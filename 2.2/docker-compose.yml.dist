@@ -1,0 +1,42 @@
+version: "3"
+services:
+  web:
+    build: ./docker
+    image: gammapartnersllc/<PROJECT NAME>:dev
+    container_name: <PROJECT NAME>_web
+    volumes:
+      - "../Extend:/var/www/<PROJECT NAME>/html/app/code/Extend"
+      - "./html:/var/www/<PROJECT NAME>/html"
+      - "./apache2:/etc/apache2/sites-available"
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+        - redis
+        - db
+    networks:
+      - <PROJECT NAME>_connect
+  db:
+    image: mysql:5.7
+    container_name: <PROJECT NAME>_db
+    volumes:
+      - "/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: <PROJECT NAME>
+      MYSQL_USER: <PROJECT NAME>
+      MYSQL_PASSWORD: <PROJECT NAME>
+    ports:
+      - "3306:3306"
+    networks:
+      - <PROJECT NAME>_connect
+  redis:
+    image: redis
+    container_name: <PROJECT NAME>_redis
+    expose:
+      - "6379"
+    networks:
+      - <PROJECT NAME>_connect
+networks:
+  <PROJECT NAME>_connect:
+    driver: bridge
