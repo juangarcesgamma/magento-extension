@@ -8,8 +8,6 @@ read -r -p "Enter project name: " projectCode
 read -r -p "Enter project url without protocol: " projectUrl
 echo "Please answer the following prompts (Default value is shown inside [] )"
 read -r -p "Enter base folder for project [${BASEDIR}] " projectFolder
-read -r -p "Enter Magento edition: (ce/ee) [ce] " magentoEdition
-read -r -p "Enter Magento version: [2.2.6] " magentoVersion
 read -r -p "Enter username for magento admin: [admin] " magentoUser
 read -r -p "Enter email for magento admin: [admin@gammapartners.com] " magentoEmail
 read -s -r -p "Enter password for magento admin: [Admin035] " magentoPassword
@@ -21,7 +19,7 @@ linuxUser=${USER}
 linuxPass=${linuxPass:-Admin035}
 projectFolder=${projectFolder:-${BASEDIR}}
 magentoEdition=${magentoEdition:-ce}
-magentoVersion=${magentoVersion:-2.2.6}
+magentoVersion=${magentoVersion:-2.2.8}
 magentoUser=${magentoUser:-admin}
 magentoEmail=${magentoEmail:-admin@gammapartners.com}
 magentoPassword=${magentoPassword:-Admin035}
@@ -61,7 +59,7 @@ echo "Creating project at $(pwd)"
 if [[ "$(uname)" == "Darwin" ]]; then
     sed -i '' -e "s|<PROJECT URL>|${projectUrl}|g" apache2/${projectCode}.conf
     sed -i '' -e "s|<PROJECT NAME>|${projectCode}|g" apache2/${projectCode}.conf
-    sed -i '' -e "s|<PROJECT NAME>|${projectCode^^}|g" docker/Dockerfile
+    sed -i '' -e "s|<PROJECT NAME>|${projectCode}|g" docker/Dockerfile
     sed -i '' -e "s|<PROJECT NAME>|${projectCode}|g" docker-compose.yml
 elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
     sed -i "s|<PROJECT URL>|${projectUrl}|g" apache2/${projectCode}.conf
@@ -85,14 +83,8 @@ docker-compose up -d
 echo "Installing Magento"
 if [[ -f "/var/www/${projectCode}/html/composer.json" ]]; then
     composerCreate="echo Project already installed"
-elif [[ ${magentoEdition} == "ce" ]]; then
-    composerCreate="composer create-project --repository=https://repo.magento.com/ magento/project-community-edition=${magentoVersion} /var/www/${projectCode}/html/install"
-elif [[ ${magentoEdition} == "ee" ]]; then
-    composerCreate="composer create-project --repository=https://repo.magento.com/ magento/project-enterprise-edition=${magentoVersion} /var/www/${projectCode}/html/install"
 else
-    echo "Edition not found"
-    exit 0
-fi
+    composerCreate="composer create-project --repository=https://repo.magento.com/ magento/project-community-edition=${magentoVersion} /var/www/${projectCode}/html/install"
 
 docker-compose exec web bash -c "${composerCreate}; \
     cp -rT /var/www/${projectCode}/html/install/ /var/www/${projectCode}/html; \
