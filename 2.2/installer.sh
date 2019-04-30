@@ -85,6 +85,7 @@ if [[ -f "/var/www/${projectCode}/html/composer.json" ]]; then
     composerCreate="echo Project already installed"
 else
     composerCreate="composer create-project --repository=https://repo.magento.com/ magento/project-community-edition=${magentoVersion} /var/www/${projectCode}/html/install"
+fi
 
 docker-compose exec web bash -c "${composerCreate}; \
     cp -rT /var/www/${projectCode}/html/install/ /var/www/${projectCode}/html; \
