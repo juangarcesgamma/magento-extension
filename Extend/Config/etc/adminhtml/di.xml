@@ -2,6 +2,13 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
+    <virtualType name="Extend\Config\Block\System\Config\AccountButton" type="Extend\Config\Block\System\Config\Button">
+        <arguments>
+            <argument name="id" xsi:type="string">accountButton</argument>
+            <argument name="label" xsi:type="string">Go to my Extend Account</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="Extend\Config\Block\System\Config\PortalButton" type="Extend\Config\Block\System\Config\Button">
         <arguments>
             <argument name="id" xsi:type="string">portalButton</argument>
@@ -15,4 +22,5 @@
             <argument name="label" xsi:type="string">Sync Products</argument>
         </arguments>
     </virtualType>
+
 </config>

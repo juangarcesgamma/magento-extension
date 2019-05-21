@@ -6,6 +6,36 @@
             <label>Extend Protection Plans</label>
             <resource>Extend_Config::config</resource>
 
+            <group id="extend_info" sortOrder="5" showInDefault="0" showInWebsite="1" showInStore="0">
+                <frontend_model>Extend\Config\Block\System\Config\Intro</frontend_model>
+            </group>
+
+            <group id="account" sortOrder="10" showInDefault="0" showInWebsite="1" showInStore="0">
+                <attribute type="expanded">1</attribute>
+                <fieldset_css>complex</fieldset_css>
+                <comment>
+                    You can get up and running with Extend in a few simple steps. Get started now by creating your
+                    Extend account!
+                </comment>
+
+                <field id="accountbutton" translate="label" type="button" sortOrder="1" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <frontend_model>Extend\Config\Block\System\Config\AccountButton</frontend_model>
+                    <comment>
+                        <![CDATA[
+                            or <a href="https://www.google.com"> I already have an Extend account, I'm ready to edit my settings</a>
+                        ]]>
+                    </comment>
+                </field>
+                <field id="help" translate="label" type="label" sortOrder="2" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <comment>
+                        <![CDATA[
+                            Need help? <a href="https://google.com">Check out our setup guide</a> for more
+                            instructions, or contact <a>support@helloextend.com</a>
+                        ]]>
+                    </comment>
+                </field>
+            </group>
+
             <group id="authentication" sortOrder="20" showInDefault="0" showInWebsite="1" showInStore="0">
                 <label>Authentication</label>
                 <comment>
@@ -18,10 +48,10 @@
                 <field id="auth_mode" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Mode</label>
                     <source_model>Extend\Config\Model\Config\Source\AuthMode</source_model>
-                    <comment>
+                    <!--<comment>
                         Warning! Please note that while you are in sandbox mode, any warranty purchases made in your store
                         will be considered test transactions. Extend will not create real warranty contracts for sandbox transactions.
-                    </comment>
+                    </comment> -->
                 </field>
                 <field id="store_id" translate="label" type="text" sortOrder="3" showInDefault="0" showInWebsite="1" showInStore="0">
                     <label>Store ID</label>
@@ -83,6 +113,7 @@
                 </comment>
                 <field id="syncbutton" translate="label" type="button" sortOrder="1" showInDefault="0" showInWebsite="1" showInStore="0">
                     <frontend_model>Extend\Config\Block\System\Config\SyncButton</frontend_model>
+                    <comment>Sync Status</comment>
                 </field>
             </group>
 
