@@ -1,0 +1,41 @@
+a#warranty_enableExtend-head {
+    display: none;
+}
+tr#row_warranty_account_accountbutton > td.label {
+    display: none;
+}
+
+tr#row_warranty_account_accountbutton > td.value{
+    width: 100%;
+}
+
+tr#row_warranty_account_accountbutton > td.value > p.note {
+    display: inline-block;
+    padding-left: 5%;
+}
+
+tr#row_warranty_account_help > td.label {
+    display: none;
+}
+
+tr#row_warranty_account_accountbutton > td:last-child {
+    display: none;
+}
+
+tr#row_warranty_products_syncbutton > td.value > p.note {
+    display: inline-block;
+    padding-left: 5%;
+}
+
+tr#row_warranty_advance_config_portalbutton > td.label {
+    display: none;
+}
+
+a#warranty_account-head{
+    display: none;
+}
+
+img#extend-logo{
+    width: 50%;
+    margin-left: 25%;
+}
