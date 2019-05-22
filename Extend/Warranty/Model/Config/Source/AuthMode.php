@@ -15,8 +15,8 @@ class AuthMode implements ArrayInterface
     public function toOptionArray()
     {
         return [
-            ['value' => 'live', 'label' => __('Live')],
-            ['value' => 'sandbox', 'label' => __('Sandbox')]
+            ['value' => 1, 'label' => __('Live')],
+            ['value' => 0, 'label' => __('Sandbox')]
         ];
     }
 }

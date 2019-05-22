@@ -64,7 +64,7 @@
                         ]]>
                     </comment>
                     <depends>
-                        <field id="auth_mode">live</field>
+                        <field id="auth_mode">1</field>
                     </depends>
                 </field>
                 <field id="api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -76,7 +76,7 @@
                         ]]>
                     </comment>
                     <depends>
-                        <field id="auth_mode">live</field>
+                        <field id="auth_mode">1</field>
                     </depends>
                 </field>
                 <field id="sandbox_store_id" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -88,7 +88,7 @@
                             ]]>
                     </comment>
                     <depends>
-                        <field id="auth_mode">sandbox</field>
+                        <field id="auth_mode">0</field>
                     </depends>
                 </field>
                 <field id="sandbox_api_key" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -100,7 +100,7 @@
                             ]]>
                     </comment>
                     <depends>
-                        <field id="auth_mode">sandbox</field>
+                        <field id="auth_mode">0</field>
                     </depends>
                 </field>
             </group>
