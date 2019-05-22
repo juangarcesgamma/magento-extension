@@ -67,7 +67,7 @@
                         <field id="auth_mode">1</field>
                     </depends>
                 </field>
-                <field id="api_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="api_key" translate="label" type="password" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>API Key</label>
                     <comment>
                         <![CDATA[
@@ -91,7 +91,7 @@
                         <field id="auth_mode">0</field>
                     </depends>
                 </field>
-                <field id="sandbox_api_key" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="sandbox_api_key" translate="label" type="password" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>SandBox API Key</label>
                     <comment>
                         <![CDATA[
