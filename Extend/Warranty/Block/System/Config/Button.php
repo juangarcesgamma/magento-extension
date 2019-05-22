@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Extend\Config\Block\System\Config;
+namespace Extend\Warranty\Block\System\Config;
 
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
@@ -13,7 +13,7 @@ class Button extends Field
     /**
      * @var string
      */
-    protected $_template = 'Extend_Config::system/config/button.phtml';
+    protected $_template = 'Extend_Warranty::system/config/button.phtml';
 
     protected $id;
     protected $label;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Extend\Config\Model\Config\Source;
+namespace Extend\Warranty\Model\Config\Source;
 
 use Magento\Framework\Option\ArrayInterface;
 

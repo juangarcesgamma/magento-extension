@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Extend\Config\Block\System\Config;
+namespace Extend\Warranty\Block\System\Config;
 
 use Magento\Config\Block\System\Config\Form\Field;
 
@@ -10,7 +10,7 @@ class Intro extends Field
     /**
      * @var string
      */
-    protected $_template = 'Extend_Config::intro.phtml';
+    protected $_template = 'Extend_Warranty::system/config/intro.phtml';
 
     public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {

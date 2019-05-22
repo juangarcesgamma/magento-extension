@@ -2,21 +2,21 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
-    <virtualType name="Extend\Config\Block\System\Config\AccountButton" type="Extend\Config\Block\System\Config\Button">
+    <virtualType name="Extend\Warranty\Block\System\Config\AccountButton" type="Extend\Warranty\Block\System\Config\Button">
         <arguments>
             <argument name="id" xsi:type="string">accountButton</argument>
-            <argument name="label" xsi:type="string">Go to my Extend Account</argument>
+            <argument name="label" xsi:type="string">Set up my Extend account</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="Extend\Config\Block\System\Config\PortalButton" type="Extend\Config\Block\System\Config\Button">
+    <virtualType name="Extend\Warranty\Block\System\Config\PortalButton" type="Extend\Warranty\Block\System\Config\Button">
         <arguments>
             <argument name="id" xsi:type="string">portalButton</argument>
             <argument name="label" xsi:type="string">Go to my Extend merchant portal</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="Extend\Config\Block\System\Config\SyncButton" type="Extend\Config\Block\System\Config\Button">
+    <virtualType name="Extend\Warranty\Block\System\Config\SyncButton" type="Extend\Warranty\Block\System\Config\Button">
         <arguments>
             <argument name="id" xsi:type="string">syncButton</argument>
             <argument name="label" xsi:type="string">Sync Products</argument>
