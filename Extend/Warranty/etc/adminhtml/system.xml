@@ -107,7 +107,7 @@
                 </field>
             </group>
 
-            <group id="enableExtend" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
+            <group id="enableExtend" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
                 <attribute type="expanded">1</attribute>
                 <fieldset_css>complex</fieldset_css>
                 <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
