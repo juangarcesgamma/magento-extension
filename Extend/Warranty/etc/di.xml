@@ -4,11 +4,15 @@
             name="Extend\Warranty\Model\ResourceModel\Indexer\Price"
             type="Magento\Catalog\Model\ResourceModel\Product\Indexer\Price\SimpleProductPrice"/>
 
-    <preference for="Magento\Catalog\Controller\Adminhtml\Product\NewAction"
-                type="Extend\Warranty\Controller\Adminhtml\Product\NewAction" />
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\NewAction">
+        <plugin name="warrantyInterceptor" type="Extend\Warranty\Plugin\WarrantyAction" sortOrder="1"/>
+    </type>
+    <type name="Magento\Catalog\Model\Product\Type">
+        <plugin name="warrantyTypeOptionInterceptor" type="Extend\Warranty\Plugin\WarrantyTypeOption" sortOrder="1"/>
+    </type>
+
     <preference for="Magento\Catalog\Block\Adminhtml\Product"
                 type="Extend\Warranty\Block\Adminhtml\Product" />
-    <preference for="Magento\Catalog\Model\Product\Type"
-                type="Extend\Warranty\Model\Product\TypeOption"/>
+
 
 </config>

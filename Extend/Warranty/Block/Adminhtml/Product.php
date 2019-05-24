@@ -2,12 +2,15 @@
 
 namespace Extend\Warranty\Block\Adminhtml;
 
-class Product extends \Magento\Catalog\Block\Adminhtml\Product
+use Magento\Bundle\Block\Adminhtml\Catalog\Product\Edit\Tab\Attributes\Extend;
+use \Magento\Catalog\Block\Adminhtml\Product as SuperBlock;
+
+class Product extends SuperBlock
 {
     protected function _getAddProductButtonOptions()
     {
         /* var Array $arrOfNotAlowedTypes */
-        $arrOfNotAlowedTypesIds = array('warranty');
+        $arrOfNotAlowedTypesIds = [\Extend\Warranty\Model\Product\Type::TYPE_CODE];
         $splitButtonOptions = [];
         $types = $this->_typeFactory->create()->getTypes();
         uasort(

@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
     <module name="Extend_Warranty" setup_version="1.0.0">
         <sequence>
-            <module name="Magento_Catalog"></module>
+            <module name="Magento_Catalog"/>
         </sequence>
     </module>
 </config>
