@@ -63,9 +63,6 @@
                             to find your StoreID and then paste of type it here.
                         ]]>
                     </comment>
-                    <depends>
-                        <field id="auth_mode">1</field>
-                    </depends>
                 </field>
                 <field id="api_key" translate="label" type="password" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>API Key</label>
@@ -75,9 +72,6 @@
                             the Extend platform. You can view and manage your API Key on <a href="https://google.com">your Extend merchant portal</a>.
                         ]]>
                     </comment>
-                    <depends>
-                        <field id="auth_mode">1</field>
-                    </depends>
                 </field>
                 <field id="sandbox_store_id" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>SandBox Store ID</label>
@@ -87,9 +81,6 @@
                                 to find your StoreID and then paste of type it here.
                             ]]>
                     </comment>
-                    <depends>
-                        <field id="auth_mode">0</field>
-                    </depends>
                 </field>
                 <field id="sandbox_api_key" translate="label" type="password" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>SandBox API Key</label>
@@ -99,9 +90,6 @@
                                 the Extend platform. You can view and manage your API Key on <a href="https://google.com">your Extend merchant portal</a>.
                             ]]>
                     </comment>
-                    <depends>
-                        <field id="auth_mode">0</field>
-                    </depends>
                 </field>
             </group>
 
