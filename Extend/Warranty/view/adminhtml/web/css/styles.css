@@ -36,6 +36,12 @@ a#warranty_account-head{
 }
 
 img#extend-logo{
-    width: 50%;
-    margin-left: 25%;
+    width: 80%;
+}
+
+img#extend-mobile{
+    max-width: none;
+}
+p#extend-intro{
+    width: 90%;
 }
