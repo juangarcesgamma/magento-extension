@@ -10,11 +10,6 @@ use Magento\Framework\Message\ManagerInterface;
 class WarrantyAction
 {
     /**
-     * @var \Extend\Warranty\Helper\Data
-     */
-    protected $helper;
-
-    /**
      * @var \Magento\Framework\Controller\Result\RedirectFactory
      */
     protected $redirectFactory;
@@ -25,12 +20,10 @@ class WarrantyAction
     protected $messageManager;
 
     public function __construct(
-        Data $helper,
         RedirectFactory $redirectFactory,
         ManagerInterface $messageManager
     )
     {
-        $this->helper = $helper;
         $this->redirectFactory = $redirectFactory;
         $this->messageManager = $messageManager;
     }
@@ -38,7 +31,7 @@ class WarrantyAction
     {
 
         $typeId = $subject->getRequest()->getParam('type');
-        if(in_array($typeId, $this->helper::NOT_ALLOWED_TYPES))
+        if(in_array($typeId, Data::NOT_ALLOWED_TYPES))
         {
             $this->messageManager->addError(__("Warranty type products cannot be created by admin"));
             return $this->redirectFactory->create()->setPath('catalog/product/index');
