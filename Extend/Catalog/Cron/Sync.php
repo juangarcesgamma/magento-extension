@@ -26,10 +26,10 @@ class Sync
         $data = [];
 
         foreach ($products as $product){
-            $data[] = "{$product['sku']},{$product['name']},{$product['qty']},{$product['price']}";
+            $data[] = $product->getSku().', '.$product->getName().', '.$product->getQty().', '.$product->getPrice();
         }
 
-        $currentDateTime = date("Y_m_d_H.i");
+        $currentDateTime = date("Y-m-d_H.i");
         $logName = 'sync_extend_' . $currentDateTime;
 
         $this->logger->info($logName,$data);

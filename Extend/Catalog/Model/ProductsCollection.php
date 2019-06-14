@@ -13,11 +13,9 @@ class ProductsCollection implements ProductsCollectionInterface
 
     public function __construct
     (
-        CollectionFactory $productCollectionFactory,
-        StockStateInterface $stockItem
+        CollectionFactory $productCollectionFactory
     )
     {
-        $this->stockItem = $stockItem;
         $this->productCollectionFactory = $productCollectionFactory;
     }
 
@@ -25,20 +23,15 @@ class ProductsCollection implements ProductsCollectionInterface
     {
         //Collection Factory get only products in stock
         $collection = $this->productCollectionFactory->create();
-        $collection->addAttributeToSelect('*');
-        $collection->addAttributeToFilter('type_id',['eq' => Type::TYPE_SIMPLE]);
+        $collection->joinField('qty',
+            'cataloginventory_stock_item',
+            'qty',
+            'product_id=entity_id',
+            '{{table}}.stock_id=1',
+            'left')
+            ->addAttributeToSelect(['name','sku','price','qty'])
+            ->addAttributeToFilter('type_id',['eq' => Type::TYPE_SIMPLE]);
 
-        $data = [];
-
-        foreach ($collection as $product){
-            $data[] = [
-                'name' => $product->getName(),
-                'sku' => $product->getSku(),
-                'price' => $product->getPrice(),
-                'qty' => $this->stockItem->getStockQty($product->getId(), $product->getStore()->getWebsiteId())
-            ];
-        }
-
-        return $data;
+       return  $collection->getItems();
     }
 }
