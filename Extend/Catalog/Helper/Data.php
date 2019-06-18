@@ -2,7 +2,6 @@
 
 namespace Extend\Catalog\Helper;
 
-use BaconQrCode\Common\Mode;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -28,7 +27,7 @@ class Data extends AbstractHelper
     }
 
     public function getExtendApiKey(){
-        $mode = $this->scopeConfig->getValue(self::MODE);
+        $mode = $this->getExtendMode();
 
         if($mode){
             return $this->scopeConfig->getValue(self::APIKEY);
@@ -38,13 +37,17 @@ class Data extends AbstractHelper
     }
 
     public function getExtendStoreID(){
-        $mode = $this->scopeConfig->getValue(self::MODE);
+        $mode = $this->getExtendMode();
 
         if($mode){
             return $this->scopeConfig->getValue(self::STOREID);
         }else{
             return $this->scopeConfig->getValue(self::SAND_STOREID);
         }
+    }
+
+    public function getExtendMode(){
+        return $this->scopeConfig->getValue(self::MODE);
     }
 
 

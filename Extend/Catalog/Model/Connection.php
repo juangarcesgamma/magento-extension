@@ -13,6 +13,8 @@ class Connection implements ConnectionInterface
 
     protected $baseUrl;
 
+    protected $sandBoxBaseUrl;
+
     /**
      * @var Json
      */
@@ -33,22 +35,29 @@ class Connection implements ConnectionInterface
         Json $jsonSerializer,
         CurlFactory $httpClient,
         Data $extendHelper,
+        string $sandBoxBaseUrl = 'https://api-stage.helloextend.com/stores/',
         string $baseUrl = 'https://developers.helloextend.com/api.helloextend.com/stores/'
     )
     {
         $this->baseUrl = $baseUrl;
+        $this->sandBoxBaseUrl = $sandBoxBaseUrl;
         $this->jsonSerializer = $jsonSerializer;
         $this->httpClient = $httpClient;
         $this->extendHelper = $extendHelper;
     }
 
-    public function createProduct($product): void
+    public function createProduct($product): array
     {
         $apiKey = $this->extendHelper->getExtendApiKey();
         $extendStoreID = $this->extendHelper->getExtendStoreID();
+        $mode = $this->extendHelper->getExtendMode();
 
-        $fullPath = $this->baseUrl . $extendStoreID . self::PRODUCTS;
-
+        if($mode){
+            $fullPath = $this->baseUrl . $extendStoreID . self::PRODUCTS;
+        }else{
+            //SANDBOX MODE
+            $fullPath = $this->sandBoxBaseUrl . $extendStoreID . self::PRODUCTS;
+        }
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $fullPath);
@@ -59,7 +68,7 @@ class Connection implements ConnectionInterface
 
         $data = [
           'title' => $product->getName(),
-          'price' => $product->getPrice(),
+          'price' => $this->formatPrice($product->getPrice()),
           'referenceId' => $product->getSku()
         ];
 
@@ -69,7 +78,16 @@ class Connection implements ConnectionInterface
 
         curl_close($ch);
 
-        return $result;
+        return json_decode($result, true);
+    }
+
+
+    private function formatPrice($price){
+        $floatPrice = floatval($price);
+        $formatedPrice = number_format($floatPrice, 2,'','');
+
+        return intval($formatedPrice);
+
     }
 }
 
