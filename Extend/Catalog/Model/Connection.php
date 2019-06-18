@@ -26,11 +26,14 @@ class Connection implements ConnectionInterface
 
     protected $extendHelper;
 
+
+    CONST PRODUCTS = '/products';
+
     public function __construct(
         Json $jsonSerializer,
         CurlFactory $httpClient,
         Data $extendHelper,
-        string $baseUrl = 'https://developers.helloextend.com/api.helloextend.com'
+        string $baseUrl = 'https://developers.helloextend.com/api.helloextend.com/stores/'
     )
     {
         $this->baseUrl = $baseUrl;
@@ -44,7 +47,7 @@ class Connection implements ConnectionInterface
         $apiKey = $this->extendHelper->getExtendApiKey();
         $extendStoreID = $this->extendHelper->getExtendStoreID();
 
-        $fullPath = $this->baseUrl . '/stores/'. $extendStoreID .'/products';
+        $fullPath = $this->baseUrl . $extendStoreID . self::PRODUCTS;
 
 
         $ch = curl_init();
