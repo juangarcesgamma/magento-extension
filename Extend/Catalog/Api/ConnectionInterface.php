@@ -6,5 +6,5 @@ namespace Extend\Catalog\Api;
 
 interface ConnectionInterface
 {
-    public function createProduct($product): array;
+    public function createProducts($products): array;
 }

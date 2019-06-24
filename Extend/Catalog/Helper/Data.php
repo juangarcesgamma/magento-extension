@@ -10,9 +10,9 @@ class Data extends AbstractHelper
 {
     CONST MODE = 'warranty/authentication/auth_mode';
     CONST APIKEY = 'warranty/authentication/api_key';
-    CONST SAND_APIKEY = 'warranty/authentication_sandbox/api_key';
+    CONST SAND_APIKEY = 'warranty/authentication/sandbox_api_key';
     CONST STOREID = 'warranty/authentication/store_id';
-    CONST SAND_STOREID = 'warranty/authentication_sandbox/store_id';
+    CONST SAND_STOREID = 'warranty/authentication/sandbox_store_id';
 
     protected $scopeConfig;
 

@@ -46,7 +46,7 @@ class Connection implements ConnectionInterface
         $this->extendHelper = $extendHelper;
     }
 
-    public function createProduct($product): array
+    public function createProducts($products): array
     {
         $apiKey = $this->extendHelper->getExtendApiKey();
         $extendStoreID = $this->extendHelper->getExtendStoreID();
@@ -59,6 +59,10 @@ class Connection implements ConnectionInterface
             $fullPath = $this->sandBoxBaseUrl . $extendStoreID . self::PRODUCTS;
         }
 
+
+        //Set 1 if the api is going to receive an group of products
+        $fullPath .= '?batch=1';
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $fullPath);
         $headers = ['Accept: application/json', 'Content-Type: application/json', 'X-Extend-Access-Token: '.$apiKey];
@@ -66,13 +70,19 @@ class Connection implements ConnectionInterface
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $data = [
-          'title' => $product->getName(),
-          'price' => $this->formatPrice($product->getPrice()),
-          'referenceId' => $product->getSku()
-        ];
+        $productsToSend = [];
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        foreach ($products as $product){
+            $data = [
+                'title' => $product->getName(),
+                'price' => $this->formatPrice($product->getPrice()),
+                'referenceId' => $product->getSku()
+            ];
+
+            $productsToSend[] = $data;
+        }
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($productsToSend));
 
         $result = curl_exec($ch);
 
@@ -83,6 +93,7 @@ class Connection implements ConnectionInterface
 
 
     private function formatPrice($price){
+
         $floatPrice = floatval($price);
         $formatedPrice = number_format($floatPrice, 2,'','');
 
