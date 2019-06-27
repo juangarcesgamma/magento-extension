@@ -28,7 +28,7 @@ class ProductsCollection implements ProductsCollectionInterface
             'product_id=entity_id',
             '{{table}}.stock_id=1',
             'left')
-            ->addAttributeToSelect(['name','sku','price','qty'])
+            ->addAttributeToSelect(['*'])
             ->addAttributeToFilter('type_id',['eq' => Type::TYPE_SIMPLE]);
 
        return  $collection->getItems();
