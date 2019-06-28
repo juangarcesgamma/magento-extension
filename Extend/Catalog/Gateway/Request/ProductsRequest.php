@@ -44,7 +44,7 @@ class ProductsRequest
         $this->createRequest($products);
     }
 
-    private function prepareClient($products){
+    private function prepareClient(){
 
         $accessKeys = $this->apiKey = $this->config->getValue('auth_mode') ?
             $this->keys->getLiveAccessKeys() :
@@ -54,42 +54,112 @@ class ProductsRequest
 
         $uri = $this->urlBuilder->setUri($uriWithStore)->build();
 
-        //Batch flag
-        $uri .= '?batch=1';
-
-        $data = [];
-        foreach ($products as $product){
-            $data[] = $this->productDataBuilder->build($product);
-        }
-
         $this->client
             ->setUri($uri)
-            ->setMethod(ZendClient::POST)
             ->setHeaders([
                 'Accept' =>' application/json',
                 'Content-Type' =>' application/json',
                 'X-Extend-Access-Token' => $accessKeys['api_key']
-            ])
-            ->setRawData(json_encode($data),'application/json');
+            ]);
+
     }
 
     private function createRequest($products){
         try{
-            $this->prepareClient($products);
+            $this->prepareClient();
+            $uri = $this->client->getUri(true);
+            //Batch flag
+            $uri .= '?batch=1';
+            $data = [];
+            foreach ($products as $product){
+                $data[] = $this->productDataBuilder->build($product);
+            }
+            $this->client
+                ->setUri($uri)
+                ->setMethod(ZendClient::POST)
+                ->setRawData(json_encode($data),'application/json');
             $response = $this->client->request();
-            $this->processResponse($response);
+            $this->processCreateResponse($response);
         }catch (\Zend_Http_Client_Exception $e){
             $this->logger->error($e->getMessage(), ['exception' => $e]);
         }
     }
 
 
-    private function processResponse(\Zend_Http_Response $response){
+    private function processCreateResponse(\Zend_Http_Response $response){
 
         if($response->isError()){
-            $this->logger->error($response->getBody(). 'Status code: ' . $response->getStatus());
+            $res = json_decode($response->getBody(),true);
+            $this->logger->error($res['message']);
+            throw new \Exception($res['message']);
+
         }elseif ($response->getStatus() === 201){
-            $this->logger->info($response->getBody());
+            $this->logger->info('Created product request successful');
         }
     }
+
+    public function get(){
+        return $this->getRequest();
+    }
+
+    private function getRequest(){
+        try{
+            $this->prepareClient();
+            $this->client->setMethod(ZendClient::GET);
+            $response = $this->client->request();
+
+
+            return $this->processGetResponse($response);
+        }catch (\Zend_Http_Client_Exception $e){
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            return null;
+        }
+    }
+
+    private function processGetResponse(\Zend_Http_Response $response){
+
+        if($response->isError()){
+            $res = json_decode($response->getBody(),true);
+            $this->logger->error($res['message']);
+            throw new \Exception($res['message']);
+        }else{
+            $this->logger->info('Get product request successful');
+            $products = json_decode($response->getBody(),true);
+            $ids = $this->productDataBuilder->getIds($products);
+
+            return $ids;
+        }
+    }
+
+    public function delete($identifier){
+        $this->deleteRequest($identifier);
+    }
+
+    private function deleteRequest($identifier){
+        try{
+            $this->prepareClient();
+            $uri = $this->client->getUri(true);
+            //Batch flag
+            $uri .= '/'.$identifier;
+            $this->client->setMethod(ZendClient::DELETE);
+            ;
+            $response = $this->client->request();
+
+            $this->processDeleteResponse($response);
+        }catch (\Zend_Http_Client_Exception $e){
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+        }
+    }
+
+    private function processDeleteResponse(\Zend_Http_Response $response){
+
+        if($response->isError()){
+            $res = json_decode($response->getBody(),true);
+            $this->logger->error($res['message']);
+            throw new \Exception($res['message']);
+        }else{
+            $this->logger->info('Products deleted');
+        }
+    }
+
 }

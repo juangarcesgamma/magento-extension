@@ -29,6 +29,20 @@ class ProductDataBuilder
     }
 
     /**
+     * @param array
+     * @return array
+     */
+
+    public function getIds($products){
+        $ids = [];
+        foreach ($products as $product){
+            $referenceID = $product['referenceId'];
+            $ids[$referenceID] = $referenceID;
+        }
+        return $ids;
+    }
+
+    /**
      * @param float $price
      * @return int
      */

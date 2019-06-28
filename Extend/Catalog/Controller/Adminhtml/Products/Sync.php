@@ -43,8 +43,26 @@ class Sync extends Action
             $scopeId = $website;
         }
 
-        $productsToCreate = $this->productsCollection->getProducts();
+        //CHECK WHICH PRODUCTS ARE ALREADY IN THE API
+        $storeProducts = $this->productsCollection->getProducts();
 
+        try{
+            $apiIds = $this->productsRequest->get();
+            $products = $this->processProducts($apiIds, $storeProducts);
+        }catch(Exception $e){
+            $msg = __($e->getMessage());
+            $code = 500;
+            $result = $this->prepareResult($result, $code, ['msg' => $msg]);
+            return $result;
+        }
+
+        $productsToDelete = $products['delete'];
+
+        foreach ($productsToDelete as $identifier){
+            $this->productsRequest->delete($identifier);
+        }
+
+        $productsToCreate = $products['create'];
 
         $numOfBatches = ceil(sizeof($productsToCreate)/self::MAX_PRODUCTS_BATCH);
 
@@ -57,16 +75,34 @@ class Sync extends Action
                 }
                 $this->productsRequest->create($productsInBatch);
             }
+
             $msg = __('Products Successfully Synchronized');
             $code = 200;
-            $result = $this->prepareResult($result, $code, $data);
+            $result = $this->prepareResult($result, $code, ['msg' => $msg]);
             return $result;
         }catch(Exception $e){
-            $msg = __('Error in Products Synchronization');
+            $msg = __($e->getMessage());
             $code = 500;
-            $result = $this->prepareResult($result, $code, $data);
+            $result = $this->prepareResult($result, $code, ['msg' => $msg]);
             return $result;
         }
+    }
+
+    protected function processProducts($apiIDS, $storeProducts){
+        $productsToUpdate = [];
+        foreach ($storeProducts as $key => $product){
+            $sku = $product->getSku();
+            if(isset($apiIDS[$sku])){
+                $productsToUpdate[] = $product;
+                unset($storeProducts[$key]);
+                unset($apiIDS[$sku]);
+            }
+        }
+        return [
+            'create' => $storeProducts,
+            'update' => $productsToUpdate,
+            'delete' => $apiIDS
+        ];
     }
 
     protected function prepareResult(JsonResult $result, int $code, array $data = [])

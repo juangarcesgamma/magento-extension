@@ -23,9 +23,10 @@ define(
 
             syncProducts: function(event) {
                 event.preventDefault();
+                var button =  $(this.element);
+                button.text('Sync in progress...');
 
                 $.get({
-                    showLoader: true,
                     url : this.options.url,
                     data: {
                         website: $('#website_switcher').val(),
@@ -33,19 +34,10 @@ define(
                     }
                 })
                     .done(function(data) {
-                        alert({
-                            title: $t('Success'),
-                            content: $t(data.msg),
-                            autoOpen: true
-                        });
+                        button.text('Sync Products');
                     })
                     .fail(function(jqXHR, textStatus, errorThrown) {
-                        console.error(errorThrown);
-                        alert({
-                            title: $t('Error!'),
-                            content: $t('An error occurred while synchronizing products. Please try again later.'),
-                            autoOpen: true
-                        });
+                        button.text('Sync Products');
                     });
             }
         });
