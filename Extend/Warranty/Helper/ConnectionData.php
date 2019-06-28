@@ -35,7 +35,12 @@ class ConnectionData
 
         return $apiKey;
     }
-    private function getMode()
+
+    /**
+     1 => Live
+     0 => Sandbox
+     **/
+    public function getMode()
     {
         $mode = $this->scopeConfig->getValue('warranty/authentication/auth_mode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 

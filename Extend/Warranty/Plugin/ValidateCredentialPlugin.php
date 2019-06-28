@@ -29,8 +29,9 @@ class ValidateCredentialPlugin
 
         $newStoreId = $this->connectionData->getStoreIdCredential();
         $newApiKey = $this->connectionData->getApiKey();
+        $isLive = $this->connectionData->getMode();
 
-        $statusCode = $this->connection->testConnection($newStoreId, $newApiKey);
+        $statusCode = $this->connection->testConnection($newStoreId, $newApiKey, $isLive);
         if($statusCode === '200'){
             $this->messageManager->addSuccessMessage(__("Connection to Extend Api successful."));
         } else {

@@ -5,6 +5,6 @@ namespace Extend\Warranty\Api;
 interface ConnectionInterface
 {
 
-    public function testConnection($storeId, $apiKey): string;
+    public function testConnection($storeId, $apiKey, $isLive): string;
 
 }

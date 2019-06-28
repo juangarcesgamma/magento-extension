@@ -11,8 +11,9 @@ use Magento\Framework\Serialize\Serializer\Json;
 class Connection implements ConnectionInterface
 {
 
-    protected $baseUrl = 'https://api-stage.helloextend.com/stores';
+    protected $baseUrlSandbox = 'https://api-stage.helloextend.com/stores';
 
+    protected $baseUrlLive = 'https://api.helloextend.com/stores';
     /**
      * @var Json
      */
@@ -32,9 +33,14 @@ class Connection implements ConnectionInterface
         $this->httpClient = $httpClient;
     }
 
-    public function testConnection($storeId, $apiKey): string
+    public function testConnection($storeId, $apiKey, $isLive): string
     {
-        $requestPath = "{$this->baseUrl}/{$storeId}/products";
+        if($isLive === "1" && !is_null($isLive)){
+            $baseUrl = $this->baseUrlLive;
+        } else if($isLive === "0" && !is_null($isLive)){
+            $baseUrl = $this->baseUrlSandbox;
+        }
+        $requestPath = "{$baseUrl}/{$storeId}/products";
 
         $client = $this->httpClient->create();
         $headers = [
