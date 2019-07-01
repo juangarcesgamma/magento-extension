@@ -7,6 +7,7 @@ use Magento\Framework\Controller\Result\Json as JsonResult;
 use Extend\Catalog\Model\ProductsCollection;
 use Magento\Framework\Controller\ResultFactory;
 use Extend\Catalog\Gateway\Request\ProductsRequest;
+use Psr\Log\LoggerInterface;
 
 class Sync extends Action
 {
@@ -16,57 +17,35 @@ class Sync extends Action
     protected $productsCollection;
     protected $productsRequest;
     protected $resultFactory;
+    protected $logger;
 
     public function __construct(
         Action\Context $context,
         ProductsCollection $productsCollection,
         ProductsRequest $productsRequest,
-        ResultFactory $resultFactory
+        ResultFactory $resultFactory,
+        LoggerInterface $logger
     )
     {
         $this->resultFactory = $resultFactory;
         $this->productsCollection = $productsCollection;
         $this->productsRequest = $productsRequest;
+        $this->logger = $logger;
         parent::__construct($context);
     }
 
     public function execute()
     {
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $website = $this->_request->getParam('website');
 
-        $scopeId = 0;
-
-        $data = [];
-
-        if(!empty($website)) {
-            $scopeId = $website;
-        }
-
-        //CHECK WHICH PRODUCTS ARE ALREADY IN THE API
         $storeProducts = $this->productsCollection->getProducts();
 
         try{
-            $apiIds = $this->productsRequest->get();
-            $products = $this->processProducts($apiIds, $storeProducts);
-        }catch(Exception $e){
-            $msg = __($e->getMessage());
-            $code = 500;
-            $result = $this->prepareResult($result, $code, ['msg' => $msg]);
-            return $result;
-        }
 
-        $productsToDelete = $products['delete'];
+            $productsToCreate = $this->processProducts($storeProducts);
 
-        foreach ($productsToDelete as $identifier){
-            $this->productsRequest->delete($identifier);
-        }
+            $numOfBatches = ceil(sizeof($productsToCreate)/self::MAX_PRODUCTS_BATCH);
 
-        $productsToCreate = $products['create'];
-
-        $numOfBatches = ceil(sizeof($productsToCreate)/self::MAX_PRODUCTS_BATCH);
-
-        try{
             for ($i = 0 ; $i < $numOfBatches ; $i++){
                 if($i === ($numOfBatches-1)){
                     $productsInBatch = array_slice($productsToCreate,$i*self::MAX_PRODUCTS_BATCH);
@@ -75,10 +54,9 @@ class Sync extends Action
                 }
                 $this->productsRequest->create($productsInBatch);
             }
-
-            $msg = __('Products Successfully Synchronized');
             $code = 200;
-            $result = $this->prepareResult($result, $code, ['msg' => $msg]);
+            $result = $this->prepareResult($result, $code);
+            $this->logger->info('Products Successfully Synchronized');
             return $result;
         }catch(Exception $e){
             $msg = __($e->getMessage());
@@ -88,21 +66,15 @@ class Sync extends Action
         }
     }
 
-    protected function processProducts($apiIDS, $storeProducts){
-        $productsToUpdate = [];
+    protected function processProducts($storeProducts){
         foreach ($storeProducts as $key => $product){
-            $sku = $product->getSku();
-            if(isset($apiIDS[$sku])){
-                $productsToUpdate[] = $product;
+            $identifier = $product->getSku();
+            $alreadyCreated = $this->productsRequest->get($identifier);
+            if($alreadyCreated){
                 unset($storeProducts[$key]);
-                unset($apiIDS[$sku]);
             }
         }
-        return [
-            'create' => $storeProducts,
-            'update' => $productsToUpdate,
-            'delete' => $apiIDS
-        ];
+        return $storeProducts;
     }
 
     protected function prepareResult(JsonResult $result, int $code, array $data = [])

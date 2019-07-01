@@ -25,19 +25,18 @@ define(
                 event.preventDefault();
                 var button =  $(this.element);
                 button.text('Sync in progress...');
+                button.attr("disabled", true);
 
                 $.get({
-                    url : this.options.url,
-                    data: {
-                        website: $('#website_switcher').val(),
-                        store: $('#store_switcher').val()
-                    }
+                    url : this.options.url
                 })
                     .done(function(data) {
                         button.text('Sync Products');
+                        button.attr("disabled", false);
                     })
                     .fail(function(jqXHR, textStatus, errorThrown) {
                         button.text('Sync Products');
+                        button.attr("disabled", false);
                     });
             }
         });
