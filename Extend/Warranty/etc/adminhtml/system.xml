@@ -102,8 +102,7 @@
                     seconds, but if your catalog is very large it could take few minutes.
                 </comment>
                 <field id="syncbutton" translate="label" type="button" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <frontend_model>Extend\Warranty\Block\System\Config\SyncButton</frontend_model>
-                    <comment>Sync Status</comment>
+                    <frontend_model>Extend\Warranty\Block\System\Config\Products\Button</frontend_model>
                 </field>
             </group>
 
