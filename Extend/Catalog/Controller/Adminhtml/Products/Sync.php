@@ -8,9 +8,13 @@ use Extend\Catalog\Model\ProductsCollection;
 use Magento\Framework\Controller\ResultFactory;
 use Extend\Catalog\Gateway\Request\ProductsRequest;
 use Psr\Log\LoggerInterface;
+use Magento\Framework\App\Config\Storage\Writer;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+
 
 class Sync extends Action
 {
+    const LAST_SYNC_PATH = 'warranty/products/lastSync';
     protected $_publicActions = ['extend/products/sync'];
     const MAX_PRODUCTS_BATCH = 250;
 
@@ -19,18 +23,25 @@ class Sync extends Action
     protected $resultFactory;
     protected $logger;
 
+    protected $configWriter;
+    protected $timezone;
+
     public function __construct(
         Action\Context $context,
         ProductsCollection $productsCollection,
         ProductsRequest $productsRequest,
         ResultFactory $resultFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        Writer $configWriter,
+        TimezoneInterface $timezone
     )
     {
         $this->resultFactory = $resultFactory;
         $this->productsCollection = $productsCollection;
         $this->productsRequest = $productsRequest;
         $this->logger = $logger;
+        $this->configWriter = $configWriter;
+        $this->timezone = $timezone;
         parent::__construct($context);
     }
 
@@ -57,6 +68,8 @@ class Sync extends Action
             $code = 200;
             $result = $this->prepareResult($result, $code);
             $this->logger->info('Products Successfully Synchronized');
+            $date = $this->timezone->formatDate(null,1, true);
+            $this->configWriter->save(self::LAST_SYNC_PATH,$date);
             return $result;
         }catch(Exception $e){
             $msg = __($e->getMessage());
