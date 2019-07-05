@@ -1,0 +1,24 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: lazaro
+ * Date: 19/12/18
+ * Time: 04:09 PM
+ */
+
+/** @var $block Extend\Warranty\Block\System\Config\Products\Button
+ */
+?>
+<div class="extend-sync-button-container">
+    <table class="extend-sync">
+        <tr>
+            <td width="30%" id="eSync">
+                <button id="<?= $block->getId() ?>" class="" data-mage-init='{"productSync": {"url": "<?= $block->getUrl('extend/products/sync') ?>"}}'><span>Sync Products</span></button>
+            </td>
+            <td width="70%" id="eSync">
+                <p id="sync-msg" class=""><?=__('Sync Status')?></p>
+                <a id="cancel_sync" style="color: red; display: none">Cancel Sync</a>
+            </td>
+        </tr>
+    </table>
+</div>
