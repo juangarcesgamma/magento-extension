@@ -70,6 +70,7 @@ class ProductsRequest
             $uri = $this->client->getUri(true);
             $uri .= '/'.$identifier;
             $this->client->setMethod(ZendClient::GET);
+            $this->client->setUri($uri);
             $response = $this->client->request();
 
             return $this->processGetResponse($response);
