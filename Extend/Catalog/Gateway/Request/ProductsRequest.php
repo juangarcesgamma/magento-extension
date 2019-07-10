@@ -39,7 +39,8 @@ class ProductsRequest
         $this->logger = $logger;
     }
 
-    private function prepareClient(){
+    private function prepareClient()
+    {
 
         $accessKeys = $this->apiKey = $this->config->getValue('auth_mode') ?
             $this->keys->getLiveAccessKeys() :
@@ -52,76 +53,82 @@ class ProductsRequest
         $this->client
             ->setUri($uri)
             ->setHeaders([
-                'Accept' =>' application/json',
-                'Content-Type' =>' application/json',
+                'Accept' => ' application/json',
+                'Content-Type' => ' application/json',
                 'X-Extend-Access-Token' => $accessKeys['api_key']
             ]);
 
     }
 
     //Get
-    public function get($identifier){
+    public function get($identifier)
+    {
         return $this->getRequest($identifier);
     }
 
-    private function getRequest($identifier){
-        try{
+    private function getRequest($identifier)
+    {
+        try {
             $this->prepareClient();
             $uri = $this->client->getUri(true);
-            $uri .= '/'.$identifier;
+            $uri .= '/' . $identifier;
             $this->client->setMethod(ZendClient::GET);
             $this->client->setUri($uri);
             $response = $this->client->request();
 
             return $this->processGetResponse($response);
-        }catch (\Zend_Http_Client_Exception $e){
+        } catch (\Zend_Http_Client_Exception $e) {
             $this->logger->error($e->getMessage(), ['exception' => $e]);
             return null;
         }
     }
 
-    private function processGetResponse(\Zend_Http_Response $response){
-        if($response->isError()){
+    private function processGetResponse(\Zend_Http_Response $response)
+    {
+        if ($response->isError()) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
     //Create
-    public function create($products){
+    public function create($products)
+    {
         $this->createRequest($products);
     }
 
-    private function createRequest($products){
-        try{
+    private function createRequest($products)
+    {
+        try {
             $this->prepareClient();
             $uri = $this->client->getUri(true);
             //Batch flag
             $uri .= '?batch=1';
             $data = [];
-            foreach ($products as $product){
+            foreach ($products as $product) {
                 $data[] = $this->productDataBuilder->build($product);
             }
             $this->client
                 ->setUri($uri)
                 ->setMethod(ZendClient::POST)
-                ->setRawData(json_encode($data),'application/json');
+                ->setRawData(json_encode($data), 'application/json');
             $response = $this->client->request();
             $this->processCreateResponse($response);
-        }catch (\Zend_Http_Client_Exception $e){
+        } catch (\Zend_Http_Client_Exception $e) {
             $this->logger->error($e->getMessage(), ['exception' => $e]);
         }
     }
 
-    private function processCreateResponse(\Zend_Http_Response $response){
+    private function processCreateResponse(\Zend_Http_Response $response)
+    {
 
-        if($response->isError()){
-            $res = json_decode($response->getBody(),true);
+        if ($response->isError()) {
+            $res = json_decode($response->getBody(), true);
             $this->logger->error($res['message']);
             throw new \Exception($res['message']);
 
-        }elseif ($response->getStatus() === 201){
+        } elseif ($response->getStatus() === 201) {
             $this->logger->info('Created product request successful');
         }
     }

@@ -17,20 +17,22 @@ class SyncProcess
         $this->productsRequest = $productsRequest;
     }
 
-    public function sync($storeProducts){
+    public function sync($storeProducts)
+    {
 
-        $productsToCreate = $this->processProducts($storeProducts);
-
+        //$productsToCreate = $this->processProducts($storeProducts);
+        $productsToCreate = $storeProducts;
         $this->productsRequest->create($productsToCreate);
 
     }
 
-    private function processProducts($storeProducts){
-
-        foreach ($storeProducts as $key => $product){
+    private function processProducts($storeProducts)
+    {
+        //Logic for remove products already in the api
+        foreach ($storeProducts as $key => $product) {
             $identifier = $product->getSku();
             $alreadyCreated = $this->productsRequest->get($identifier);
-            if($alreadyCreated){
+            if ($alreadyCreated) {
                 unset($storeProducts[$key]);
             }
         }
