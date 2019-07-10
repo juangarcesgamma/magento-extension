@@ -11,8 +11,8 @@ use Extend\Catalog\Model\ProductsCollection;
 
 class Sync extends Action
 {
+    const MAX_PRODUCTS_BATCH = 250;
     protected $_publicActions = ['extend/products/sync'];
-
     protected $resultFactory;
     protected $logger;
     protected $syncProcess;
@@ -39,7 +39,19 @@ class Sync extends Action
         $storeProducts = $this->productsCollection->getProducts();
 
         try{
-            $this->syncProcess->sync($storeProducts);
+            $numOfBatches = ceil(sizeof($storeProducts)/self::MAX_PRODUCTS_BATCH);
+            $i = 0;
+            while ($numOfBatches>0){
+                if($numOfBatches === 1){
+                    $productsInBatch = array_slice($storeProducts,$i*self::MAX_PRODUCTS_BATCH);
+                }else{
+                    $productsInBatch = array_slice($storeProducts,$i*self::MAX_PRODUCTS_BATCH,self::MAX_PRODUCTS_BATCH);
+                }
+                $this->syncProcess->sync($productsInBatch);
+                $numOfBatches--;
+                $i++;
+                sleep(0.75);
+            }
             $code = 200;
             $result = $this->prepareResult($result, $code);
             $this->logger->info('Products Successfully Synchronized');

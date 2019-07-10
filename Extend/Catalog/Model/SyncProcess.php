@@ -8,7 +8,6 @@ use Extend\Catalog\Gateway\Request\ProductsRequest;
 
 class SyncProcess
 {
-    const MAX_PRODUCTS_BATCH = 250;
     protected $productsRequest;
 
     public function __construct(
@@ -22,17 +21,8 @@ class SyncProcess
 
         $productsToCreate = $this->processProducts($storeProducts);
 
-        $numOfBatches = ceil(sizeof($productsToCreate)/self::MAX_PRODUCTS_BATCH);
+        $this->productsRequest->create($productsToCreate);
 
-        for ($i = 0 ; $i < $numOfBatches ; $i++){
-            if($i === ($numOfBatches-1)){
-                $productsInBatch = array_slice($productsToCreate,$i*self::MAX_PRODUCTS_BATCH);
-            }else{
-                $productsInBatch = array_slice($productsToCreate,$i*self::MAX_PRODUCTS_BATCH,self::MAX_PRODUCTS_BATCH);
-            }
-            $this->productsRequest->create($productsInBatch);
-            sleep(0.75);
-        }
     }
 
     private function processProducts($storeProducts){
