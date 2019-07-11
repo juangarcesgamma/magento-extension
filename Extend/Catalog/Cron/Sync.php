@@ -26,7 +26,7 @@ class Sync
         $data = [];
 
         foreach ($products as $product){
-            $data[] = $product->getSku().', '.$product->getName().', '.$product->getQty().', '.$product->getPrice();
+            $data[] = $product->getSku().', '.$product->getName().', '.$product->getPrice();
         }
 
         $currentDateTime = date("Y-m-d_H.i");
