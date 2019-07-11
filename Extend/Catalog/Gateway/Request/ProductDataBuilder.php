@@ -33,10 +33,11 @@ class ProductDataBuilder
 
     public function build($productSubject)
     {
+
         $data = [
             'title' => (string)$productSubject->getName(),
             'description' => (string)$productSubject->getShortDescription(),
-            'price' => $this->formatPrice($productSubject->getPrice()),
+            'price' => $this->formatPrice($productSubject->getFinalPrice()),
             'referenceId' => (string)$productSubject->getSku(),
             'category' => $this->getCategories($productSubject),
             'imageUrl' => (string)$productSubject->getImage(),
@@ -109,18 +110,19 @@ class ProductDataBuilder
     }
 
     /**
-     * @param float $price
+     * @param $price
      * @return int
      */
-    private function formatPrice(float $price)
+    private function formatPrice($price)
     {
+        if(!empty($price)){
+            $floatPrice = floatval($price);
 
-        $floatPrice = floatval($price);
+            $formattedPrice = number_format($floatPrice, 2, '', '');
 
-        $formattedPrice = number_format($floatPrice, 2, '', '');
-
-        return intval($formattedPrice);
-
+            return intval($formattedPrice);
+        }
+        return 0;
     }
 
 }
