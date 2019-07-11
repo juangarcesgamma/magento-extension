@@ -45,10 +45,11 @@ define(
                     url : this.options.url
                 })
                     .done(function(data) {
-                        restore(button,synMsg,cancelSync)
+                        restore(button,synMsg,cancelSync);
+                        $("#sync-time").text(data.msg);
                     })
                     .fail(function(jqXHR, textStatus, errorThrown) {
-                        restore(button,synMsg,cancelSync)
+                        restore(button,synMsg,cancelSync);
                         if(jqXHR.aborted){
                             return;
                         }
