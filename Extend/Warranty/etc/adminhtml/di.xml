@@ -16,11 +16,4 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="Extend\Warranty\Block\System\Config\SyncButton" type="Extend\Warranty\Block\System\Config\Button">
-        <arguments>
-            <argument name="id" xsi:type="string">syncButton</argument>
-            <argument name="label" xsi:type="string">Sync Products</argument>
-        </arguments>
-    </virtualType>
-
 </config>

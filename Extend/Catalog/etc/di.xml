@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Extend\Catalog\Api\ProductsCollectionInterface"
+                type="Extend\Catalog\Model\ProductsCollection"/>
+
+    <preference for="Extend\Catalog\Api\ConnectionInterface"
+                type="Extend\Catalog\Model\Connection"/>
+
+    <preference for="Extend\Catalog\Api\Data\UrlBuilderInterface"
+                type="Extend\Catalog\Model\UrlBuilder"/>
+
+</config>
