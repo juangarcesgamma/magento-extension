@@ -3,19 +3,26 @@
 namespace Extend\Catalog\ViewModel;
 
 use Magento\Catalog\Api\Data\ProductInterfaceFactory;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Extend\Warranty\Model\Product\Type as WarrantyType;
 
 class Warranty implements ArgumentInterface
 {
+
+    const ENABLE_EXTEND_PATH = 'warranty/enableExtend/enable';
     protected $productFactory;
+
+    protected $scopeConfig;
 
     public function __construct
     (
-        ProductInterfaceFactory $productFactory
+        ProductInterfaceFactory $productFactory,
+        ScopeConfigInterface $scopeConfig
     )
     {
         $this->productFactory = $productFactory;
+        $this->scopeConfig = $scopeConfig;
     }
 
     public function getWarranties(string $sku): array
@@ -69,21 +76,25 @@ class Warranty implements ArgumentInterface
         ];
         //END OF DUMMY PRODUCTS
 
-        $warranties = [];
 
-        foreach ($warrantiesData as $warrantyData) {
-            $warranty = $this->productFactory->create();
+        if($this->isExtendEnabled()){
+            $warranties = [];
 
-            $warranty
-                ->setPrice($this->deformatPrice($warrantyData['prices']['max']))
-                ->setName($warrantyData['title'])
-                ->setTypeId(WarrantyType::TYPE_CODE)
-                ->setSku($warrantyData['id'])
-                ->setCustomAttribute('warranty_length',$warrantyData['term_length']/12);
+            foreach ($warrantiesData as $warrantyData) {
+                $warranty = $this->productFactory->create();
 
-            $warranties[] = $warranty;
+                $warranty
+                    ->setPrice($this->deformatPrice($warrantyData['prices']['max']))
+                    ->setName($warrantyData['title'])
+                    ->setTypeId(WarrantyType::TYPE_CODE)
+                    ->setSku($warrantyData['id'])
+                    ->setCustomAttribute('warranty_length',$warrantyData['term_length']/12);
+
+                $warranties[] = $warranty;
+            }
+            return $warranties;
         }
-        return $warranties;
+        return [];
     }
 
     private function deformatPrice(int $price): float
@@ -93,5 +104,10 @@ class Warranty implements ArgumentInterface
         $price = substr_replace($price, '.', strlen($price) - 2, 0);
 
         return (float)$price;
+    }
+
+    public function isExtendEnabled()
+    {
+        return $this->scopeConfig->isSetFlag($this::ENABLE_EXTEND_PATH);
     }
 }
