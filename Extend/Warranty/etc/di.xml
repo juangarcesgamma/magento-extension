@@ -10,7 +10,9 @@
     <type name="Magento\Catalog\Model\Product\Type">
         <plugin name="warrantyTypeOptionInterceptor" type="Extend\Warranty\Plugin\WarrantyTypeOption" sortOrder="1"/>
     </type>
-
+    <type name="Extend\Catalog\Controller\Adminhtml\Products\Sync">
+        <plugin name="syncInterceptor" type="Extend\Warranty\Plugin\SyncAction" sortOrder="1"/>
+    </type>
     <preference for="Magento\Catalog\Block\Adminhtml\Product"
                 type="Extend\Warranty\Block\Adminhtml\Product" />
 
