@@ -5,9 +5,6 @@
     <preference for="Extend\Catalog\Api\ProductsCollectionInterface"
                 type="Extend\Catalog\Model\ProductsCollection"/>
 
-    <preference for="Extend\Catalog\Api\ConnectionInterface"
-                type="Extend\Catalog\Model\Connection"/>
-
     <preference for="Extend\Catalog\Api\Data\UrlBuilderInterface"
                 type="Extend\Catalog\Model\UrlBuilder"/>
 
