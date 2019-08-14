@@ -104,7 +104,7 @@ class Add
                 ->setTypeId(WarrantyType::TYPE_CODE)
                 ->setVisibility(1)
                 ->setAttributeSetId(4)
-                ->setSku($warrantyData['id'] . '-' . $id)
+                ->setSku($warrantyData['id'] . ':' . $id)
                 ->setId($id)
                 ->setWebsiteIds([$this->storeManager->getStore()->getWebsiteId()])
                 ->setStockData([
@@ -115,7 +115,8 @@ class Add
                     'is_in_stock' => 1,
                     'qty' => 10
                 ])
-                ->setStatus(1);
+                ->setStatus(1)
+                ->setCustomAttribute('assocProduct',$product->getId());
 
             $warranty->save();
 
@@ -130,7 +131,6 @@ class Add
 
                 $customerCart->addProduct($warranty, $params);
 
-                $customerCart->save();
             } catch (LocalizedException $e) {
 
                 $this->registry->register('isSecureArea', true);
