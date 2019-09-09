@@ -8,11 +8,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Data extends AbstractHelper
 {
-    CONST MODE = 'warranty/authentication/auth_mode';
-    CONST APIKEY = 'warranty/authentication/api_key';
-    CONST SAND_APIKEY = 'warranty/authentication/sandbox_api_key';
-    CONST STOREID = 'warranty/authentication/store_id';
-    CONST SAND_STOREID = 'warranty/authentication/sandbox_store_id';
+    CONST BASEPATH = 'warranty/authentication/';
 
     protected $scopeConfig;
 
@@ -26,29 +22,9 @@ class Data extends AbstractHelper
         parent::__construct($context);
     }
 
-    public function getExtendApiKey(){
-        $mode = $this->getExtendMode();
-
-        if($mode){
-            return $this->scopeConfig->getValue(self::APIKEY);
-        }else{
-            return $this->scopeConfig->getValue(self::SAND_APIKEY);
-        }
+    public function getValue(string $field)
+    {
+        $path = self::BASEPATH . $field;
+        return $this->scopeConfig->getValue($path);
     }
-
-    public function getExtendStoreID(){
-        $mode = $this->getExtendMode();
-
-        if($mode){
-            return $this->scopeConfig->getValue(self::STOREID);
-        }else{
-            return $this->scopeConfig->getValue(self::SAND_STOREID);
-        }
-    }
-
-    public function getExtendMode(){
-        return $this->scopeConfig->getValue(self::MODE);
-    }
-
-
 }
