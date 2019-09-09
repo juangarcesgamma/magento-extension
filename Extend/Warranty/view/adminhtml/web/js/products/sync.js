@@ -7,6 +7,13 @@ define(
     function($, alert, $t) {
         'use strict';
 
+        function restore(button,msg,cancel) {
+            button.text('Sync Products');
+            button.attr("disabled", false);
+            msg.show();
+            cancel.hide();
+        }
+
         $.widget('extend.productSync', {
             options: {
                 url: ''
@@ -19,26 +26,41 @@ define(
 
             _bind: function() {
                 $(this.element).click(this.syncProducts.bind(this));
-            },
 
+            },
             syncProducts: function(event) {
                 event.preventDefault();
                 var button =  $(this.element);
+                var synMsg = $("#sync-msg");
+                var cancelSync = $("#cancel_sync");
+
                 button.text('Sync in progress...');
                 button.attr("disabled", true);
 
-                $.get({
+                synMsg.hide();
+                cancelSync.show();
+
+
+                var ajaxCall = $.get({
                     url : this.options.url
                 })
                     .done(function(data) {
-                        button.text('Sync Products');
-                        button.attr("disabled", false);
+                        restore(button,synMsg,cancelSync);
+                        $("#sync-time").text(data.msg);
                     })
                     .fail(function(jqXHR, textStatus, errorThrown) {
-                        button.text('Sync Products');
-                        button.attr("disabled", false);
+                        restore(button,synMsg,cancelSync);
+                        if(jqXHR.aborted){
+                            return;
+                        }
                     });
-            }
+
+                $(cancelSync).bind( "click", function() {
+                    ajaxCall.abort();
+                });
+            },
+
+
         });
 
         return $.extend.productSync;

@@ -3,6 +3,9 @@
 namespace Extend\Warranty\Block\System\Config\Products;
 
 use Magento\Config\Block\System\Config\Form\Field;
+use Magento\Backend\Block\Template\Context;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Extend\Catalog\Controller\Adminhtml\Products\Sync;
 
 class Button extends Field
 {
@@ -20,5 +23,10 @@ class Button extends Field
         $html .= $this->toHtml();
         $html .= '</td>';
         return $html;
+    }
+
+
+    public function getLastSync(){
+        return $this->_scopeConfig->getValue(Sync::LAST_SYNC_PATH);
     }
 }
