@@ -8,7 +8,7 @@ use Extend\Catalog\Helper\Data as Config;
 class Keys
 {
     /**
-     * @var Config
+     * @var ConfigInterface
      */
     private $config;
 

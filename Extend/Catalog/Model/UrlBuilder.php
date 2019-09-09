@@ -9,6 +9,7 @@ use Extend\Catalog\Helper\Data as Config;
 
 class UrlBuilder implements UrlBuilderInterface
 {
+
     const DS = DIRECTORY_SEPARATOR;
 
     protected $config;
