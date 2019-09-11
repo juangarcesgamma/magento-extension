@@ -5,10 +5,14 @@
     <preference for="Extend\Catalog\Api\ProductsCollectionInterface"
                 type="Extend\Catalog\Model\ProductsCollection"/>
 
-    <preference for="Extend\Catalog\Api\ConnectionInterface"
-                type="Extend\Catalog\Model\Connection"/>
-
     <preference for="Extend\Catalog\Api\Data\UrlBuilderInterface"
                 type="Extend\Catalog\Model\UrlBuilder"/>
 
+    <type name="Magento\Checkout\Controller\Cart\Add">
+        <plugin name="addWarrantyCart" type="Extend\Catalog\Plugin\Controller\Cart\Add"/>
+    </type>
+
+    <type name="Magento\Checkout\Controller\Onepage\Success">
+        <plugin name="sendWarrantyExtend" type="Extend\Catalog\Plugin\Controller\Onepage\Success"/>
+    </type>
 </config>
