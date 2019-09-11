@@ -5,6 +5,7 @@ namespace Extend\Catalog\Controller\Adminhtml\Products;
 use Magento\Backend\App\Action;
 use Magento\Framework\Controller\ResultFactory;
 use Extend\Catalog\Model\SyncProcess;
+use Magento\Framework\Filesystem\File\Read;
 use Psr\Log\LoggerInterface;
 use Extend\Catalog\Model\ProductsCollection;
 use Magento\Framework\App\Config\Storage\Writer;
@@ -21,6 +22,8 @@ class Sync extends Action
     protected $logger;
     protected $syncProcess;
     protected $productsCollection;
+    protected $fileCsv;
+    protected $moduleReader;
 
     protected $configWriter;
     protected $timezone;
@@ -52,20 +55,22 @@ class Sync extends Action
         $storeProducts = $this->productsCollection->getProducts();
 
         try {
-            $numOfBatches = ceil(sizeof($storeProducts) / self::MAX_PRODUCTS_BATCH);
-            $i = 0;
-            while ($numOfBatches > 0) {
-                if ($numOfBatches === 1) {
-                    $productsInBatch = array_slice($storeProducts, $i * self::MAX_PRODUCTS_BATCH);
-                } else {
-                    $productsInBatch = array_slice($storeProducts, $i * self::MAX_PRODUCTS_BATCH, self::MAX_PRODUCTS_BATCH);
-                }
-                $this->syncProcess->sync($productsInBatch);
-                $numOfBatches--;
-                $i++;
-                sleep(0.75);
+            $totalBatches = ceil(sizeof($storeProducts) / self::MAX_PRODUCTS_BATCH);
+            $currentBatch = (int)$this->getRequest()->getParam('currentBatchesProcessed');
+
+            if ($currentBatch === $totalBatches) {
+                $productsInBatch = array_slice($storeProducts, $currentBatch * self::MAX_PRODUCTS_BATCH);
+            } else {
+                $productsInBatch = array_slice($storeProducts, $currentBatch * self::MAX_PRODUCTS_BATCH, self::MAX_PRODUCTS_BATCH);
             }
-            $this->logger->info('Products Successfully Synchronized');
+            $this->syncProcess->sync($productsInBatch);
+
+            $currentBatch++;
+
+            $data = [
+                'totalBatches' => (int)$totalBatches,
+                'currentBatchesProcessed' => (int)$currentBatch
+                ];
             $date = $this->timezone->formatDate(null, 1, true);
             $data = ['msg' => $date];
             $this->configWriter->save(self::LAST_SYNC_PATH, $date);
