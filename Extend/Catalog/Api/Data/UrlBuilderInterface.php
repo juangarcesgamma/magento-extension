@@ -4,7 +4,7 @@ namespace Extend\Catalog\Api\Data;
 
 interface UrlBuilderInterface
 {
-    const SANDBOX_URL = 'https://api-stage.helloextend.com/';
+    const SANDBOX_URL = 'https://api-demo.helloextend.com/';
 
     const LIVE_URL = 'https://api.helloextend.com/';
 

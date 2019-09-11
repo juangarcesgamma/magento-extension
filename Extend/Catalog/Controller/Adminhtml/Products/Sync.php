@@ -3,18 +3,20 @@
 namespace Extend\Catalog\Controller\Adminhtml\Products;
 
 use Magento\Backend\App\Action;
-use Magento\Framework\Controller\Result\Json as JsonResult;
 use Magento\Framework\Controller\ResultFactory;
 use Extend\Catalog\Model\SyncProcess;
 use Magento\Framework\Filesystem\File\Read;
 use Psr\Log\LoggerInterface;
 use Extend\Catalog\Model\ProductsCollection;
-use Magento\Framework\Module\Dir\Reader;
-use Magento\Framework\File\Csv;
+use Magento\Framework\App\Config\Storage\Writer;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Framework\App\Cache\Manager;
+
 
 class Sync extends Action
 {
-    const MAX_PRODUCTS_BATCH = 20;
+    const LAST_SYNC_PATH = 'warranty/products/lastSync';
+    const MAX_PRODUCTS_BATCH = 250;
     protected $_publicActions = ['extend/products/sync'];
     protected $resultFactory;
     protected $logger;
@@ -23,24 +25,28 @@ class Sync extends Action
     protected $fileCsv;
     protected $moduleReader;
 
+    protected $configWriter;
+    protected $timezone;
+    private $cacheManager;
+
     public function __construct(
         Action\Context $context,
         ResultFactory $resultFactory,
         LoggerInterface $logger,
         SyncProcess $syncProcess,
         ProductsCollection $productsCollection,
-        Csv $fileCsv,
-        Reader $moduleReader
-
+        Writer $configWriter,
+        TimezoneInterface $timezone,
+        Manager $cacheManager
     )
     {
         $this->productsCollection = $productsCollection;
         $this->resultFactory = $resultFactory;
         $this->logger = $logger;
         $this->syncProcess = $syncProcess;
-        $this->fileCsv = $fileCsv;
-        $this->moduleReader = $moduleReader;
-
+        $this->configWriter = $configWriter;
+        $this->timezone = $timezone;
+        $this->cacheManager = $cacheManager;
         parent::__construct($context);
     }
 
@@ -65,8 +71,11 @@ class Sync extends Action
                 'totalBatches' => (int)$totalBatches,
                 'currentBatchesProcessed' => (int)$currentBatch
                 ];
+            $date = $this->timezone->formatDate(null, 1, true);
+            $data = ['msg' => $date];
+            $this->configWriter->save(self::LAST_SYNC_PATH, $date);
+            $this->cacheManager->clean($this->cacheManager->getAvailableTypes());
             return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setHttpResponseCode(200)->setData($data);
-
         } catch (Exception $e) {
             $data = ['msg' => $e->getMessage()];
             return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setHttpResponseCode(500)->setData($data);

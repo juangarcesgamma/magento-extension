@@ -41,7 +41,7 @@ class UrlBuilder implements UrlBuilderInterface
      */
     public function getUri()
     {
-        return (string) $this->uri;
+        return (string)$this->uri;
     }
 
     /**
