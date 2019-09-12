@@ -33,14 +33,15 @@ class ProductDataBuilder
 
     public function build($productSubject)
     {
+        $description = !empty($productSubject->getShortDescription())? (string)$productSubject->getShortDescription() : 'No description';
+        $imgUrl = !empty($productSubject->getImage())? (string)$productSubject->getImage() : 'No image url';
 
         $data = [
             'title' => (string)$productSubject->getName(),
-            'description' => (string)$productSubject->getShortDescription(),
+            'description' => $description,
             'price' => $this->formatPrice($productSubject->getFinalPrice()),
             'referenceId' => (string)$productSubject->getSku(),
-            'category' => $this->getCategories($productSubject),
-            'imageUrl' => (string)$productSubject->getImage(),
+            'category' => $imgUrl,
             'identifiers' => [
                 'sku' => (string)$productSubject->getSku(),
                 'type' => (string)$productSubject->getTypeId()
