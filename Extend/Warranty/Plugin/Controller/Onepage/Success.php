@@ -1,6 +1,6 @@
 <?php
 
-namespace Extend\Catalog\Plugin\Controller\Onepage;
+namespace Extend\Warranty\Plugin\Controller\Onepage;
 
 use Magento\Checkout\Controller\Onepage\Success as SuperSuccess;
 use Magento\Framework\Exception\StateException;

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Extend\Catalog\Model;
+namespace Extend\Warranty\Model;
 
 
-use Extend\Catalog\Api\Data\UrlBuilderInterface;
+use Extend\Warranty\Api\Data\UrlBuilderInterface;
 use Extend\Catalog\Helper\Data as Config;
 
 class UrlBuilder implements UrlBuilderInterface

@@ -1,6 +1,6 @@
 <?php
 
-namespace Extend\Catalog\Controller\Adminhtml\Products;
+namespace Extend\Warranty\Controller\Adminhtml\Products;
 
 use Magento\Backend\App\Action;
 use Magento\Framework\Controller\ResultFactory;
@@ -71,7 +71,7 @@ class Sync extends Action
             $this->configWriter->save(self::LAST_SYNC_PATH, $date);
             $this->cacheManager->clean($this->cacheManager->getAvailableTypes());
             return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setHttpResponseCode(200)->setData($data);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $data = ['msg' => $e->getMessage()];
             return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setHttpResponseCode(500)->setData($data);
         }

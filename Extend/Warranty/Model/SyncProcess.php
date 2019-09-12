@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Extend\Catalog\Model;
+namespace Extend\Warranty\Model;
 
 
 use Extend\Catalog\Gateway\Request\ProductsRequest;
@@ -20,7 +20,6 @@ class SyncProcess
     public function sync($storeProducts)
     {
 
-        //$productsToCreate = $this->processProducts($storeProducts);
         $productsToCreate = $storeProducts;
         $this->productsRequest->create($productsToCreate);
 

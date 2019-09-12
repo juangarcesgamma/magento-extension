@@ -1,6 +1,6 @@
 <?php
 
-namespace Extend\Catalog\Model;
+namespace Extend\Warranty\Model;
 
 use Extend\Catalog\Helper\Data as Config;
 
@@ -8,7 +8,7 @@ use Extend\Catalog\Helper\Data as Config;
 class Keys
 {
     /**
-     * @var ConfigInterface
+     * @var Config
      */
     private $config;
 

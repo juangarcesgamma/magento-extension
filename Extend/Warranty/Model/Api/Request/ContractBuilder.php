@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Extend\Catalog\Gateway\Request;
+namespace Extend\Warranty\Model\Api\Request;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Catalog\Api\ProductRepositoryInterface;

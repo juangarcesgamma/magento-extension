@@ -1,6 +1,6 @@
 <?php
 
-namespace Extend\Catalog\Api;
+namespace Extend\Warranty\Api;
 
 interface ProductsCollectionInterface
 {

@@ -2,7 +2,7 @@
 
 namespace Extend\Catalog\Model;
 
-use Extend\Catalog\Api\ProductsCollectionInterface;
+use Extend\Warranty\Api\ProductsCollectionInterface;
 use Magento\Catalog\Model\Product\Type;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 

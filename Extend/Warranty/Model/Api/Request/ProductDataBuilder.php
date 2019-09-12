@@ -1,6 +1,6 @@
 <?php
 
-namespace Extend\Catalog\Gateway\Request;
+namespace Extend\Catalog\Model\Api\Request;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;

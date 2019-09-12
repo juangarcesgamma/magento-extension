@@ -1,6 +1,6 @@
 <?php
 
-namespace Extend\Catalog\Api\Data;
+namespace Extend\Warranty\Api\Data;
 
 interface UrlBuilderInterface
 {

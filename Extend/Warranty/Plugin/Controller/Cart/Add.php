@@ -1,6 +1,6 @@
 <?php
 
-namespace Extend\Catalog\Plugin\Controller\Cart;
+namespace Extend\Warranty\Plugin\Controller\Cart;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Checkout\Controller\Cart\Add as SuperAdd;

@@ -16,5 +16,18 @@
     <preference for="Magento\Catalog\Block\Adminhtml\Product"
                 type="Extend\Warranty\Block\Adminhtml\Product" />
 
+    <preference for="Extend\Warranty\Api\ProductsCollectionInterface"
+                type="Extend\Warranty\Model\ProductsCollection"/>
+
+    <preference for="Extend\Warranty\Api\Data\UrlBuilderInterface"
+                type="Extend\Warranty\Model\UrlBuilder"/>
+
+    <type name="Magento\Checkout\Controller\Cart\Add">
+        <plugin name="addWarrantyCart" type="Extend\Warranty\Plugin\Controller\Cart\Add"/>
+    </type>
+
+    <type name="Magento\Checkout\Controller\Onepage\Success">
+        <plugin name="sendWarrantyExtend" type="Extend\Warranty\Plugin\Controller\Onepage\Success"/>
+    </type>
 
 </config>
