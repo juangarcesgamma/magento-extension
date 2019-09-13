@@ -1,10 +1,10 @@
 <?php
 
-namespace Extend\Catalog\Gateway\Request;
+namespace Extend\Warranty\Model\Api\Sync\Contract;
 
-use Extend\Catalog\Model\Keys;
+use Extend\Warranty\Model\Keys;
 use Magento\Framework\HTTP\ZendClient;
-use Extend\Catalog\Api\Data\UrlBuilderInterface;
+use Extend\Warranty\Api\Data\UrlBuilderInterface;
 use Extend\Catalog\Helper\Data as Config;
 use Psr\Log\LoggerInterface;
 

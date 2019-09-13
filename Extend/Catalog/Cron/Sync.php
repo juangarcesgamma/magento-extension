@@ -3,7 +3,7 @@
 namespace Extend\Catalog\Cron;
 
 use Psr\Log\LoggerInterface;
-use Extend\Catalog\Api\ProductsCollectionInterface;
+use Extend\Warranty\Api\SyncInterface;
 
 class Sync
 {
@@ -13,7 +13,7 @@ class Sync
     public function __construct
     (
         LoggerInterface $logger,
-        ProductsCollectionInterface $productsCollection
+        SyncInterface $productsCollection
     )
     {
         $this->logger = $logger;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Extend\Catalog\ViewModel;
+namespace Extend\Warranty\ViewModel;
 
 use Magento\Catalog\Api\Data\ProductInterfaceFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;

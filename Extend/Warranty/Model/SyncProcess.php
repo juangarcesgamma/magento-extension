@@ -4,8 +4,8 @@
 namespace Extend\Warranty\Model;
 
 
-use Extend\Catalog\Controller\Adminhtml\Products\Sync;
-use Extend\Catalog\Gateway\Request\ProductsRequest;
+use Extend\Warranty\Controller\Adminhtml\Products\Sync;
+use Extend\Warranty\Model\Api\Sync\Product\ProductsRequest;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class SyncProcess
@@ -27,11 +27,7 @@ class SyncProcess
     {
 
         $productsToSync = $this->processProducts($storeProducts);
-        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/test.log');
-        $logger = new \Zend\Log\Logger();
-        $logger->addWriter($writer);
-        $logger->info(count($productsToSync['productsToUpdate']));
-        $logger->info(count($productsToSync['productsToCreate']));
+
         if(!empty($productsToSync['productsToCreate'])){
             $this->productsRequest->create($productsToSync['productsToCreate']);
         }

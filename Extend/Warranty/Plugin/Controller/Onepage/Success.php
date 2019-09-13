@@ -7,9 +7,9 @@ use Magento\Framework\Exception\StateException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Extend\Warranty\Model\Product\Type as WarrantyType;
-use Extend\Catalog\Gateway\Request\ContractsRequest;
+use Extend\Warranty\Model\Api\Sync\Contract\ContractsRequest;
 use Magento\Checkout\Model\Session;
-use Extend\Catalog\Gateway\Request\ContractBuilder;
+use Extend\Warranty\Model\Api\Request\ContractBuilder;
 use Magento\Framework\Registry;
 
 class Success

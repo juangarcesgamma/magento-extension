@@ -1,6 +1,6 @@
 <?php
 
-namespace Extend\Catalog\Helper;
+namespace Extend\Warranty\Helper\Api;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;

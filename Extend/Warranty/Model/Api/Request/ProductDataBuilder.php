@@ -1,6 +1,6 @@
 <?php
 
-namespace Extend\Catalog\Model\Api\Request;
+namespace Extend\Warranty\Model\Api\Request;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
