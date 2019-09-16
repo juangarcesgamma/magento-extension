@@ -11,7 +11,7 @@ use Extend\Warranty\Api\TimeUpdaterInterface;
 
 class Sync extends Action
 {
-    protected $_publicActions = ['extend/products/sync'];
+    const ADMIN_RESOURCE = 'Extend_Warranty::product_manual_sync';
 
     protected $resultFactory;
     protected $logger;
@@ -43,7 +43,7 @@ class Sync extends Action
     public function execute()
     {
         if (!isset($this->totalBatches)) {
-            $this->totalBatches = ceil($this->sync->getTotalOfProducts() / SyncInterface::MAX_PRODUCTS_BATCH);
+            $this->totalBatches = (int)ceil($this->sync->getTotalOfProducts() / SyncInterface::MAX_PRODUCTS_BATCH);
         }
 
         $currentBatch = (int)$this->getRequest()->getParam('currentBatchesProcessed');
@@ -62,6 +62,7 @@ class Sync extends Action
 
             if ($currentBatch == $this->totalBatches) {
                 $data['msg'] = $this->timeUpdater->updateLastSync();
+                unset($this->totalBatches);
             }
 
             return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setHttpResponseCode(200)->setData($data);

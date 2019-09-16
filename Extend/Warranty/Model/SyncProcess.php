@@ -3,10 +3,9 @@
 
 namespace Extend\Warranty\Model;
 
-
-use Extend\Warranty\Controller\Adminhtml\Products\Sync;
 use Extend\Warranty\Model\Api\Sync\Product\ProductsRequest;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Extend\Warranty\Api\TimeUpdaterInterface;
 
 class SyncProcess
 {
@@ -44,15 +43,15 @@ class SyncProcess
         //Logic for remove products already in the api
         foreach ($storeProducts as $key => $product) {
             $lastModifiedDate = $product->getUpdatedAt();
-            $lastGlobalSyncDate = $this->scopeConfig->getValue(Sync::LAST_SYNC_PATH);
-            $productIsSynced = (bool)$product->getCustomAttribute('is_product_synced')->getValue();
+            $lastGlobalSyncDate = $this->scopeConfig->getValue(TimeUpdaterInterface::LAST_SYNC_PATH);
+            $productIsSynced = (bool)$product->getCustomAttribute('is_product_synced');
 
             //If product has a sync flag
             if (!is_null($productIsSynced)) {
                 //If product is already synced and it is up to date then no sync
                 if ($productIsSynced && (!is_null($lastModifiedDate) && $lastModifiedDate < $lastGlobalSyncDate)) {
                     unset($storeProducts[$key]);
-                    //If product is already synced but it is oudated then update and not create
+                    //If product is already synced but it is outdated then update and not create
                 } else if ($productIsSynced && (!is_null($lastModifiedDate) && $lastModifiedDate >= $lastGlobalSyncDate)) {
                     $productsOutdated[] = $product;
                     unset($storeProducts[$key]);

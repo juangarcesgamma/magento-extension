@@ -26,7 +26,10 @@
                 type="Extend\Warranty\Model\Api\TimeUpdater"/>
 
     <preference for="Extend\Warranty\Api\Data\UrlBuilderInterface"
-                type="Extend\Warranty\Model\UrlBuilder"/>
+                type="Extend\Warranty\Model\Api\UrlBuilder"/>
+
+    <preference for="Extend\Warranty\Api\ConnectorInterface"
+                type="Extend\Warranty\Model\Api\Connector"/>
 
     <type name="Magento\Checkout\Controller\Cart\Add">
         <plugin name="addWarrantyCart" type="Extend\Warranty\Plugin\Controller\Cart\Add"/>

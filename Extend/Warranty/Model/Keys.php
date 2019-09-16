@@ -2,7 +2,7 @@
 
 namespace Extend\Warranty\Model;
 
-use Extend\Catalog\Helper\Data as Config;
+use Extend\Warranty\Helper\Api\Data as Config;
 
 
 class Keys

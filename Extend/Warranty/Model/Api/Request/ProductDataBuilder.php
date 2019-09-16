@@ -41,7 +41,8 @@ class ProductDataBuilder
             'description' => $description,
             'price' => $this->formatPrice($productSubject->getFinalPrice()),
             'referenceId' => (string)$productSubject->getSku(),
-            'category' => $imgUrl,
+            'imageUrl' => $imgUrl,
+            'category' => $this->getCategories($productSubject),
             'identifiers' => [
                 'sku' => (string)$productSubject->getSku(),
                 'type' => (string)$productSubject->getTypeId()

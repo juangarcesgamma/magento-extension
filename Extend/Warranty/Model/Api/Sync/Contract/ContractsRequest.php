@@ -5,7 +5,7 @@ namespace Extend\Warranty\Model\Api\Sync\Contract;
 use Extend\Warranty\Model\Keys;
 use Magento\Framework\HTTP\ZendClient;
 use Extend\Warranty\Api\Data\UrlBuilderInterface;
-use Extend\Catalog\Helper\Data as Config;
+use Extend\Warranty\Helper\Api\Data as Config;
 use Psr\Log\LoggerInterface;
 
 class ContractsRequest

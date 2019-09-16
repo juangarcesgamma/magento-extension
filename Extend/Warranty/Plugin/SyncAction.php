@@ -2,7 +2,7 @@
 
 namespace Extend\Warranty\Plugin;
 
-use Extend\Catalog\Controller\Adminhtml\Products\Sync;
+use Extend\Warranty\Controller\Adminhtml\Products\Sync;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;

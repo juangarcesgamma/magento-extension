@@ -2,7 +2,7 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
     <group id="default">
-        <job name="sync_products" instance="Extend\Catalog\Cron\Sync" method="execute">
+        <job name="sync_products" instance="Extend\Warranty\Cron\Sync" method="execute">
             <schedule>0 0 * * *</schedule>
         </job>
     </group>

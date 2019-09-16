@@ -1,6 +1,6 @@
 <?php
 
-namespace Extend\Catalog\Setup\Patch\Data;
+namespace Extend\Warranty\Setup\Patch\Data;
 
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;

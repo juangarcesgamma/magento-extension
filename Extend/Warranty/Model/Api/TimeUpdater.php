@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Extend\Warranty\Model;
+namespace Extend\Warranty\Model\Api;
 
 
 use Extend\Warranty\Api\TimeUpdaterInterface;

@@ -1,7 +1,8 @@
 <?php
 
-namespace Extend\Catalog\Setup\Patch\Data;
+namespace Extend\Warranty\Setup\Patch\Data;
 
+use Extend\Warranty\Model\Product\Type as WarrantyType;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Eav\Setup\EavSetupFactory;
@@ -51,7 +52,8 @@ class WarrantyLengthInstallPatch implements DataPatchInterface
                 'is_filterable_in_grid' => false,
                 'visible' => true,
                 'is_html_allowed_on_front' => true,
-                'visible_on_front' => true
+                'visible_on_front' => true,
+                'apply_to'=> WarrantyType::TYPE_CODE
             ]
         );
 

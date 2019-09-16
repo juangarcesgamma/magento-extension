@@ -8,7 +8,7 @@ namespace Extend\Warranty\Plugin;
 
 
 use Extend\Warranty\Helper\ConnectionData;
-use Extend\Warranty\Model\Connector;
+use Extend\Warranty\Api\ConnectorInterface;
 use Magento\Framework\Message\ManagerInterface;
 
 class ValidateCredentialPlugin
@@ -17,7 +17,7 @@ class ValidateCredentialPlugin
     protected $connectionData;
     protected $messageManager;
 
-    public function __construct(Connector $connection, ConnectionData $connectionData, ManagerInterface $messageManager)
+    public function __construct(ConnectorInterface $connection, ConnectionData $connectionData, ManagerInterface $messageManager)
     {
         $this->connection = $connection;
         $this->connectionData = $connectionData;
