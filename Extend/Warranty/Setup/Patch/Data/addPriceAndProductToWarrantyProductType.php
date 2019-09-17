@@ -61,28 +61,5 @@ class addPriceAndProductToWarrantyProductType implements DataPatchInterface
                 );
             }
         }
-
-        $eavSetup->addAttribute(
-            \Magento\Catalog\Model\Product::ENTITY,
-            'assocProduct',
-            [
-                'type' => 'int',
-                'sort_order' => 50,
-                'label' => 'Associated Product',
-                'input' => 'text',
-                'visible' => true,
-                'required' => true,
-                'user_defined' => false,
-                'default' => '',
-                'searchable' => false,
-                'filterable' => false,
-                'comparable' => false,
-                'visible_on_front' => false,
-                'used_in_product_listing' => true,
-                'unique' => false,
-                'apply_to'=> WarrantyType::TYPE_CODE
-            ]
-        );
-
     }
 }
