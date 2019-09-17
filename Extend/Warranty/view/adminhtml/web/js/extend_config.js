@@ -14,5 +14,15 @@ require(['jquery'], function($){
             }
         });
         $("#warranty_authentication_auth_mode").change();
+
+        $("#warranty_enableExtend_enable").change(function () {
+            if($(this).val() == "1"){
+                $("#syncBtn").prop('disabled', false);
+            } else {
+                $("#syncBtn").prop('disabled', true);
+            }
+        });
+
+        $("#warranty_enableExtend_enable").change();
     });
 });

@@ -60,37 +60,6 @@ class ProductsRequest
 
     }
 
-    //Get
-    public function get($identifier)
-    {
-        return $this->getRequest($identifier);
-    }
-
-    private function getRequest($identifier)
-    {
-        try {
-            $this->prepareClient();
-            $uri = $this->client->getUri(true);
-            $uri .= '/' . $identifier;
-            $this->client->setMethod(ZendClient::GET);
-            $this->client->setUri($uri);
-            $response = $this->client->request();
-
-            return $this->processGetResponse($response);
-        } catch (\Zend_Http_Client_Exception $e) {
-            $this->logger->error($e->getMessage(), ['exception' => $e]);
-            return null;
-        }
-    }
-
-    private function processGetResponse(\Zend_Http_Response $response)
-    {
-        if ($response->isError()) {
-            return false;
-        } else {
-            return true;
-        }
-    }
 
     //Create
     public function create($products)
@@ -98,11 +67,21 @@ class ProductsRequest
         $this->createRequest($products);
     }
 
+    //Update
+    public function update($products)
+    {
+        foreach ($products as $product) {
+            $this->updateRequest($product);
+        }
+    }
+
     private function createRequest($products)
     {
         try {
             $this->prepareClient();
+
             $uri = $this->client->getUri(true);
+
             //Batch flag
             $uri .= '?batch=1';
             $data = [];
@@ -113,8 +92,36 @@ class ProductsRequest
                 ->setUri($uri)
                 ->setMethod(ZendClient::POST)
                 ->setRawData(json_encode($data), 'application/json');
+
             $response = $this->client->request();
-            $this->processCreateResponse($response);
+
+            if($this->processCreateResponse($response)){
+                foreach ($products as $product) {
+                    $product->setCustomAttribute('is_product_synced', true);
+                    $product->save();
+                }
+            }
+        } catch (\Zend_Http_Client_Exception $e) {
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+        }
+    }
+
+    private function updateRequest($product)
+    {
+        try {
+            $buildedProduct = $this->productDataBuilder->build($product);
+            $this->prepareClient();
+            $uri = $this->client->getUri(true);
+            $uri .= '/' . $product->getSku();
+            $this->client->setMethod(ZendClient::PUT)
+                ->setRawData(json_encode($buildedProduct), 'application/json');;
+            $this->client->setUri($uri);
+            $response = $this->client->request();
+
+            if($this->processPutResponse($response)){
+                $product->setCustomAttribute('is_product_synced', true);
+                $product->save();
+            }
         } catch (\Zend_Http_Client_Exception $e) {
             $this->logger->error($e->getMessage(), ['exception' => $e]);
         }
@@ -122,14 +129,26 @@ class ProductsRequest
 
     private function processCreateResponse(\Zend_Http_Response $response)
     {
-
         if ($response->isError()) {
             $res = json_decode($response->getBody(), true);
             $this->logger->error($res['message']);
             throw new \Exception($res['message']);
 
         } elseif ($response->getStatus() === 201) {
-            $this->logger->info('Created product request successful');
+            $this->logger->info('Create product request successful');
+            return true;
+        }
+        return false;
+    }
+    private function processPutResponse(\Zend_Http_Response $response)
+    {
+        if ($response->isError()) {
+            $res = json_decode($response->getBody(), true);
+            $this->logger->error($res['message']);
+            throw new \Exception($res['message']);
+        } else {
+            $this->logger->info('Update product request successful');
+            return true;
         }
     }
 
