@@ -19,5 +19,24 @@
     <preference for="Magento\Catalog\Block\Adminhtml\Product"
                 type="Extend\Warranty\Block\Adminhtml\Product" />
 
+    <preference for="Extend\Warranty\Api\SyncInterface"
+                type="Extend\Warranty\Model\Product\Sync"/>
+
+    <preference for="Extend\Warranty\Api\TimeUpdaterInterface"
+                type="Extend\Warranty\Model\Api\TimeUpdater"/>
+
+    <preference for="Extend\Warranty\Api\Data\UrlBuilderInterface"
+                type="Extend\Warranty\Model\Api\UrlBuilder"/>
+
+    <preference for="Extend\Warranty\Api\ConnectorInterface"
+                type="Extend\Warranty\Model\Api\Connector"/>
+
+    <type name="Magento\Checkout\Controller\Cart\Add">
+        <plugin name="addWarrantyCart" type="Extend\Warranty\Plugin\Controller\Cart\Add"/>
+    </type>
+
+    <type name="Magento\Checkout\Controller\Onepage\Success">
+        <plugin name="sendWarrantyExtend" type="Extend\Warranty\Plugin\Controller\Onepage\Success"/>
+    </type>
 
 </config>
