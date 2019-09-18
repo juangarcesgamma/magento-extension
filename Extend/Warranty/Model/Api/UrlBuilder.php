@@ -25,7 +25,7 @@ class UrlBuilder implements UrlBuilderInterface
     /**
      * @return string
      */
-    public function build()
+    public function build(): string
     {
         $baseUrl = $this->config->getValue('auth_mode') ?
             static::LIVE_URL :
@@ -39,16 +39,16 @@ class UrlBuilder implements UrlBuilderInterface
     /**
      * @return string
      */
-    public function getUri()
+    public function getUri(): string
     {
-        return (string)$this->uri;
+        return (string) $this->uri;
     }
 
     /**
      * @param string $uri
      * @return $this
      */
-    public function setUri($uri)
+    public function setUri(string $uri): UrlBuilderInterface
     {
         $this->uri = $uri;
 

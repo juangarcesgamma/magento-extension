@@ -15,22 +15,22 @@ class Keys
     /**
      * @var null|string
      */
-    private $apiKey;
+    private $liveKey;
 
     /**
      * @var null|string
      */
-    private $storeID;
+    private $liveStoreID;
 
     /**
      * @var null|string
      */
-    private $sandbox_ApiKey;
+    private $sandboxKey;
 
     /**
      * @var null|string
      */
-    private $sandbox_storeID;
+    private $sandboxStoreID;
 
     public function __construct(
         Config $config
@@ -39,33 +39,40 @@ class Keys
         $this->config = $config;
     }
 
+    public function getKeys(): array
+    {
+        return $this->config->getValue('auth_mode') ?
+            $this->getLiveAccessKeys() :
+            $this->getSandboxAccessKeys();
+    }
+
     /**
      * @return array
      */
 
-    public function getLiveAccessKeys()
+    private function getLiveAccessKeys(): array
     {
-        if ($this->apiKey === null || $this->storeID === null) {
-            $this->apiKey = $this->config->getValue('api_key');
-            $this->storeID = $this->config->getValue('store_id');
+        if ($this->liveKey === null || $this->liveStoreID === null) {
+            $this->liveKey = $this->config->getValue('api_key');
+            $this->liveStoreID = $this->config->getValue('store_id');
         }
 
         return [
-            'api_key' => $this->apiKey,
-            'storeID' => $this->storeID
+            'api_key' => $this->liveKey,
+            'store_id' => $this->liveStoreID
         ];
     }
 
-    public function getSandboxAccessKeys()
+    private function getSandboxAccessKeys(): array
     {
-        if ($this->apiKey === null || $this->storeID === null) {
-            $this->sandbox_ApiKey = $this->config->getValue('sandbox_api_key');
-            $this->sandbox_storeID = $this->config->getValue('sandbox_store_id');
+        if ($this->sandboxKey === null || $this->sandboxStoreID === null) {
+            $this->sandboxKey = $this->config->getValue('sandbox_api_key');
+            $this->sandboxStoreID = $this->config->getValue('sandbox_store_id');
         }
 
         return [
-            'api_key' => $this->sandbox_ApiKey,
-            'storeID' => $this->sandbox_storeID
+            'api_key' => $this->sandboxKey,
+            'store_id' => $this->sandboxStoreID
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Extend\Warranty\Plugin\Controller\Cart;
 
+use Extend\Warranty\Helper\Data;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Checkout\Controller\Cart\Add as SuperAdd;
 use \Magento\Framework\App\Request\Http;
@@ -17,14 +18,47 @@ use Magento\Framework\Registry;
 
 class Add
 {
+    /**
+     * @var Http
+     */
     protected $request;
+
+    /**
+     * @var Cart
+     */
     protected $cart;
+
+    /**
+     * @var ProductFactory
+     */
     protected $productFactory;
+
+    /**
+     * @var FormKey
+     */
     protected $formKey;
+
+    /**
+     * @var ProductRepositoryInterface
+     */
     protected $productRepository;
+
+    /**
+     * @var StoreManagerInterface
+     */
     protected $storeManager;
+
+    /**
+     * @var Registry
+     */
     protected $registry;
+
+    /**
+     * @var ResourceConnection
+     */
     protected $connection;
+
+    protected $helper;
 
     public function __construct
     (
@@ -35,7 +69,8 @@ class Add
         ProductRepositoryInterface $productRepository,
         StoreManagerInterface $storeManager,
         Registry $registry,
-        ResourceConnection $connection
+        ResourceConnection $connection,
+        Data $helper
     )
     {
         $this->request = $request;
@@ -46,12 +81,13 @@ class Add
         $this->storeManager = $storeManager;
         $this->registry = $registry;
         $this->connection = $connection;
+        $this->helper = $helper;
 
     }
 
     public function beforeExecute(SuperAdd $subject)
     {
-        $productId = $this->request->getPost('product');
+        /*$productId = $this->request->getPost('product');
 
         try {
             $product = $this->productRepository->getById($productId);
@@ -78,7 +114,8 @@ class Add
                         599
                     ]
                 ],
-                'products' => ["24-MB03",
+                'products' => [
+                    "24-MB03",
                     "24-MB04",
                     "240-LV04",
                     "MH01-XS-Black"
@@ -99,7 +136,7 @@ class Add
             $id = $queryResult['LastID'] + 1;
 
             $warranty
-                ->setPrice($this->deformatPrice($warrantyData['prices']['max']))
+                ->setPrice($this->helper->removeFormatPrice($warrantyData['prices']['max']))
                 ->setName($warrantyData['title'] . ' - ' . $id)
                 ->setTypeId(WarrantyType::TYPE_CODE)
                 ->setVisibility(1)
@@ -138,17 +175,6 @@ class Add
                 return null;
             }
         }
-        return null;
+        return null;*/
     }
-
-    private function deformatPrice(int $price): float
-    {
-        $price = (string)$price;
-
-        $price = substr_replace($price, '.', strlen($price) - 2, 0);
-
-        return (float)$price;
-    }
-
-
 }

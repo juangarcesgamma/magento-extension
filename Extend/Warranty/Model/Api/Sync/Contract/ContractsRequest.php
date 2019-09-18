@@ -2,71 +2,80 @@
 
 namespace Extend\Warranty\Model\Api\Sync\Contract;
 
+use Extend\Warranty\Api\ConnectorInterface;
 use Extend\Warranty\Model\Keys;
-use Magento\Framework\HTTP\ZendClient;
 use Extend\Warranty\Api\Data\UrlBuilderInterface;
 use Extend\Warranty\Helper\Api\Data as Config;
+use Magento\Framework\Serialize\Serializer\Json;
 use Psr\Log\LoggerInterface;
 
 class ContractsRequest
 {
-    const URI = '/stores/%s/contracts';
+    const ENDPOINT_URI = 'contracts';
 
+    /**
+     * @var Keys
+     */
     protected $keys;
+
+    /**
+     * @var UrlBuilderInterface
+     */
     protected $urlBuilder;
-    protected $client;
+
+    /**
+     * @var ConnectorInterface
+     */
+    protected $connector;
+
+    /**
+     * @var Config
+     */
     protected $config;
+
+    /**
+     * @var Json
+     */
+    protected $jsonSerializer;
+
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
 
     public function __construct(
         Keys $keys,
         UrlBuilderInterface $urlBuilder,
-        ZendClient $client,
+        ConnectorInterface $connector,
         Config $config,
+        Json $jsonSerializer,
         LoggerInterface $logger
     )
     {
         $this->keys = $keys;
         $this->urlBuilder = $urlBuilder;
-        $this->client = $client;
+        $this->connector = $connector;
         $this->config = $config;
+        $this->jsonSerializer = $jsonSerializer;
         $this->logger = $logger;
     }
 
-    public function prepareClient()
-    {
-
-        $accessKeys = $this->config->getValue('auth_mode') ?
-            $this->keys->getLiveAccessKeys() :
-            $this->keys->getSandboxAccessKeys();
-
-        $uriWithStore = sprintf(self::URI, $accessKeys['storeID']);
-
-        $uri = $this->urlBuilder->setUri($uriWithStore)->build();
-
-        $this->client
-            ->setUri($uri)
-            ->setHeaders([
-                'Accept' => ' application/json',
-                'Content-Type' => ' application/json',
-                'X-Extend-Access-Token' => $accessKeys['api_key']
-            ]);
-
-    }
-
-    public function create($contract)
+    public function create($contract): void
     {
         $this->createRequest($contract);
     }
 
-    private function createRequest($contract)
+    private function createRequest($contract): void
     {
         try {
-            $this->client
-                ->setMethod(ZendClient::POST)
-                ->setRawData(json_encode($contract), 'application/json');
-            $response = $this->client->request();
-            $this->processCreateResponse($response, $contract);
+            $response = $this->connector
+                ->call(
+                    self::ENDPOINT_URI,
+                    \Zend_Http_Client::POST,
+                    $contract
+                );
+
+            $this->processCreateResponse($response);
 
         } catch (\Zend_Http_Client_Exception $e) {
 
@@ -74,14 +83,14 @@ class ContractsRequest
         }
     }
 
-    private function processCreateResponse(\Zend_Http_Response $response, $contract)
+    private function processCreateResponse(\Zend_Http_Response $response): void
     {
         if ($response->isError()) {
-            $res = json_decode($response->getBody(), true);
+            $res = $this->jsonSerializer->unserialize($response->getBody());
             $this->logger->error('Contract Request Fail',$res);
 
         } elseif ($response->getStatus() === 201) {
-            $res = json_decode($response->getBody(), true);
+            $res = $this->jsonSerializer->unserialize($response->getBody());
             $this->logger->info(__('Contract #%1 request successful', $res['id']));
         }
     }

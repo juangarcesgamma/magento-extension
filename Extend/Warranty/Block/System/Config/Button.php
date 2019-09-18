@@ -15,10 +15,22 @@ class Button extends Field
      */
     protected $_template = 'Extend_Warranty::system/config/button.phtml';
 
+    /**
+     * @var string
+     */
     protected $id;
+
+    /**
+     * @var string
+     */
     protected $label;
 
-    public function __construct(Context $context, array $data = [], $id = '', $label = '')
+    public function __construct(
+        Context $context,
+        array $data = [],
+        $id = '',
+        $label = ''
+    )
     {
         $this->id = $id;
         $this->label = $label;

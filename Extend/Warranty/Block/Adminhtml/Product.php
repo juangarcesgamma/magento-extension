@@ -20,7 +20,7 @@ class Product extends SuperBlock
         );
 
         foreach ($types as $typeId => $type) {
-            if(!in_array($typeId, Data::NOT_ALLOWED_TYPES)) {
+            if (!in_array($typeId, Data::NOT_ALLOWED_TYPES)) {
                 $splitButtonOptions[$typeId] = [
                     'label' => __($type['label']),
                     'onclick' => "setLocation('" . $this->_getProductCreateUrl($typeId) . "')",

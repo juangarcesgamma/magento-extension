@@ -3,6 +3,7 @@
 
 namespace Extend\Warranty\Model\Api\Request;
 
+use Extend\Warranty\Helper\Data;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -12,23 +13,40 @@ use Magento\Directory\Api\CountryInformationAcquirerInterface;
 
 class ContractBuilder
 {
-
+    /**
+     * @var ProductRepositoryInterface
+     */
     protected $productRepository;
+
+    /**
+     * @var StoreManagerInterface
+     */
     protected $storeManager;
+
+    /**
+     * @var CountryInformationAcquirerInterface
+     */
     protected $countryInformationAcquirer;
+
+    /**
+     * @var Data
+     */
+    protected $helper;
 
 
     public function __construct
     (
         StoreManagerInterface $storeManager,
         ProductRepositoryInterface $productRepository,
-        CountryInformationAcquirerInterface $countryInformationAcquirer
+        CountryInformationAcquirerInterface $countryInformationAcquirer,
+        Data $helper
     )
     {
 
         $this->productRepository = $productRepository;
         $this->storeManager = $storeManager;
         $this->countryInformationAcquirer = $countryInformationAcquirer;
+        $this->helper = $helper;
     }
 
     /**
@@ -62,7 +80,7 @@ class ContractBuilder
 
             $contracts[$warranty->getSku()] = [
                 'transactionId' => $order->getId(),
-                'transactionTotal' => $this->formatPrice($order->getGrandTotal()),
+                'transactionTotal' => $this->helper->formatPrice($order->getGrandTotal()),
                 'customer' => [
                     'phone' => $billing->getTelephone(),
                     'email' => $order->getCustomerEmail(),
@@ -70,38 +88,52 @@ class ContractBuilder
                     'billing' => [
                         "postalCode" => $billing->getPostcode(),
                         "city" => $billing->getCity(),
-                        "country" => $this->countryInformationAcquirer->getCountryInfo($billing->getCountryId())->getThreeLetterAbbreviation(),
+                        "country" => $this->countryInformationAcquirer
+                            ->getCountryInfo(
+                                $billing->getCountryId()
+                            )->getThreeLetterAbbreviation(),
                         "region" => $billing->getRegion()
                     ],
                     'shipping' => [
                         "postalCode" => $shipping->getPostcode(),
                         "city" => $shipping->getCity(),
-                        "country" => $this->countryInformationAcquirer->getCountryInfo($shipping->getCountryId())->getThreeLetterAbbreviation(),
+                        "country" => $this->countryInformationAcquirer
+                            ->getCountryInfo(
+                                $shipping->getCountryId()
+                            )->getThreeLetterAbbreviation(),
                         "region" => $shipping->getRegion()
                     ]
                 ],
                 'product' => [
                     'referenceId' => $product->getSku(),
-                    'purchasePrice' => $this->formatPrice($product->getFinalPrice()),
+                    'purchasePrice' => $this->helper->formatPrice($product->getFinalPrice()),
                     'title' => $product->getName()
                 ],
                 'currency' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
                 'transactionDate' => strtotime($order->getCreatedAt()),
                 'plan' => [
-                    'purchasePrice' => $this->formatPrice($warranty->getFinalPrice()),
+                    'purchasePrice' => $this->helper->formatPrice($warranty->getFinalPrice()),
                     'planId' => $this->formatPlanId($warranty->getSku())
                 ]
             ];
 
             $billingStreet = $billing->getStreet();
             $billingFormat = $this->formatStreet($billingStreet);
-            $contracts[$warranty->getSku()]['customer']['billing'] = array_merge($contracts[$warranty->getSku()]['customer']['billing'],$billingFormat);
+
+            $contracts[$warranty->getSku()]['customer']['billing'] = array_merge(
+                $contracts[$warranty->getSku()]['customer']['billing'],
+                $billingFormat
+            );
 
             $shippingStreet = $shipping->getStreet();
             $shippingFormat = $this->formatStreet($shippingStreet);
-            $contracts[$warranty->getSku()]['customer']['shipping'] = array_merge($contracts[$warranty->getSku()]['customer']['shipping'],$shippingFormat);
 
-            if(!$order->getCustomerIsGuest()){
+            $contracts[$warranty->getSku()]['customer']['shipping'] = array_merge(
+                $contracts[$warranty->getSku()]['customer']['shipping'],
+                $shippingFormat
+            );
+
+            if (!$order->getCustomerIsGuest()) {
                 $contracts[$warranty->getSku()]['customer']['customerId'] = $order->getCustomerId();
             }
 
@@ -109,33 +141,21 @@ class ContractBuilder
         return $contracts;
     }
 
-    private function formatStreet($street)
+    private function formatStreet($street): array
     {
         $address = [];
 
         $address['address1'] = array_shift($street);
-        if(!empty($street)){
+        if (!empty($street)) {
             $address['address2'] = implode(",",$street);
         }
 
         return $address;
     }
 
-    private function formatPlanId($sku)
+    private function formatPlanId($sku): string
     {
         $formatSku = explode(":", $sku);
-        return $formatSku[0];
-    }
-
-    private function formatPrice($price)
-    {
-        if (!empty($price)) {
-            $floatPrice = floatval($price);
-
-            $formattedPrice = number_format($floatPrice, 2, '', '');
-
-            return intval($formattedPrice);
-        }
-        return 0;
+        return current($formatSku);
     }
 }

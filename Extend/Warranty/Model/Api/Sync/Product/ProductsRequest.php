@@ -4,6 +4,8 @@
 namespace Extend\Warranty\Model\Api\Sync\Product;
 
 use Extend\Warranty\Model\Api\Request\ProductDataBuilder;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\Serialize\Serializer\Json;
 use Psr\Log\LoggerInterface;
 
 use Extend\Warranty\Api\ConnectorInterface;
@@ -11,39 +13,65 @@ use Extend\Warranty\Api\ConnectorInterface;
 
 class ProductsRequest
 {
+    const ENDPOINT_URI = 'products';
+    /**
+     * @var ConnectorInterface
+     */
     protected $connector;
+
+    /**
+     * @var ProductDataBuilder
+     */
     protected $productDataBuilder;
+
+    /**
+     * @var Json
+     */
+    protected $jsonSerializer;
+
+    protected $productRepository;
+
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
 
     public function __construct
     (
         ConnectorInterface $connector,
         ProductDataBuilder $productDataBuilder,
+        Json $jsonSerializer,
+        ProductRepositoryInterface $productRepository,
         LoggerInterface $logger
     )
     {
         $this->connector = $connector;
         $this->productDataBuilder = $productDataBuilder;
+        $this->jsonSerializer = $jsonSerializer;
+        $this->productRepository = $productRepository;
         $this->logger = $logger;
     }
 
-    //Create
     /**
      * @param $products
      * @throws \Exception
      */
-    public function create($products)
+    public function create($products): void
     {
         $data = [];
+
         foreach ($products as $product) {
             $data[] = $this->productDataBuilder->build($product);
         }
 
-        $endpoint = '/products?batch=1';
-        $response  = $this->connector->call($endpoint, 'POST', $data);
+        $response  = $this->connector->call(
+            self::ENDPOINT_URI . '?batch=1',
+            \Zend_Http_Client::POST,
+            $data
+        );
 
         if ($response->isError()) {
-            $res = json_decode($response->getBody(), true);
+            $res = $this->jsonSerializer->unserialize($response->getBody());
             $this->logger->error($res['message']);
             throw new \Exception($res['message']);
 
@@ -52,27 +80,31 @@ class ProductsRequest
         }
     }
 
-    //Update
 
     /**
      * @param $products
      * @throws \Exception
      */
-    public function update($products)
+    public function update($products): void
     {
-        $endpoint = '/products/';
         foreach ($products as $product) {
             $data = $this->productDataBuilder->build($product);
-            $response  = $this->connector->call($endpoint . $product->getSku(), 'PUT', $data);
+            $response  = $this->connector->call(
+                self::ENDPOINT_URI . "/{$product->getSku()}",
+                \Zend_Http_Client::PUT,
+                $data
+            );
 
             if ($response->isError()) {
-                $res = json_decode($response->getBody(), true);
+                $res = $this->jsonSerializer->unserialize($response->getBody());
                 $this->logger->error($res['message']);
+
                 throw new \Exception($res['message']);
             } else {
                 $this->logger->info('Update product request successful');
                 $product->setCustomAttribute('is_product_synced', true);
-                $product->save();
+
+                $this->productRepository->save($product);
             }
         }
 

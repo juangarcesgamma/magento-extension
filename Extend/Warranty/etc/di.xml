@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <virtualType
-            name="Extend\Warranty\Model\ResourceModel\Indexer\Price"
-            type="Magento\Catalog\Model\ResourceModel\Product\Indexer\Price\SimpleProductPrice"/>
-
-    <type name="Magento\Catalog\Controller\Adminhtml\Product\NewAction">
-        <plugin name="warrantyInterceptor" type="Extend\Warranty\Plugin\WarrantyAction" sortOrder="1"/>
-    </type>
-    <type name="Magento\Catalog\Model\Product\Type">
-        <plugin name="warrantyTypeOptionInterceptor" type="Extend\Warranty\Plugin\WarrantyTypeOption" sortOrder="1"/>
-    </type>
-    <type name="Magento\Config\Model\Config">
-        <plugin name="admin_system_config_save_plugin" type="Extend\Warranty\Plugin\ValidateCredentialPlugin" sortOrder="1"/>
-    </type>
-    <type name="Extend\Catalog\Controller\Adminhtml\Products\Sync">
-        <plugin name="syncInterceptor" type="Extend\Warranty\Plugin\SyncAction" sortOrder="1"/>
-    </type>
     <preference for="Magento\Catalog\Block\Adminhtml\Product"
                 type="Extend\Warranty\Block\Adminhtml\Product" />
 
@@ -31,6 +15,19 @@
     <preference for="Extend\Warranty\Api\ConnectorInterface"
                 type="Extend\Warranty\Model\Api\Connector"/>
 
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\NewAction">
+        <plugin name="warrantyInterceptor" type="Extend\Warranty\Plugin\WarrantyAction" sortOrder="1"/>
+    </type>
+    <type name="Magento\Catalog\Model\Product\Type">
+        <plugin name="warrantyTypeOptionInterceptor" type="Extend\Warranty\Plugin\WarrantyTypeOption" sortOrder="1"/>
+    </type>
+    <type name="Magento\Config\Model\Config">
+        <plugin name="admin_system_config_save_plugin" type="Extend\Warranty\Plugin\ValidateCredentialPlugin" sortOrder="1"/>
+    </type>
+    <type name="Extend\Catalog\Controller\Adminhtml\Products\Sync">
+        <plugin name="syncInterceptor" type="Extend\Warranty\Plugin\SyncAction" sortOrder="1"/>
+    </type>
+
     <type name="Magento\Checkout\Controller\Cart\Add">
         <plugin name="addWarrantyCart" type="Extend\Warranty\Plugin\Controller\Cart\Add"/>
     </type>
@@ -38,5 +35,9 @@
     <type name="Magento\Checkout\Controller\Onepage\Success">
         <plugin name="sendWarrantyExtend" type="Extend\Warranty\Plugin\Controller\Onepage\Success"/>
     </type>
+
+    <virtualType
+            name="Extend\Warranty\Model\ResourceModel\Indexer\Price"
+            type="Magento\Catalog\Model\ResourceModel\Product\Indexer\Price\SimpleProductPrice"/>
 
 </config>

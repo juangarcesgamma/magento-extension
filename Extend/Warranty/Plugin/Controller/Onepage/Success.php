@@ -14,11 +14,34 @@ use Magento\Framework\Registry;
 
 class Success
 {
+    /**
+     * @var Session
+     */
     protected $session;
+
+    /**
+     * @var OrderRepositoryInterface
+     */
     protected $orderRepository;
+
+    /**
+     * @var ProductRepositoryInterface
+     */
     protected $productRepository;
+
+    /**
+     * @var ContractsRequest
+     */
     protected $contractsRequest;
+
+    /**
+     * @var ContractBuilder
+     */
     protected $contractBuilder;
+
+    /**
+     * @var Registry
+     */
     protected $registry;
 
     public function __construct
@@ -65,10 +88,10 @@ class Success
             }
             $this->registry->register('isSecureArea', true);
 
-            foreach ($warranties as $warranty){
-                try{
+            foreach ($warranties as $warranty) {
+                try {
                     $this->productRepository->delete($warranty);
-                }catch (StateException $exception){
+                } catch (StateException $exception) {
                     continue;
                 }
             }
