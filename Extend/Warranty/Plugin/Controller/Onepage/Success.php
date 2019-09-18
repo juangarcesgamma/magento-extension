@@ -64,6 +64,7 @@ class Success
 
     function afterExecute(SuperSuccess $subject, $resultPage)
     {
+        /*
         $orderId = $this->session->getLastOrderId();
 
         $order = $this->orderRepository->get($orderId);
@@ -95,7 +96,7 @@ class Success
                     continue;
                 }
             }
-        }
+        }*/
 
         return $resultPage;
     }

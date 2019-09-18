@@ -53,9 +53,7 @@ class CreateContract implements ObserverInterface
         }
 
         if ($flag) {
-            foreach ($warranties as $warranty) {
-                $this->warrantyContract->createContract($order, $warranty);
-            }
+            $this->warrantyContract->createContract($order, $warranties);
         }
     }
 }
