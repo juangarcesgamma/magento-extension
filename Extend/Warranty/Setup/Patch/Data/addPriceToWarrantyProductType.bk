@@ -7,7 +7,7 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Eav\Setup\EavSetupFactory;
 use Extend\Warranty\Model\Product\Type as WarrantyType;
 
-class addPriceAndProductToWarrantyProductType implements DataPatchInterface
+class addPriceToWarrantyProductType implements DataPatchInterface
 {
 
     protected $moduleDataSetup;
@@ -39,10 +39,7 @@ class addPriceAndProductToWarrantyProductType implements DataPatchInterface
 
         //associate these attributes with new product type
         $fieldList = [
-            'price',
-            'minimal_price',
-            'cost',
-            'tier_price'
+            'price'
         ];
 
         // make these attributes applicable to new product type
