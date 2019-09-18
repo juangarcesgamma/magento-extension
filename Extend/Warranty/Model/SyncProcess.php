@@ -9,8 +9,14 @@ use Extend\Warranty\Api\TimeUpdaterInterface;
 
 class SyncProcess
 {
+    /**
+     * @var ProductsRequest
+     */
     protected $productsRequest;
 
+    /**
+     * @var ScopeConfigInterface
+     */
     protected $scopeConfig;
 
     public function __construct(
@@ -22,9 +28,8 @@ class SyncProcess
         $this->scopeConfig = $scopeConfig;
     }
 
-    public function sync($storeProducts)
+    public function sync(array $storeProducts): void
     {
-
         $productsToSync = $this->processProducts($storeProducts);
 
         if(!empty($productsToSync['productsToCreate'])){
@@ -36,7 +41,7 @@ class SyncProcess
         }
     }
 
-    private function processProducts($storeProducts)
+    private function processProducts(array $storeProducts): array
     {
         $productsOutdated = [];
 
@@ -44,7 +49,7 @@ class SyncProcess
         foreach ($storeProducts as $key => $product) {
             $lastModifiedDate = $product->getUpdatedAt();
             $lastGlobalSyncDate = $this->scopeConfig->getValue(TimeUpdaterInterface::LAST_SYNC_PATH);
-            $productIsSynced = (bool)$product->getCustomAttribute('is_product_synced');
+            $productIsSynced = (bool) $product->getCustomAttribute('is_product_synced');
 
             //If product has a sync flag
             if (!is_null($productIsSynced)) {

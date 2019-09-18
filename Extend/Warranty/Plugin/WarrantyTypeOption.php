@@ -9,11 +9,10 @@ class WarrantyTypeOption
 {
     public function afterGetOptionArray(Type $subject, $result)
     {
-        $warrantyKey = array_key_exists(\Extend\Warranty\Model\Product\Type::TYPE_CODE, $result);
-        if($warrantyKey !== false)
-        {
+        if (isset($result[\Extend\Warranty\Model\Product\Type::TYPE_CODE])) {
             unset($result[\Extend\Warranty\Model\Product\Type::TYPE_CODE]);
         }
+
         return $result;
     }
 }

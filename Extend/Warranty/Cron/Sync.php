@@ -6,8 +6,10 @@ use Psr\Log\LoggerInterface;
 
 class Sync
 {
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
-    protected $productsCollection;
 
     public function __construct
     (
@@ -17,8 +19,8 @@ class Sync
         $this->logger = $logger;
     }
 
-    public function execute(){
-
+    public function execute()
+    {
         $this->logger->info('Cron for product sync, waiting for implementation');
     }
 }

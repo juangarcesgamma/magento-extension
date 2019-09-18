@@ -11,8 +11,19 @@ use Magento\Framework\App\Cache\Manager;
 
 class TimeUpdater implements TimeUpdaterInterface
 {
+    /**
+     * @var Writer
+     */
     protected $configWriter;
+
+    /**
+     * @var TimezoneInterface
+     */
     protected $timezone;
+
+    /**
+     * @var Manager
+     */
     private $cacheManager;
 
     public function __construct

@@ -9,4 +9,8 @@ interface SyncInterface
     public function getProducts(int $batchNumber): array;
 
     public function getTotalOfProducts(): int;
+
+    public function getBatchSize(): int;
+
+    public function getBatchesToProcess(): int;
 }

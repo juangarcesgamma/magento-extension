@@ -1,4 +1,4 @@
-require(['jquery'], function($){
+require(['jquery'], function($) {
     $(document).ready( function() {
         $("#warranty_authentication_auth_mode").change(function(){
             if($(this).val() == "0"){

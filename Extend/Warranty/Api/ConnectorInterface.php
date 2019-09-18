@@ -7,9 +7,13 @@ interface ConnectorInterface
 {
     public function initClient(): void;
 
-    public function call($endpoint, $method, $data = null): Zend_Http_Response;
+    public function call(
+        string $endpoint,
+        string $method = \Zend_Http_Client::GET,
+        array $data = null
+    ): Zend_Http_Response;
 
     //Call for plugin of Cesar
-    public function testConnection($storeId, $apiKey, $isLive): string;
+    public function testConnection(): bool;
 
 }

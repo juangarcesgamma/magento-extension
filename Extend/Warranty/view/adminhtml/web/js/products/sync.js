@@ -42,7 +42,7 @@ define(
         }
 
         function batchBeingProcessed(shouldAbort, url){
-            if(!shouldAbort){
+            if (!shouldAbort) {
                 return new Promise((resolve, reject) => {
                     $.get({
                         url : url,

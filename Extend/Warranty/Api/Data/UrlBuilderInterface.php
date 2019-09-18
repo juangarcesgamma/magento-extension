@@ -11,17 +11,17 @@ interface UrlBuilderInterface
     /**
      * @return string
      */
-    public function build();
+    public function build(): string;
 
     /**
      * @return string
      */
-    public function getUri();
+    public function getUri(): string;
 
     /**
      * @param string $uri
      * @return $this
      */
-    public function setUri($uri);
+    public function setUri(string $uri): UrlBuilderInterface;
 
 }

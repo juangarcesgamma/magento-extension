@@ -3,6 +3,7 @@
 namespace Extend\Warranty\Plugin;
 
 use Extend\Warranty\Controller\Adminhtml\Products\Sync;
+use Magento\Backend\Model\UrlInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -10,33 +11,49 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 class SyncAction
 {
     /**
-     * @var \Magento\Framework\Controller\Result\RedirectFactory
+     * @var RedirectFactory
      */
     protected $redirectFactory;
 
     /**
-     * @var Magento\Framework\Message\ManagerInterface
+     * @var ManagerInterface
      */
     protected $messageManager;
 
+    /**
+     * @var ScopeConfigInterface
+     */
     protected $scopeConfig;
+
+    /**
+     * @var UrlInterface
+     */
+    protected $urlBuilder;
 
     public function __construct(
         RedirectFactory $redirectFactory,
         ManagerInterface $messageManager,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        UrlInterface $urlBuilder
     )
     {
         $this->redirectFactory = $redirectFactory;
         $this->messageManager = $messageManager;
         $this->scopeConfig = $scopeConfig;
+        $this->urlBuilder = $urlBuilder;
     }
     public function aroundExecute(Sync $subject, callable $proceed)
     {
-        if($this->scopeConfig->isSetFlag('warranty/enableExtend/enable')){
+        if ($this->scopeConfig->isSetFlag('warranty/enableExtend/enable')) {
             return $proceed();
         }
-        return;
 
+        $redirect = $this->redirectFactory->create();
+
+        $redirect
+            ->setHttpResponseCode(403)
+            ->setUrl($this->urlBuilder->getUrl('noroute'));
+
+        return $redirect;
     }
 }

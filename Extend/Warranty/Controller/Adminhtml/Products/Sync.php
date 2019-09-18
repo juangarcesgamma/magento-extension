@@ -13,13 +13,34 @@ class Sync extends Action
 {
     const ADMIN_RESOURCE = 'Extend_Warranty::product_manual_sync';
 
+    /**
+     * @var ResultFactory
+     */
     protected $resultFactory;
+
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
+
+    /**
+     * @var SyncProcess
+     */
     protected $syncProcess;
+
+    /**
+     * @var SyncInterface
+     */
     protected $sync;
 
+    /**
+     * @var
+     */
     protected $totalBatches;
 
+    /**
+     * @var TimeUpdaterInterface
+     */
     protected $timeUpdater;
 
     public function __construct(
@@ -42,11 +63,11 @@ class Sync extends Action
 
     public function execute()
     {
-        if (!isset($this->totalBatches)) {
-            $this->totalBatches = (int)ceil($this->sync->getTotalOfProducts() / SyncInterface::MAX_PRODUCTS_BATCH);
+        if ($this->totalBatches === null) {
+            $this->totalBatches = $this->sync->getBatchesToProcess();
         }
 
-        $currentBatch = (int)$this->getRequest()->getParam('currentBatchesProcessed');
+        $currentBatch = (int) $this->getRequest()->getParam('currentBatchesProcessed');
 
         $productsBatch = $this->sync->getProducts($currentBatch);
 
@@ -56,8 +77,8 @@ class Sync extends Action
             $currentBatch++;
 
             $data = [
-                'totalBatches' => (int)$this->totalBatches,
-                'currentBatchesProcessed' => (int)$currentBatch,
+                'totalBatches' => (int) $this->totalBatches,
+                'currentBatchesProcessed' => (int) $currentBatch,
             ];
 
             if ($currentBatch == $this->totalBatches) {
@@ -65,10 +86,19 @@ class Sync extends Action
                 unset($this->totalBatches);
             }
 
-            return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setHttpResponseCode(200)->setData($data);
+            return $this->resultFactory
+                ->create(ResultFactory::TYPE_JSON)
+                ->setHttpResponseCode(200)
+                ->setData($data);
         } catch (\Exception $e) {
             $data = ['msg' => $e->getMessage()];
-            return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setHttpResponseCode(500)->setData($data);
+
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+
+            return $this->resultFactory
+                ->create(ResultFactory::TYPE_JSON)
+                ->setHttpResponseCode(500)
+                ->setData($data);
         }
     }
 }

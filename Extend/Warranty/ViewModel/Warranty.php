@@ -2,6 +2,7 @@
 
 namespace Extend\Warranty\ViewModel;
 
+use Extend\Warranty\Helper\Data;
 use Magento\Catalog\Api\Data\ProductInterfaceFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
@@ -11,18 +12,32 @@ class Warranty implements ArgumentInterface
 {
 
     const ENABLE_EXTEND_PATH = 'warranty/enableExtend/enable';
+
+    /**
+     * @var ProductInterfaceFactory
+     */
     protected $productFactory;
 
+    /**
+     * @var ScopeConfigInterface
+     */
     protected $scopeConfig;
+
+    /**
+     * @var Data
+     */
+    protected $helper;
 
     public function __construct
     (
         ProductInterfaceFactory $productFactory,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        Data $helper
     )
     {
         $this->productFactory = $productFactory;
         $this->scopeConfig = $scopeConfig;
+        $this->helper = $helper;
     }
 
     public function getWarranties(string $sku): array
@@ -77,14 +92,14 @@ class Warranty implements ArgumentInterface
         //END OF DUMMY PRODUCTS
 
 
-        if($this->isExtendEnabled()){
+        if ($this->isExtendEnabled()) {
             $warranties = [];
 
             foreach ($warrantiesData as $warrantyData) {
                 $warranty = $this->productFactory->create();
 
                 $warranty
-                    ->setPrice($this->deformatPrice($warrantyData['prices']['max']))
+                    ->setPrice($this->helper->removeFormatPrice($warrantyData['prices']['max']))
                     ->setName($warrantyData['title'])
                     ->setTypeId(WarrantyType::TYPE_CODE)
                     ->setSku($warrantyData['id'])
@@ -95,15 +110,6 @@ class Warranty implements ArgumentInterface
             return $warranties;
         }
         return [];
-    }
-
-    private function deformatPrice(int $price): float
-    {
-        $price = (string)$price;
-
-        $price = substr_replace($price, '.', strlen($price) - 2, 0);
-
-        return (float)$price;
     }
 
     public function isExtendEnabled()

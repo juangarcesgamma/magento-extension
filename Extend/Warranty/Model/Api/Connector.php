@@ -16,10 +16,6 @@ use Magento\Framework\HTTP\ZendClient;
 
 class Connector implements ConnectorInterface
 {
-
-    protected $baseUrlSandbox = 'https://api-stage.helloextend.com/stores';
-
-    protected $baseUrlLive = 'https://api.helloextend.com/stores';
     /**
      * @var Json
      */
@@ -31,11 +27,29 @@ class Connector implements ConnectorInterface
     protected $httpClient;
 
 
+    /**
+     * @var ZendClient
+     */
     protected $client;
+
+    /**
+     * @var Keys
+     */
     protected $keys;
+
+    /**
+     * @var UrlBuilderInterface
+     */
     protected $urlBuilder;
+
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var string
+     */
     protected $uri;
 
     public function __construct
@@ -59,38 +73,19 @@ class Connector implements ConnectorInterface
         $this->httpClient = $httpClient;
     }
 
-    public function testConnection($storeId, $apiKey, $isLive): string
+    public function testConnection(): bool
     {
-        if ($isLive === "1" && !is_null($isLive)) {
-            $baseUrl = $this->baseUrlLive;
-        } else if ($isLive === "0" && !is_null($isLive)) {
-            $baseUrl = $this->baseUrlSandbox;
-        }
-        $requestPath = "{$baseUrl}/{$storeId}/products";
+        $response = $this->call("products");
 
-        $client = $this->httpClient->create();
-        $headers = [
-            "Accept" => "application/json",
-            "Content-Type" => "application/json",
-            "X-Extend-Access-Token" => $apiKey
-        ];
-        $client->setHeaders($headers);
-
-        $client->get($requestPath);
-
-        return strval($client->getStatus());
+        return $response->isSuccessful();
 
     }
 
     public function initClient(): void
     {
-        $accessKeys = $this->apiKey = $this->config->getValue('auth_mode') ?
-            $this->keys->getLiveAccessKeys() :
-            $this->keys->getSandboxAccessKeys();
+        $accessKeys = $this->keys->getKeys();
 
-        $uriWithStore = '/stores/' . $accessKeys['storeID'];
-
-        $this->uri = $this->urlBuilder->setUri($uriWithStore)->build();
+        $this->uri = '/stores/' . $accessKeys['store_id'];
 
         $this->client
             ->setHeaders([
@@ -100,16 +95,34 @@ class Connector implements ConnectorInterface
             ]);
     }
 
-    public function call($endpoint, $method, $data = null): Zend_Http_Response
+    public function call(
+        string $endpoint,
+        string $method = \Zend_Http_Client::GET,
+        array $data = null
+    ): Zend_Http_Response
     {
-        $finalUri = $this->uri . $endpoint;
+        $this->uri = rtrim($this->uri);
+        $endpoint = ltrim($endpoint);
 
         $this->client
-            ->setUri($finalUri)
+            ->setUri(
+                $this->urlBuilder
+                    ->setUri(
+                        "{$this->uri}/{$endpoint}"
+                    )
+                    ->build()
+            )
             ->setMethod($method);
 
-        if (isset($data)) {
-            $this->client->setRawData(json_encode($data), 'application/json');
+        if (
+            isset($data) &&
+            $method !== \Zend_Http_Client::GET
+        ) {
+            $this->client
+                ->setRawData(
+                    $this->jsonSerializer->serialize($data),
+                    'application/json'
+                );
         }
 
         $response = $this->client->request();
