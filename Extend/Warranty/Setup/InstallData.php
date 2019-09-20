@@ -11,6 +11,7 @@ use Extend\Warranty\Model\Product\Type;
 use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\App\State;
+use Magento\Store\Model\StoreManagerInterface;
 
 
 class InstallData implements InstallDataInterface
@@ -18,17 +19,20 @@ class InstallData implements InstallDataInterface
     protected $productFactory;
     protected $eavSetupFactory;
     protected $state;
+    protected $storeManager;
 
     public function __construct
     (
         ProductFactory $productFactory,
         EavSetupFactory $eavSetupFactory,
-        State $state
+        State $state,
+        StoreManagerInterface $storeManager
     )
     {
         $this->productFactory = $productFactory;
         $this->eavSetupFactory = $eavSetupFactory;
         $this->state = $state;
+        $this->storeManager = $storeManager;
     }
 
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
@@ -37,8 +41,11 @@ class InstallData implements InstallDataInterface
         $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_ADMINHTML);
         $warranty = $this->productFactory->create();
 
+        $websites = $this->storeManager->getWebsites();
+
         $warranty->setSku('WARRANTY-1')
             ->setName('Extend Warranty')
+            ->setWebsiteIds(array_keys($websites))
             ->setAttributeSetId(4) //Default
             ->setStatus(1) //Enable
             ->setVisibility(1) //Not visible individually
@@ -46,9 +53,7 @@ class InstallData implements InstallDataInterface
             ->setTypeId(Type::TYPE_CODE)
             ->setPrice(0)
             ->setStockData([
-                    'use_config_manage_stock' => 0,
-                    'manage_stock' => 1,
-                    'is_in_stock' => 1,
+                    'manage_stock' => 0,
                     'qty' => 1
                 ]);
 
@@ -57,26 +62,6 @@ class InstallData implements InstallDataInterface
         $setup->startSetup();
 
         $eavSetup = $this->eavSetupFactory->create();
-
-        //ADD WARRANTY LENGTH ATTRIBUTE FOR WARRANTY PRODUCT TYPE
-        $eavSetup->addAttribute(
-            Product::ENTITY,
-            'warranty_length',
-            [
-                'type' => 'int',
-                'label' => 'Warranty Length',
-                'input' => 'text',
-                'required' => false,
-                'sort_order' => 105,
-                'is_used_in_grid' => false,
-                'is_visible_in_grid' => false,
-                'is_filterable_in_grid' => false,
-                'visible' => true,
-                'is_html_allowed_on_front' => true,
-                'visible_on_front' => true,
-                'apply_to'=> Type::TYPE_CODE
-            ]
-        );
 
         //ADD SYNCED DATE ATTRIBUTE FOR PRODUCTS
         $eavSetup->addAttribute(

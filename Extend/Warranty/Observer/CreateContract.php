@@ -1,26 +1,35 @@
 <?php
 
+namespace Extend\Warranty\Observer;
+
 use Extend\Warranty\Model\Product\Type as WarrantyType;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Extend\Warranty\Model\WarrantyContract;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
 class CreateContract implements ObserverInterface
 {
     protected $productRepository;
     protected $warrantyContract;
+    protected $quoteRepository;
+    protected $logger;
 
     public function __construct
     (
         ProductRepositoryInterface $productRepository,
-        WarrantyContract $warrantyContract
+        WarrantyContract $warrantyContract,
+        CartRepositoryInterface $quoteRepository,
+        LoggerInterface $logger
     )
     {
         $this->productRepository = $productRepository;
         $this->warrantyContract = $warrantyContract;
+        $this->quoteRepository = $quoteRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -32,23 +41,25 @@ class CreateContract implements ObserverInterface
         $invoice = $observer->getEvent()->getInvoice();
         /** @var OrderInterface $order */
         $order = $invoice->getOrder();
+
+        try {
+            $quote = $this->quoteRepository->get($order->getQuoteId());
+        } catch (NoSuchEntityException $exception) {
+            $this->logger->error("No quote found");
+            return;
+        }
+
         $warranties = [];
 
         $flag = 0;
 
-        /** @var OrderItemInterface $item */
-        foreach ($order->getItems() as $item) {
-
+        foreach ($quote->getAllItems() as $item) {
+            /** @var \Magento\Quote\Model\Quote\Item $item */
             if ($item->getProductType() == WarrantyType::TYPE_CODE) {
                 if (!$flag) {
                     $flag = 1;
                 }
-
-                try {
-                    $warranties[$item->getProductId()] = $this->productRepository->getById($item->getProductId());
-                } catch (NoSuchEntityException $e) {
-                    continue;
-                }
+                $warranties[] = $item;
             }
         }
 

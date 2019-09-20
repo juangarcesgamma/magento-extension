@@ -62,7 +62,7 @@ class ContractsRequest
 
     public function create($contract): string
     {
-        $this->createRequest($contract);
+        return $this->createRequest($contract);
     }
 
     private function createRequest($contract): string
@@ -75,11 +75,11 @@ class ContractsRequest
                     $contract
                 );
 
-            $this->processCreateResponse($response);
+            return $this->processCreateResponse($response);
 
         } catch (\Zend_Http_Client_Exception $e) {
-
             $this->logger->error($e->getMessage(), ['exception' => $e]);
+            return '';
         }
     }
 
