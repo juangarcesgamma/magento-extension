@@ -84,4 +84,18 @@ class Type extends AbstractType
 
         return $product;
     }
+
+    public function getOrderOptions($product)
+    {
+        $options = parent::getOrderOptions($product);
+
+        if($warrantyId = $product->getCustomOption(self::WARRANTY_ID)){
+            $options[self::WARRANTY_ID] = $warrantyId->getValue();
+        }
+
+        if($associatedProduct = $product->getCustomOption(self::ASSOCIATED_PRODUCT)){
+            $options[self::ASSOCIATED_PRODUCT] = $associatedProduct->getValue();
+        }
+        return $options;
+    }
 }

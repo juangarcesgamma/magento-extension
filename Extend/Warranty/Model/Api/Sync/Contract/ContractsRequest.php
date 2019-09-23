@@ -91,9 +91,9 @@ class ContractsRequest
 
         } elseif ($response->getStatus() === 201) {
             $res = $this->jsonSerializer->unserialize($response->getBody());
-            $contract_id = $res['id'];
-            $this->logger->info(__('Contract #%1 request successful', $contract_id));
-            return $contract_id;
+            $contractId = $res['id'];
+            $this->logger->info(__('Contract #%1 request successful', $contractId));
+            return $contractId;
         }
 
         return '';

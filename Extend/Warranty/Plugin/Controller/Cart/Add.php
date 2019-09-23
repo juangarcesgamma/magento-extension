@@ -1,14 +1,16 @@
 <?php
 
 namespace Extend\Warranty\Plugin\Controller\Cart;
-;
+
 use Magento\Checkout\Controller\Cart\Add as SuperAdd;
 use \Magento\Framework\App\Request\Http;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Extend\Warranty\Model\Product\Type as WarrantyType;
 use Magento\Checkout\Helper\Cart;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Message\ManagerInterface;
 
 class Add
 {
@@ -32,18 +34,25 @@ class Add
      */
     protected $searchCriteriaBuilder;
 
+    /**
+     * @var ManagerInterface
+     */
+    protected $messageManager;
+
     public function __construct
     (
         Http $request,
         Cart $cart,
         ProductRepositoryInterface $productRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        ManagerInterface $messageManager
     )
     {
         $this->request = $request;
         $this->cart = $cart;
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->messageManager = $messageManager;
     }
 
     public function beforeExecute(SuperAdd $subject)
@@ -98,7 +107,11 @@ class Add
 
             $cart = $this->cart->getCart();
 
-            $cart->addProduct($warranty->getId(), $warrantyData);
+            try {
+                $cart->addProduct($warranty->getId(), $warrantyData);
+            } catch (LocalizedException $e) {
+                $this->messageManager->addErrorMessage('Error while adding warranty product');
+            }
 
         }
         return null;

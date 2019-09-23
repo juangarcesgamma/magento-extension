@@ -42,19 +42,12 @@ class CreateContract implements ObserverInterface
         /** @var OrderInterface $order */
         $order = $invoice->getOrder();
 
-        try {
-            $quote = $this->quoteRepository->get($order->getQuoteId());
-        } catch (NoSuchEntityException $exception) {
-            $this->logger->error("No quote found");
-            return;
-        }
-
         $warranties = [];
 
         $flag = 0;
 
-        foreach ($quote->getAllItems() as $item) {
-            /** @var \Magento\Quote\Model\Quote\Item $item */
+        foreach ($order->getAllItems() as $item) {
+            /** @var \Magento\Sales\Model\Order\Item $item */
             if ($item->getProductType() == WarrantyType::TYPE_CODE) {
                 if (!$flag) {
                     $flag = 1;

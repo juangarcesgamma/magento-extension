@@ -59,17 +59,17 @@ class ContractBuilder
     {
         $contracts = [];
 
-        /** @var \Magento\Quote\Model\Quote\Item $warranty */
+        /** @var \Magento\Sales\Model\Order\Item $warranty */
         foreach ($warranties as $key => $warranty) {
-            $productId = $warranty->getOptionByCode(Type::ASSOCIATED_PRODUCT);
-            $warranty_id = $warranty->getOptionByCode(Type::WARRANTY_ID);
+            $productId = $warranty->getProductOptionByCode(Type::ASSOCIATED_PRODUCT);
+            $warrantyId = $warranty->getProductOptionByCode(Type::WARRANTY_ID);
 
-            if (empty($productId) || empty($warranty_id)) {
+            if (empty($productId) || empty($warrantyId)) {
                 continue;
             }
 
             try {
-                $product = $this->productRepository->getById($productId->getValue());
+                $product = $this->productRepository->getById($productId);
             } catch (NoSuchEntityException $exception) {
                 continue;
             }
@@ -114,7 +114,7 @@ class ContractBuilder
                 'transactionDate' => strtotime($order->getCreatedAt()),
                 'plan' => [
                     'purchasePrice' => $this->helper->formatPrice($warranty->getCustomPrice()),
-                    'planId' => $warranty_id->getValue()
+                    'planId' => $warrantyId
                 ]
             ];
 
