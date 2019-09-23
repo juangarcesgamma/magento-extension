@@ -60,12 +60,12 @@ class ContractsRequest
         $this->logger = $logger;
     }
 
-    public function create($contract): void
+    public function create($contract): string
     {
-        $this->createRequest($contract);
+        return $this->createRequest($contract);
     }
 
-    private function createRequest($contract): void
+    private function createRequest($contract): string
     {
         try {
             $response = $this->connector
@@ -75,15 +75,15 @@ class ContractsRequest
                     $contract
                 );
 
-            $this->processCreateResponse($response);
+            return $this->processCreateResponse($response);
 
         } catch (\Zend_Http_Client_Exception $e) {
-
             $this->logger->error($e->getMessage(), ['exception' => $e]);
+            return '';
         }
     }
 
-    private function processCreateResponse(\Zend_Http_Response $response): void
+    private function processCreateResponse(\Zend_Http_Response $response): string
     {
         if ($response->isError()) {
             $res = $this->jsonSerializer->unserialize($response->getBody());
@@ -91,8 +91,12 @@ class ContractsRequest
 
         } elseif ($response->getStatus() === 201) {
             $res = $this->jsonSerializer->unserialize($response->getBody());
-            $this->logger->info(__('Contract #%1 request successful', $res['id']));
+            $contractId = $res['id'];
+            $this->logger->info(__('Contract #%1 request successful', $contractId));
+            return $contractId;
         }
+
+        return '';
     }
 
 }

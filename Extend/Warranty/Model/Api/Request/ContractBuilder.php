@@ -8,8 +8,8 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Sales\Model\Order;
-use Magento\Catalog\Model\Product;
 use Magento\Directory\Api\CountryInformationAcquirerInterface;
+use Extend\Warranty\Model\Product\Type;
 
 class ContractBuilder
 {
@@ -59,16 +59,17 @@ class ContractBuilder
     {
         $contracts = [];
 
-        /** @var Product $warranty */
-        foreach ($warranties as $warranty) {
-            $productId = $warranty->getCustomAttribute('assocProduct');
+        /** @var \Magento\Sales\Model\Order\Item $warranty */
+        foreach ($warranties as $key => $warranty) {
+            $productId = $warranty->getProductOptionByCode(Type::ASSOCIATED_PRODUCT);
+            $warrantyId = $warranty->getProductOptionByCode(Type::WARRANTY_ID);
 
-            if (empty($productId)) {
+            if (empty($productId) || empty($warrantyId)) {
                 continue;
             }
 
             try {
-                $product = $this->productRepository->getById($productId->getValue());
+                $product = $this->productRepository->getById($productId);
             } catch (NoSuchEntityException $exception) {
                 continue;
             }
@@ -78,7 +79,7 @@ class ContractBuilder
             $shipping = $order->getShippingAddress();
 
 
-            $contracts[$warranty->getSku()] = [
+            $contracts[$key] = [
                 'transactionId' => $order->getId(),
                 'transactionTotal' => $this->helper->formatPrice($order->getGrandTotal()),
                 'customer' => [
@@ -112,29 +113,29 @@ class ContractBuilder
                 'currency' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
                 'transactionDate' => strtotime($order->getCreatedAt()),
                 'plan' => [
-                    'purchasePrice' => $this->helper->formatPrice($warranty->getFinalPrice()),
-                    'planId' => $this->formatPlanId($warranty->getSku())
+                    'purchasePrice' => $this->helper->formatPrice($warranty->getCustomPrice()),
+                    'planId' => $warrantyId
                 ]
             ];
 
             $billingStreet = $billing->getStreet();
             $billingFormat = $this->formatStreet($billingStreet);
 
-            $contracts[$warranty->getSku()]['customer']['billing'] = array_merge(
-                $contracts[$warranty->getSku()]['customer']['billing'],
+            $contracts[$key]['customer']['billing'] = array_merge(
+                $contracts[$key]['customer']['billing'],
                 $billingFormat
             );
 
             $shippingStreet = $shipping->getStreet();
             $shippingFormat = $this->formatStreet($shippingStreet);
 
-            $contracts[$warranty->getSku()]['customer']['shipping'] = array_merge(
-                $contracts[$warranty->getSku()]['customer']['shipping'],
+            $contracts[$key]['customer']['shipping'] = array_merge(
+                $contracts[$key]['customer']['shipping'],
                 $shippingFormat
             );
 
             if (!$order->getCustomerIsGuest()) {
-                $contracts[$warranty->getSku()]['customer']['customerId'] = $order->getCustomerId();
+                $contracts[$key]['customer']['customerId'] = $order->getCustomerId();
             }
 
         }
@@ -151,11 +152,5 @@ class ContractBuilder
         }
 
         return $address;
-    }
-
-    private function formatPlanId($sku): string
-    {
-        $formatSku = explode(":", $sku);
-        return current($formatSku);
     }
 }
