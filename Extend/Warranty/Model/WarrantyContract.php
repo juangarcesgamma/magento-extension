@@ -47,15 +47,13 @@ class WarrantyContract
         try {
             $contracts = $this->contractBuilder->prepareInfo($order, $warranties);
 
-            foreach ($contracts as $contract) {
+            foreach ($contracts as $key => $contract) {
                 $contractId = $this->contractsRequest->create($contract);
                 if (!empty($contractId)) {
-
-                    foreach ($order->getItems() as $item) {
-                        if ($item->getSku() == $contract['product']['referenceId'] && empty($item->getContractId())) {
-                            $item->setContractId($contractId);
-                            $item->save();
-                        }
+                    $items = $order->getAllItems();
+                    if (isset($items[$key]) && empty($items[$key]->getContractId())) {
+                        $items[$key]->setContractId($contractId);
+                        $items[$key]->save();
                     }
                 }
             }
