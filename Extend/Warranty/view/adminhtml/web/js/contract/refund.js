@@ -7,7 +7,7 @@ define(
     function ($, alert, $t) {
         'use strict';
 
-        function refund(url, contractId) {
+        function refund(url, contractId, itemId) {
             event.preventDefault();
 
             $('body').trigger('processStart');
@@ -18,21 +18,27 @@ define(
                 showLoader: true,
                 url: url,
                 data: {
-                    contractId: contractId
+                    contractId: contractId,
+                    itemId: itemId
                 }
             })
                 .done(function (data) {
                     $('body').trigger('processStop');
                     alert({
-                        title: $.mage.__("Refund complete!"),
-                        content: $.mage.__("The refund was successful"),
+                        title: $.mage.__('Refund Successful'),
+                        content: $.mage.__('The request was successfully complete.'),
+                        actions: {
+                            always: function(){
+                                location.reload();
+                            }
+                        }
                     });
                 })
                 .fail(function (jqXHR, textStatus, errorThrown) {
                     $('body').trigger('processStop');
                     alert({
                         title: $.mage.__("Refund failed"),
-                        content: $.mage.__("An unexpected error, please try again later"),
+                        content: $.mage.__("An unexpected error, please try again later."),
                     });
                 });
         }
@@ -40,7 +46,8 @@ define(
         $.widget('extend.refundWarranty', {
             options: {
                 url: '',
-                contractId: ''
+                contractId: '',
+                itemId: ''
             },
 
             _create: function () {
@@ -56,6 +63,7 @@ define(
 
                 const url = this.options.url;
                 const contractId = this.options.contractId;
+                const itemId = this.options.itemId;
 
                 alert({
                     title: 'Are you sure?',
@@ -65,7 +73,7 @@ define(
 
                         click: function () {
                             this.closeModal(true);
-                            refund(url, contractId);
+                            refund(url, contractId, itemId);
 
                         }
                     }, {

@@ -5,6 +5,7 @@ namespace Extend\Warranty\Controller\Adminhtml\Contract;
 use Magento\Backend\App\Action;
 use Magento\Framework\Controller\ResultFactory;
 use Extend\Warranty\Model\Api\Sync\Contract\ContractsRequest;
+use Magento\Sales\Api\OrderItemRepositoryInterface;
 
 class Refund extends Action
 {
@@ -15,24 +16,35 @@ class Refund extends Action
      */
     protected $resultFactory;
 
+    /**
+     * @var ContractsRequest
+     */
     protected $contractsRequest;
+
+    /**
+     * @var OrderItemRepositoryInterface
+     */
+    protected $orderItemRepository;
 
     public function __construct(
         Action\Context $context,
         ResultFactory $resultFactory,
-        ContractsRequest $contractsRequest
+        ContractsRequest $contractsRequest,
+        OrderItemRepositoryInterface $orderItemRepository
     )
     {
         parent::__construct($context);
 
         $this->resultFactory = $resultFactory;
         $this->contractsRequest = $contractsRequest;
+        $this->orderItemRepository = $orderItemRepository;
     }
 
 
     public function execute()
     {
         $contractId = (string)$this->getRequest()->getParam('contractId');
+        $itemId = (string)$this->getRequest()->getParam('itemId');
 
         $res = $this->contractsRequest->refund($contractId);
 
@@ -42,6 +54,11 @@ class Refund extends Action
         $response->setHttpResponseCode(500);
 
         if ($res) {
+            $item = $this->orderItemRepository->get($itemId);
+            $options = $item->getProductOptions();
+            $options['refund'] = true;
+            $item->setProductOptions($options);
+            $item->save();
             $response->setHttpResponseCode(200);
         }
 

@@ -53,6 +53,13 @@ class WarrantyContract
                     $items = $order->getAllItems();
                     if (isset($items[$key]) && empty($items[$key]->getContractId())) {
                         $items[$key]->setContractId($contractId);
+
+                        $options = $items[$key]->getProductOptions();
+
+                        $options = array_merge($options, ['refund' => false]);
+
+                        $items[$key]->setProductOptions($options);
+
                         $items[$key]->save();
                     }
                 }

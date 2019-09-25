@@ -13,12 +13,25 @@ class WarrantyRenderer extends DefaultRenderer
         switch ($column) {
             case 'refund':
                 if ($item->getStatusId() == Item::STATUS_INVOICED) {
-                    if ($this->canDisplayContainer()) {
-                        $html .= '<div id="' . $this->getHtmlId() . '">';
-                    }
-                    $html .= '<button type="button"'. " data-mage-init='{\"refundWarranty\": {\"url\": \"{$this->getUrl('extend/contract/refund')}\", \"contractId\": \"{$item->getContractId()}\" }}'" . '>Request Refund</button>';
-                    if ($this->canDisplayContainer()) {
-                        $html .= '</div>';
+                    $options = $item->getProductOptions();
+                    if (isset($options['refund']) && $options['refund'] === false) {
+                        if ($this->canDisplayContainer()) {
+                            $html .= '<div id="' . $this->getHtmlId() . '">';
+                        }
+                        $html .= '<button type="button"' . " data-mage-init='{$this->getDataInit($item)}' >Request Refund</button>";
+                        if ($this->canDisplayContainer()) {
+                            $html .= '</div>';
+                        }
+                    } else if (isset($options['refund']) && $options['refund'] === true) {
+                        if ($this->canDisplayContainer()) {
+                            $html .= '<div id="' . $this->getHtmlId() . '">';
+                        }
+                        $html .= '<button type="button" disabled>Refunded</button>';
+                        if ($this->canDisplayContainer()) {
+                            $html .= '</div>';
+                        }
+                    } else {
+                        $html .= '&nbsp;';
                     }
                 } else {
                     $html .= '&nbsp;';
@@ -28,6 +41,13 @@ class WarrantyRenderer extends DefaultRenderer
                 $html = parent::getColumnHtml($item, $column, $field);
         }
         return $html;
+    }
+
+    private function getDataInit($item)
+    {
+        return '{"refundWarranty": {"url": "' . $this->getUrl('extend/contract/refund') .
+                '", "contractId": "' . $item->getContractId() .
+                '", "itemId": "' . $item->getId() .  '" }}';
     }
 
     public function getHtmlId()
