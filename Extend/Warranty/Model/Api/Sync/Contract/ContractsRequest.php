@@ -87,7 +87,7 @@ class ContractsRequest
     {
         if ($response->isError()) {
             $res = $this->jsonSerializer->unserialize($response->getBody());
-            $this->logger->error('Contract Request Fail',$res);
+            $this->logger->error('Contract Request Fail', $res);
 
         } elseif ($response->getStatus() === 201) {
             $res = $this->jsonSerializer->unserialize($response->getBody());
@@ -97,6 +97,44 @@ class ContractsRequest
         }
 
         return '';
+    }
+
+
+    public function refund($contractId): bool
+    {
+        return $this->refundRequest($contractId);
+    }
+
+    private function refundRequest($contractId): bool
+    {
+        try {
+            $endpoint = self::ENDPOINT_URI . "/{$contractId}/refund";
+
+            $response = $this->connector
+                ->call(
+                    $endpoint,
+                    \Zend_Http_Client::POST
+                );
+
+            return $this->processRefundResponse($response);
+
+        } catch (\Zend_Http_Client_Exception $e) {
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            return false;
+        }
+    }
+
+    private function processRefundResponse(\Zend_Http_Response $response): bool
+    {
+        if ($response->getStatus() === 202) {
+            $this->logger->info('Refund Request Success');
+            return true;
+        }
+
+        $res = $this->jsonSerializer->unserialize($response->getBody());
+        $this->logger->error('Refund Request Fail', $res);
+        return false;
+
     }
 
 }
