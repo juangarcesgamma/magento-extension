@@ -1,0 +1,16 @@
+<?php
+/** @var $viewModel Extend\Warranty\ViewModel\Installation
+ */
+$viewModel = $block->getData('viewModel');
+if ($viewModel) {
+    $viewModel->prepareBlockData();
+}
+?>
+<?php if (isset($viewModel) && $viewModel->getExtendEnable()) : ?>
+    <script src="https://sdk.helloextend.com/extend-sdk-client/v1/dev/extend-sdk-client.min.js"></script>
+    <script type="text/javascript">
+
+        //Extend.config({ storeId: '<?= $block->escapeHtmlAttr($block->escapeUrl($viewModel->getExtendStoreId())); ?>' });
+
+    </script>
+<?php endif; ?>
