@@ -46,8 +46,7 @@ $warranties = $viewModel->getWarranties($block->getProduct()->getSku());
                         <div>
                             <input class="warranty" type="checkbox" id="<?= $warranty->getSku() ?>">
                             <label class="checkboxLabel"
-                                   for="<?= $warranty->getSku() ?>"><?= $warranty->getCustomAttribute('warranty_length')->getValue() ?>
-                                years - <strong>$<?= $warranty->getPrice() ?></strong></label>
+                                   for="<?= $warranty->getSku() ?>"># years - <strong>$<?= $warranty->getPrice() ?></strong></label>
                         </div>
                     <?php endforeach; ?>
                 </fieldset>
