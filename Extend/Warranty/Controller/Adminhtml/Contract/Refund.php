@@ -43,15 +43,13 @@ class Refund extends Action
 
     public function execute()
     {
-        $contractId = (string)$this->getRequest()->getParam('contractId');
-        $itemId = (string)$this->getRequest()->getParam('itemId');
+        $contractId = (string)$this->getRequest()->getPost('contractId');
+        $itemId = (string)$this->getRequest()->getPost('itemId');
 
         $res = $this->contractsRequest->refund($contractId);
 
         $response = $this->resultFactory
             ->create(ResultFactory::TYPE_JSON);
-
-        $response->setHttpResponseCode(500);
 
         if ($res) {
             $item = $this->orderItemRepository->get($itemId);
@@ -60,6 +58,8 @@ class Refund extends Action
             $item->setProductOptions($options);
             $item->save();
             $response->setHttpResponseCode(200);
+        } else {
+            $response->setHttpResponseCode(500);
         }
 
         return $response;

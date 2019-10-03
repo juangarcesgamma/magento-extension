@@ -12,15 +12,9 @@ define(
 
             $('body').trigger('processStart');
 
-            console.log(url);
-
-            $.get({
-                showLoader: true,
-                url: url,
-                data: {
-                    contractId: contractId,
-                    itemId: itemId
-                }
+            $.post(url,{
+                contractId: contractId,
+                itemId: itemId
             })
                 .done(function (data) {
                     $('body').trigger('processStop');
@@ -65,26 +59,10 @@ define(
                 const contractId = this.options.contractId;
                 const itemId = this.options.itemId;
 
-                alert({
-                    title: 'Are you sure?',
-                    buttons: [{
-                        text: $.mage.__('Yes'),
-                        class: 'action primary accept',
 
-                        click: function () {
-                            this.closeModal(true);
-                            refund(url, contractId, itemId);
-
-                        }
-                    }, {
-                        text: $.mage.__('No'),
-                        class: 'action',
-
-                        click: function () {
-                            this.closeModal(true);
-                        }
-                    }]
-                });
+                if (confirm("Are you sure?")) {
+                    refund(url, contractId, itemId);
+                }
 
             }
         });
