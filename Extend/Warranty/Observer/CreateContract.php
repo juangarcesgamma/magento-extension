@@ -46,13 +46,13 @@ class CreateContract implements ObserverInterface
 
         $flag = 0;
 
-        foreach ($order->getAllItems() as $item) {
+        foreach ($order->getAllItems() as $key => $item) {
             /** @var \Magento\Sales\Model\Order\Item $item */
             if ($item->getProductType() == WarrantyType::TYPE_CODE) {
                 if (!$flag) {
                     $flag = 1;
                 }
-                $warranties[] = $item;
+                $warranties[$key] = $item;
             }
         }
 
