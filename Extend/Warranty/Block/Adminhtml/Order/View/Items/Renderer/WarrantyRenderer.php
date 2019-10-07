@@ -47,7 +47,7 @@ class WarrantyRenderer extends DefaultRenderer
 
     public function getColumnHtml(\Magento\Framework\DataObject $item, $column, $field = null)
     {
-        if(!$this->enable){
+        if (!$this->enable) {
             return parent::getColumnHtml($item, $column, $field);
         }
         $html = '';
@@ -87,8 +87,8 @@ class WarrantyRenderer extends DefaultRenderer
     private function getDataInit($item)
     {
         return '{"refundWarranty": {"url": "' . $this->getUrl('extend/contract/refund') .
-                '", "contractId": "' . $item->getContractId() .
-                '", "itemId": "' . $item->getId() .  '" }}';
+            '", "contractId": "' . $item->getContractId() .
+            '", "itemId": "' . $item->getId() . '" }}';
     }
 
     public function getHtmlId()
