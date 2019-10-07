@@ -37,6 +37,9 @@ define(
                 });
                 currentBatchesProcessed = data.currentBatchesProcessed;
                 totalBatches = data.totalBatches;
+                if(currentBatchesProcessed === totalBatches){
+                    $("#sync-time").text(data.msg);
+                }
             } while (currentBatchesProcessed <= totalBatches);
             restore(button);
         }
@@ -91,7 +94,7 @@ define(
                 event.preventDefault();
                 var button =  $(this.element);
 
-                button.text('Sync in progress...');
+                button.text("Sync in progress...");
                 button.attr("disabled", true);
 
                 synMsg.hide();

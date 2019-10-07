@@ -45,3 +45,10 @@ img#extend-mobile{
 p#extend-intro{
     width: 90%;
 }
+#syncBtn {
+    padding: 2% 15%;
+}
+
+#eSync {
+    vertical-align: middle !important;
+}
