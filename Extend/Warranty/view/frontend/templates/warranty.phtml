@@ -36,14 +36,12 @@ $viewModel = $block->getData('viewModel');
                 <script>
                     Extend.buttons.render('#extend-offer', {
                         referenceId: '<?= $_product->getSku() ?>'
-                    });
-
-                    window.addEventListener('load', function () {
+                    }, function () {
                         let elem = document.getElementsByClassName("extend-product-offer")[0];
                         if (elem.innerHTML !== "") {
                             elem.append(document.createElement("HR"));
                         }
-                    })
+                    });
                 </script>
             <?php endif; ?>
 
