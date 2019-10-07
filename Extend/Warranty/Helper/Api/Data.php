@@ -10,6 +10,8 @@ class Data extends AbstractHelper
 {
     CONST BASEPATH = 'warranty/authentication/';
 
+    CONST ENABLE_PATH = 'warranty/enableExtend/enable';
+
     protected $scopeConfig;
 
     public function __construct
@@ -26,5 +28,10 @@ class Data extends AbstractHelper
     {
         $path = self::BASEPATH . $field;
         return $this->scopeConfig->getValue($path);
+    }
+
+    public function isExtendEnabled()
+    {
+        return $this->scopeConfig->isSetFlag($this::ENABLE_PATH);
     }
 }

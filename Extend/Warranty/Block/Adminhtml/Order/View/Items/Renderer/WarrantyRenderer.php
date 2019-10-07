@@ -4,11 +4,52 @@ namespace Extend\Warranty\Block\Adminhtml\Order\View\Items\Renderer;
 
 use Magento\Sales\Block\Adminhtml\Order\View\Items\Renderer\DefaultRenderer;
 use Magento\Sales\Model\Order\Item;
+use Magento\Backend\Block\Template\Context;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
+use Magento\Framework\Registry;
+use Magento\GiftMessage\Helper\Message;
+use Magento\Checkout\Helper\Data;
+use Extend\Warranty\Helper\Api\Data as ExtendData;
 
 class WarrantyRenderer extends DefaultRenderer
 {
+    /**
+     * @var ExtendData
+     */
+    protected $enable;
+
+    public function __construct
+    (
+        Context $context,
+        StockRegistryInterface $stockRegistry,
+        StockConfigurationInterface $stockConfiguration,
+        Registry $registry,
+        Message $messageHelper,
+        Data $checkoutHelper,
+        ExtendData $extendHelper,
+        array $data = []
+    )
+    {
+        parent::__construct
+        (
+            $context,
+            $stockRegistry,
+            $stockConfiguration,
+            $registry,
+            $messageHelper,
+            $checkoutHelper,
+            $data
+        );
+
+        $this->enable = $extendHelper->isExtendEnabled();
+    }
+
     public function getColumnHtml(\Magento\Framework\DataObject $item, $column, $field = null)
     {
+        if(!$this->enable){
+            return parent::getColumnHtml($item, $column, $field);
+        }
         $html = '';
         switch ($column) {
             case 'refund':
