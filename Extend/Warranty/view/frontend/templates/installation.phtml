@@ -7,10 +7,20 @@ if ($viewModel) {
 }
 ?>
 <?php if (isset($viewModel) && $viewModel->getExtendEnable()) : ?>
-    <script src="https://sdk.helloextend.com/extend-sdk-client/v1/dev/extend-sdk-client.min.js"></script>
-    <script type="text/javascript">
+    <?php if ($viewModel->getExtendLive()) : ?>
+        <script src="https://sdk.helloextend.com/extend-sdk-client/v1/extend-sdk-client.min.js"></script>
+    <?php else: ?>
+        <script src="https://sdk.helloextend.com/extend-sdk-client/v1/demo/extend-sdk-client.min.js"></script>
+    <?php endif; ?>
 
-        //Extend.config({ storeId: '<?= $block->escapeHtmlAttr($block->escapeUrl($viewModel->getExtendStoreId())); ?>' });
-
+    <script>
+        Extend.config({ storeId: '<?= $block->escapeHtmlAttr($block->escapeUrl($viewModel->getExtendStoreId())); ?>' });
     </script>
 <?php endif; ?>
+
+<script>
+    var BASE_URL = '<?= $block->escapeUrl($block->getBaseUrl()) ?>';
+    var require = {
+        "baseUrl": "<?= /* @escapeNotVerified */ $block->getViewFileUrl('/') ?>"
+    };
+</script>

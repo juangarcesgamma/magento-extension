@@ -34,4 +34,10 @@ class Data extends AbstractHelper
     {
         return $this->scopeConfig->isSetFlag($this::ENABLE_PATH);
     }
+
+    public function isExtendLive()
+    {
+        $path = self::BASEPATH . 'auth_mode';
+        return $this->scopeConfig->isSetFlag($path);
+    }
 }

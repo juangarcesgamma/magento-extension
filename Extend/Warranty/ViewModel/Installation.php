@@ -59,7 +59,12 @@ class Installation implements  ArgumentInterface
 
     public function getExtendEnable()
     {
-        return isset($this->enable) ? $this->enable : false;
+        return isset($this->enable) ? $this->enable : $this->data->isExtendEnabled();
+    }
+
+    public function getExtendLive()
+    {
+        return $this->data->isExtendLive();
     }
 
     public function getExtendStoreId()
