@@ -17,7 +17,7 @@
             </td>
             <td width="60%" id="eSync">
                 <p id="sync-msg" class=""><strong><?=__('Last Sync:').' '?></strong><span id="sync-time"><?= !empty($block->getLastSync()) ? $block->getLastSync() : 'Never'?></span></p>
-                <a id="cancel_sync" style="color: red; display: none" href="javascript:void(0)"><strong>Cancel Sync</strong></a>
+                <button type="button" id="cancel_sync" style="color: red; display: none; padding: 0; border: none; background: none;" ><strong>Cancel Sync</strong></button>
             </td>
         </tr>
     </table>
