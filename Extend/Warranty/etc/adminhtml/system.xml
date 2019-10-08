@@ -21,7 +21,7 @@
                 </comment>
 
                 <field id="accountbutton" translate="label" type="button" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <frontend_model>Extend\Warranty\Block\System\Config\AccountButton</frontend_model>
+                    <frontend_model>Extend\Warranty\Block\System\Config\AccountLink</frontend_model>
                     <comment>
                         <![CDATA[
                             or <a href="https://www.google.com"> I already have an Extend account, I'm ready to edit my settings</a>
@@ -31,8 +31,7 @@
                 <field id="help" translate="label" type="label" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
                     <comment>
                         <![CDATA[
-                            Need help? <a href="https://google.com">Check out our setup guide</a> for more
-                            instructions, or contact <a>support@helloextend.com</a>
+                            For more information or help, contact <a href="mailto:support@helloextend.com">support@helloextend.com</a>.
                         ]]>
                     </comment>
                 </field>
