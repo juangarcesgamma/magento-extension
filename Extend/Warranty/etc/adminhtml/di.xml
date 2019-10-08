@@ -2,10 +2,11 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
-    <virtualType name="Extend\Warranty\Block\System\Config\AccountButton" type="Extend\Warranty\Block\System\Config\Button">
+    <virtualType name="Extend\Warranty\Block\System\Config\AccountLink" type="Extend\Warranty\Block\System\Config\Link">
         <arguments>
-            <argument name="id" xsi:type="string">accountButton</argument>
+            <argument name="url" xsi:type="string">https://merchants.extend.com/onboarding/platform/mg-signup</argument>
             <argument name="label" xsi:type="string">Set up my Extend account</argument>
+            <argument name="class" xsi:type="string">action-default scalable</argument>
         </arguments>
     </virtualType>
 

@@ -7,8 +7,7 @@ use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
-
-class Button extends Field
+class Link extends Field
 {
     /**
      * @var string
@@ -18,7 +17,7 @@ class Button extends Field
     /**
      * @var string
      */
-    protected $id;
+    protected $url;
 
     /**
      * @var string
@@ -28,12 +27,14 @@ class Button extends Field
     public function __construct(
         Context $context,
         array $data = [],
-        $id = '',
-        $label = ''
+        $url = '',
+        $label = '',
+        $class = ''
     )
     {
-        $this->id = $id;
+        $this->url = $url;
         $this->label = $label;
+        $this->class = $class;
         parent::__construct($context, $data);
     }
 
@@ -58,15 +59,8 @@ class Button extends Field
 
     public function getHtml()
     {
-        $button = $this->getLayout()->createBlock(
-            'Magento\Backend\Block\Widget\Button'
-        )->setData(
-            [
-                'id' => $this->id,
-                'label' => __($this->label)
-            ]
-        );
+        $linkHtml = "<a href='{$this->url}' class='{$this->class}'>{$this->label}</a>";
 
-        return $button->toHtml();
+        return $linkHtml;
     }
 }
