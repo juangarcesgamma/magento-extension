@@ -9,8 +9,9 @@ use Magento\Store\Model\StoreManagerInterface;
 use Extend\Warranty\Helper\Api\Data;
 use Extend\Warranty\Model\Keys;
 use Extend\Warranty\Model\Api\Connector;
+use Magento\Framework\Serialize\Serializer\Json;
 
-class Installation implements  ArgumentInterface
+class Installation implements ArgumentInterface
 {
     /**
      * @var StoreManagerInterface
@@ -27,9 +28,24 @@ class Installation implements  ArgumentInterface
      */
     protected $keys;
 
+    /**
+     * @var Json
+     */
+    protected $jsonSerializer;
+
+    /**
+     * @var Connector
+     */
     protected $connection;
 
+    /**
+     * @var bool
+     */
     protected $enable;
+
+    /**
+     * @var string
+     */
     protected $storeId;
 
     public function __construct
@@ -37,13 +53,15 @@ class Installation implements  ArgumentInterface
         StoreManagerInterface $storeManager,
         Data $data,
         Keys $keys,
-        Connector $connection
+        Connector $connection,
+        Json $jsonSerializer
     )
     {
         $this->storeManager = $storeManager;
         $this->data = $data;
         $this->keys = $keys;
         $this->connection = $connection;
+        $this->jsonSerializer = $jsonSerializer;
     }
 
     public function prepareBlockData()
@@ -55,6 +73,23 @@ class Installation implements  ArgumentInterface
         } else {
             $this->enable = false;
         }
+    }
+
+    public function getJsMode()
+    {
+        return $this->getExtendLive() ?
+            "https://sdk.helloextend.com/extend-sdk-client/v1/extend-sdk-client.min.js" :
+            "https://sdk.helloextend.com/extend-sdk-client/v1/demo/extend-sdk-client.min.js";
+    }
+
+    public function getJsonConfig()
+    {
+
+        $data = [
+            'storeId' => (string)$this->getExtendStoreId()
+        ];
+
+        return $this->jsonSerializer->serialize($data);
     }
 
     public function getExtendEnable()

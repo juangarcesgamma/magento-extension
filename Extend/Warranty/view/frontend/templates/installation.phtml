@@ -7,14 +7,10 @@ if ($viewModel) {
 }
 ?>
 <?php if (isset($viewModel) && $viewModel->getExtendEnable()) : ?>
-    <?php if ($viewModel->getExtendLive()) : ?>
-        <script src="https://sdk.helloextend.com/extend-sdk-client/v1/extend-sdk-client.min.js"></script>
-    <?php else: ?>
-        <script src="https://sdk.helloextend.com/extend-sdk-client/v1/demo/extend-sdk-client.min.js"></script>
-    <?php endif; ?>
+    <script src="<?= $viewModel->getJsMode() ?>"></script>
 
     <script>
-        Extend.config({ storeId: '<?= $block->escapeHtmlAttr($block->escapeUrl($viewModel->getExtendStoreId())); ?>' });
+        Extend.config(<?= $viewModel->getJsonConfig() ?>);
     </script>
 <?php endif; ?>
 
