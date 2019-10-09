@@ -24,7 +24,7 @@
                     <frontend_model>Extend\Warranty\Block\System\Config\AccountLink</frontend_model>
                     <comment>
                         <![CDATA[
-                            or <a href="https://www.google.com"> I already have an Extend account, I'm ready to edit my settings</a>
+                            or <a href="https://www.google.com" class="extend-account-link"> I already have an Extend account, I'm ready to edit my settings</a>
                         ]]>
                     </comment>
                 </field>
