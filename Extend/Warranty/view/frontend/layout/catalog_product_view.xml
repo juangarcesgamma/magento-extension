@@ -5,12 +5,12 @@
         <referenceContainer name="content">
             <referenceBlock name="product.info.addtocart" template="Extend_Warranty::warranty.phtml">
                 <arguments>
-                    <argument name="view_model" xsi:type="object">Extend\Warranty\ViewModel\Warranty</argument>
+                    <argument name="viewModel" xsi:type="object">Extend\Warranty\ViewModel\Installation</argument>
                 </arguments>
             </referenceBlock>
             <referenceBlock name="product.info.addtocart.additional" template="Extend_Warranty::warranty.phtml">
                 <arguments>
-                    <argument name="view_model" xsi:type="object">Extend\Warranty\ViewModel\Warranty</argument>
+                    <argument name="viewModel" xsi:type="object">Extend\Warranty\ViewModel\Installation</argument>
                 </arguments>
             </referenceBlock>
         </referenceContainer>
