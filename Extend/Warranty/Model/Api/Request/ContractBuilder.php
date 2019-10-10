@@ -69,7 +69,7 @@ class ContractBuilder
             }
 
             try {
-                $product = $this->productRepository->getById($productId);
+                $product = $this->productRepository->get($productId);
             } catch (NoSuchEntityException $exception) {
                 continue;
             }
@@ -113,7 +113,7 @@ class ContractBuilder
                 'currency' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
                 'transactionDate' => strtotime($order->getCreatedAt()),
                 'plan' => [
-                    'purchasePrice' => $this->helper->formatPrice($warranty->getCustomPrice()),
+                    'purchasePrice' => $this->helper->formatPrice($warranty->getPrice()),
                     'planId' => $warrantyId
                 ]
             ];
