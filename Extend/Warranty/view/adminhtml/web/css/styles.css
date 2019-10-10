@@ -118,3 +118,10 @@ tr#row_warranty_account_help p.note {
 tr#row_warranty_account_help p.note a {
     font-size: 14px;
 }
+#syncBtn {
+    padding: 2% 15%;
+}
+
+#eSync {
+    vertical-align: middle !important;
+}
