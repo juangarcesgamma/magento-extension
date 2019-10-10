@@ -11,7 +11,11 @@ define([
 
         $(document).ready(function () {
             $('div.product-options-wrapper').click(() => {
-                selectedProduct();
+                let sku = selectedProduct();
+
+                if(sku !== ''){
+                    renderWarranties(sku);
+                }
             });
         });
 
@@ -28,7 +32,7 @@ define([
                 let attribute_id = $(value).attr('attribute-id');
                 let option_selected = $(value).attr('option-selected');
                 if (!attribute_id || !option_selected) {
-                    return;
+                    return '';
                 }
                 selected_options[attribute_id] = option_selected;
             });
@@ -37,12 +41,41 @@ define([
 
             for (let [productId, attributes] of Object.entries(productConfig.index)) {
                 if (match(attributes, selected_options)) {
-                    let sku = productConfig.skus[productId];
-
-                    const component = Extend.buttons.instance('#extend-offer');
-                    component.setActiveProduct(sku);
+                    return productConfig.skus[productId];
                 }
             }
+        }
+
+        function renderWarranties(productSku){
+            const component = Extend.buttons.instance('#extend-offer');
+            component.setActiveProduct(productSku);
+        }
+
+        $('#product-addtocart-button').click((event) => {
+            event.preventDefault();
+
+            /** get the component instance rendered previously */
+            const component = Extend.buttons.instance('#extend-offer');
+            /** get the users plan selection */
+            const plan = component.getPlanSelection();
+
+            if (plan) {
+                addWarranty(plan);
+            }else{
+                $("input[name^='warranty']").remove();
+            }
+            $('#product_addtocart_form').submit();
+
+        });
+
+        function addWarranty(plan){
+
+            $.each(plan, (attribute, value) => {
+                $('<input />').attr('type', 'hidden')
+                    .attr('name', 'warranty[' + attribute + ']')
+                    .attr('value', value)
+                    .appendTo('#product_addtocart_form');
+            });
         }
 
     };
