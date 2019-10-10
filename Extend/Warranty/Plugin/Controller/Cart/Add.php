@@ -65,35 +65,11 @@ class Add
             return null;
         }
 
-        if ($product->getSku() == '24-MB03') {
+        $warrantyData = $this->request->getPost('warranty');
 
-            // HARDCORED WARRANTY - HEL-167
-            $warrantyData = [
-                'id' => "10001-misc-elec-base-replace-1y",
-                'title' => "Extend Protection Plan - Electronics",
-                'imageUrl' => "https://extend-js-sdk.s3.amazonaws.com/extend_icon.png",
-                "term_length" => 12,
-                'prices' => [
-                    'min' => 199,
-                    'max' => 599,
-                    'points' => [
-                        199,
-                        339,
-                        389,
-                        599
-                    ]
-                ],
-                'products' => [
-                    "24-MB03",
-                    "24-MB04",
-                    "240-LV04",
-                    "MH01-XS-Black"
-                ]
-            ];
-            //END HARDCORE
+        if ($warrantyData) {
 
-            $warrantyData['products'] = $product->getId();
-            $warrantyData['custom_price'] = $warrantyData['prices']['max'];
+            $warrantyData['product'] = $product->getSku();
 
             $this->searchCriteriaBuilder
                 ->setPageSize(1)->addFilter('type_id', WarrantyType::TYPE_CODE);

@@ -11,7 +11,7 @@ tr#row_warranty_account_accountbutton > td.value{
 
 tr#row_warranty_account_accountbutton > td.value > p.note {
     display: inline-block;
-    padding-left: 5%;
+    font-size: 14px;
 }
 
 tr#row_warranty_account_help > td.label {
@@ -36,12 +36,85 @@ a#warranty_account-head{
 }
 
 img#extend-logo{
-    width: 80%;
+    width: 170px;
+}
+
+div.extend__info {
+    color: black;
+    width: 44%;
+    line-height: 19px;
 }
 
 img#extend-mobile{
-    max-width: none;
+    width: 19%;
 }
-p#extend-intro{
-    width: 90%;
+
+.extend__intro {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.extend__intro p {
+    margin: 0;
+}
+
+.action.action-extend-external {
+    border: 1px solid #007dbd;
+    border-radius: 0;
+    display: inline-block;
+    font-weight: 600;
+    line-height: 1.36;
+    padding: 1rem 2rem;
+    text-align: center;
+    vertical-align: baseline;
+    font-size: 1.6rem;
+    letter-spacing: .025em;
+    background-color: #007dbd;
+    color: #fff;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.25);
+    white-space: nowrap;
+    margin-right: 20px;
+}
+
+.action.action-extend-external:hover,
+.action.action-extend-external:active,
+.action.action-extend-external:focus {
+    background-color: #0073ae;
+    border-color: #007dbd;
+    box-shadow: 0 0 0 1px #007bdb;
+    color: #fff;
+    text-decoration: none;
+}
+
+.action.action-extend-external::after {
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Admin Icons';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    speak: none;
+    content: '\e644';
+    font-size: 1rem;
+    vertical-align: super;
+    margin-left: 8px;
+}
+
+.accordion .config .note {
+    margin: 0;
+}
+
+.accordion .config .note a.extend-account-link {
+    font-size: 14px;
+    margin-left: 15px;
+}
+
+tr#row_warranty_account_help p.note {
+    color: black;
+    font-size: 14px;
+}
+
+tr#row_warranty_account_help p.note a {
+    font-size: 14px;
 }
