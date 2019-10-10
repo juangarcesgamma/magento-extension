@@ -91,17 +91,52 @@ class Type extends AbstractType
     {
         $options = parent::getOrderOptions($product);
 
-        if($warrantyId = $product->getCustomOption(self::WARRANTY_ID)){
+        if ($warrantyId = $product->getCustomOption(self::WARRANTY_ID)) {
             $options[self::WARRANTY_ID] = $warrantyId->getValue();
         }
 
-        if($associatedProduct = $product->getCustomOption(self::ASSOCIATED_PRODUCT)){
+        if ($associatedProduct = $product->getCustomOption(self::ASSOCIATED_PRODUCT)) {
             $options[self::ASSOCIATED_PRODUCT] = $associatedProduct->getValue();
         }
 
-        if($term = $product->getCustomOption(self::TERM)){
+        if ($term = $product->getCustomOption(self::TERM)) {
             $options[self::TERM] = $term->getValue();
         }
+        return $options;
+    }
+
+    /**
+     * @param  \Magento\Catalog\Model\Product $product
+     * @return array
+     */
+    public function getWarrantyInfo($product)
+    {
+        $warrantyProperties = [
+            self::ASSOCIATED_PRODUCT => 'Product',
+            self::TERM => 'Term'
+        ];
+
+        $options = [];
+
+        foreach ($warrantyProperties as $property => $label) {
+
+            if ($attributesOption = $product->getCustomOption($property)) {
+                $data = $attributesOption->getValue();
+                if (!$data) {
+                    continue;
+                }
+                $options[] = [
+                    'label' => $label,
+                    'value' => $data
+                ];
+            }
+        }
+
+        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/test.log');
+        $logger = new \Zend\Log\Logger();
+        $logger->addWriter($writer);
+        $logger->info($options);
+
         return $options;
     }
 }

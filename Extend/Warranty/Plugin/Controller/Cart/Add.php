@@ -57,19 +57,9 @@ class Add
 
     public function beforeExecute(SuperAdd $subject)
     {
-        $productId = $this->request->getPost('product');
-
-        try {
-            $product = $this->productRepository->getById($productId);
-        } catch (NoSuchEntityException $e) {
-            return null;
-        }
-
         $warrantyData = $this->request->getPost('warranty');
 
         if ($warrantyData) {
-
-            $warrantyData['product'] = $product->getSku();
 
             $this->searchCriteriaBuilder
                 ->setPageSize(1)->addFilter('type_id', WarrantyType::TYPE_CODE);
