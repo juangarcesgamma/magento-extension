@@ -2,11 +2,10 @@
 
 /**
  * @var $block \Magento\Catalog\Block\Product\View
- * @var Extend\Catalog\ViewModel\Warranty $viewModel
+ * @var Extend\Warranty\ViewModel\Installation $viewModel
  */
-$viewModel = $block->getViewModel();
+$viewModel = $block->getData('viewModel');
 
-$warranties = $viewModel->getWarranties($block->getProduct()->getSku());
 ?>
 <?php $_product = $block->getProduct(); ?>
 <?php $buttonTitle = __('Add to Cart'); ?>
@@ -32,25 +31,16 @@ $warranties = $viewModel->getWarranties($block->getProduct()->getSku());
                 </div>
             <?php endif; ?>
             <hr>
-            <?php if ($viewModel->isExtendEnabled()): ?>
-                <h2>Fast and free replacement if your product breaks</h2>
-                <p>Protect your purchase with EXTEND.</p>
-                <fieldset>
+            <?php if (isset($viewModel) && $viewModel->getExtendEnable()) : ?>
+                <div id="extend-offer"></div>
 
-                    <?php
-                    /**
-                     * @var \Magento\Catalog\Model\Product $warranty
-                     */
-                    foreach ($warranties as $warranty):
-                        ?>
-                        <div>
-                            <input class="warranty" type="checkbox" id="<?= $warranty->getSku() ?>">
-                            <label class="checkboxLabel"
-                                   for="<?= $warranty->getSku() ?>"># years - <strong>$<?= $warranty->getPrice() ?></strong></label>
-                        </div>
-                    <?php endforeach; ?>
-                </fieldset>
-                <hr>
+                <script type="text/x-magento-init">
+                {
+                    "#extend-offer": {
+                        "extendWarranties":{"productSku":"<?= $_product->getTypeId() == 'simple' ? $_product->getSku() : '' ?>"}
+                    }
+                }
+                </script>
             <?php endif; ?>
 
             <div class="actions">
@@ -83,6 +73,24 @@ $warranties = $viewModel->getWarranties($block->getProduct()->getSku());
             "Magento_Catalog/js/validate-product": {}
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

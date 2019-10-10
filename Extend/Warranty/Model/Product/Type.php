@@ -19,6 +19,7 @@ class Type extends AbstractType
 
     const WARRANTY_ID = 'warranty_id';
     const ASSOCIATED_PRODUCT = 'associated_product';
+    const TERM = 'warranty_term';
 
     /**
      * @var Data
@@ -73,12 +74,13 @@ class Type extends AbstractType
 
     protected function _prepareProduct(\Magento\Framework\DataObject $buyRequest, $product, $processMode)
     {
-        $price = $this->helper->removeFormatPrice($buyRequest->getPrices()['max']);
+        $price = $this->helper->removeFormatPrice($buyRequest->getPrice());
 
         $buyRequest->setData('custom_price', $price);
 
-        $product->addCustomOption(self::WARRANTY_ID, $buyRequest->getId());
-        $product->addCustomOption(self::ASSOCIATED_PRODUCT, $buyRequest->getProducts());
+        $product->addCustomOption(self::WARRANTY_ID, $buyRequest->getData('planId'));
+        $product->addCustomOption(self::ASSOCIATED_PRODUCT, $buyRequest->getProduct());
+        $product->addCustomOption(self::TERM, $buyRequest->getTerm());
 
         $product->setQty(1);
 
@@ -95,6 +97,10 @@ class Type extends AbstractType
 
         if($associatedProduct = $product->getCustomOption(self::ASSOCIATED_PRODUCT)){
             $options[self::ASSOCIATED_PRODUCT] = $associatedProduct->getValue();
+        }
+
+        if($term = $product->getCustomOption(self::TERM)){
+            $options[self::TERM] = $term->getValue();
         }
         return $options;
     }
