@@ -118,3 +118,22 @@ tr#row_warranty_account_help p.note {
 tr#row_warranty_account_help p.note a {
     font-size: 14px;
 }
+
+div.extend-sync-button-container {
+    align-items: center;
+    display: flex;
+}
+
+div.extend-sync-button-container #syncBtn{
+    border: 0;
+    font-weight: bold;
+    padding: .6rem 4.5rem;
+}
+
+div.extend-sync-button-container .sync-info {
+    margin-left: 30px;
+}
+
+div.extend-sync-button-container .sync-info p{
+    margin: 0;
+}

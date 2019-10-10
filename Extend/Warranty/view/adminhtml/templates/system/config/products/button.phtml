@@ -10,15 +10,11 @@
  */
 ?>
 <div class="extend-sync-button-container">
-    <table class="extend-sync">
-        <tr>
-            <td width="30%" id="eSync">
-                <button id="syncBtn" class="" data-mage-init='{"productSync": {"url": "<?= $block->getUrl('extend/products/sync') ?>"}}'><span>Sync Products</span></button>
-            </td>
-            <td width="70%" id="eSync">
-                <p id="sync-msg" class=""><strong><?=__('Last Sync:').' '?></strong><span id="sync-time"><?= !empty($block->getLastSync()) ? $block->getLastSync() : 'Never'?></span></p>
-                <a id="cancel_sync" style="color: red; display: none">Cancel Sync</a>
-            </td>
-        </tr>
-    </table>
+    <button id="syncBtn" data-mage-init='{"productSync": {"url": "<?= $block->getUrl('extend/products/sync') ?>"}}'>
+        <span>Sync Products</span>
+    </button>
+    <div class="sync-info">
+        <p id="sync-msg" class=""><strong><?=__('Last Sync:').' '?></strong><span id="sync-time"><?= !empty($block->getLastSync()) ? $block->getLastSync() : 'Never'?></span></p>
+        <a id="cancel_sync" style="color: red; display: none">Cancel Sync</a>
+    </div>
 </div>
