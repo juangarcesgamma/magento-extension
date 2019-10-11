@@ -60,27 +60,38 @@ img#extend-mobile{
     margin: 0;
 }
 
-.action.action-extend-external {
+.action.action-extend-external,
+.action.action-extend-refund {
     border: 1px solid #007dbd;
     border-radius: 0;
     display: inline-block;
     font-weight: 600;
     line-height: 1.36;
-    padding: 1rem 2rem;
     text-align: center;
     vertical-align: baseline;
-    font-size: 1.6rem;
     letter-spacing: .025em;
     background-color: #007dbd;
     color: #fff;
     text-shadow: 1px 1px 0 rgba(0,0,0,0.25);
     white-space: nowrap;
+}
+
+.action.action-extend-external {
+    font-size: 1.6rem;
+    padding: 1rem 2rem;
     margin-right: 20px;
+}
+
+.action.action-extend-refund {
+
 }
 
 .action.action-extend-external:hover,
 .action.action-extend-external:active,
-.action.action-extend-external:focus {
+.action.action-extend-external:focus,
+.action.action-extend-refund:hover,
+.action.action-extend-refund:active,
+.action.action-extend-refund:focus {
     background-color: #0073ae;
     border-color: #007dbd;
     box-shadow: 0 0 0 1px #007bdb;
