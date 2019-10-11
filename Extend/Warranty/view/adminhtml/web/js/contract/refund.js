@@ -61,6 +61,7 @@ define(
                 const itemId = this.options.itemId;
 
                 var modalOptions = {
+                    modalClass: 'extend-confirm-modal',
                     buttons: [{
                         text: 'Ok',
                         class: 'extend-confirm',
