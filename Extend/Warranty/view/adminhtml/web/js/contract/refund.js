@@ -63,7 +63,7 @@ define(
                 var modalOptions = {
                     buttons: [{
                         text: 'Ok',
-                        modalClass: 'extend-confirm',
+                        class: 'extend-confirm',
                         click: function() {
                             refund(url, contractId, itemId);
                             this.closeModal();

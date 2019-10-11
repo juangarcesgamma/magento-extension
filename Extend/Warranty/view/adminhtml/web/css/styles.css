@@ -201,7 +201,19 @@ div.extend-sync-button-container .sync-info #cancel_sync {
 
 .modal-popup .modal-inner-wrap {
     width: 20%;
-    padding: 24px;
+    padding: 20px;
+}
+
+.modal-popup .modal-header {
+    padding-top: 1rem;
+}
+
+.modal-popup .action-close {
+    padding: 0;
+}
+
+.modal-popup .action-close::before {
+    font-size: 1.4rem;
 }
 
 .modal-popup .modal-content {
