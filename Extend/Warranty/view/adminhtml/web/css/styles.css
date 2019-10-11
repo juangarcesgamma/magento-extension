@@ -203,30 +203,30 @@ div.extend-sync-button-container .sync-info #cancel_sync {
     font-weight: bold;
 }
 
-.modal-popup .modal-inner-wrap {
+.modal-popup.extend-confirm-modal .modal-inner-wrap {
     width: 20%;
     padding: 20px;
 }
 
-.modal-popup .modal-header {
+.modal-popup.extend-confirm-modal .modal-header {
     padding-top: 1rem;
 }
 
-.modal-popup .action-close {
+.modal-popup.extend-confirm-modal .action-close {
     padding: 0;
     right: 7px;
     top: 7px;
 }
 
-.modal-popup .action-close::before {
+.modal-popup.extend-confirm-modal .action-close::before {
     font-size: 1.4rem;
 }
 
-.modal-popup .modal-content {
+.modal-popup.extend-confirm-modal .modal-content {
     padding: 0;
 }
 
-.modal-popup .modal-footer {
+.modal-popup.extend-confirm-modal .modal-footer {
     padding: 0;
 }
 
