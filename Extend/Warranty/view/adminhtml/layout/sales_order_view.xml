@@ -5,6 +5,9 @@
         <css src="Extend_Warranty::css/styles.css"/>
     </head>
     <body>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template" name="extend-modal-cont" template="Extend_Warranty::confirm-modal.phtml" after="-"/>
+        </referenceContainer>
         <referenceContainer name="order_items">
             <block class="Extend\Warranty\Block\Adminhtml\Order\View\Items\Renderer\WarrantyRenderer" as="warranty" name="warranty_order_items_renderer" template="Magento_Sales::order/view/items/renderer/default.phtml">
                 <arguments>
@@ -24,6 +27,5 @@
                 </arguments>
             </block>
         </referenceContainer>
-        <block name="extend-modal-cont" template="Extend_Warranty::confirm-modal.phtml" />
     </body>
 </page>
