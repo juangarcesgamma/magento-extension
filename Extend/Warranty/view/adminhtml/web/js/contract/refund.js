@@ -5,7 +5,7 @@ define(
         'Magento_Ui/js/modal/modal',
         'mage/translate'
     ],
-    function ($, alert, $t) {
+    function ($, alert, modal, $t) {
         'use strict';
 
         function refund(url, contractId, itemId) {
