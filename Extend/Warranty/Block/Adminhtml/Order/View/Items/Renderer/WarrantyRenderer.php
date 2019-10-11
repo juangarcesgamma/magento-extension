@@ -59,7 +59,7 @@ class WarrantyRenderer extends DefaultRenderer
                         if ($this->canDisplayContainer()) {
                             $html .= '<div id="' . $this->getHtmlId() . '">';
                         }
-                        $html .= '<button type="button"' . " data-mage-init='{$this->getDataInit($item)}' >Request Refund</button>";
+                        $html .= '<button type="button" class="action action-extend-refund"' . " data-mage-init='{$this->getDataInit($item)}' >Request Refund</button>";
                         if ($this->canDisplayContainer()) {
                             $html .= '</div>';
                         }

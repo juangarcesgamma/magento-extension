@@ -15,6 +15,7 @@ define(
 
         function restore(button) {
             button.text('Sync Products');
+            button.removeClass("syncing");
             button.attr("disabled", false);
             synMsg.show();
             cancelSync.hide();
@@ -93,8 +94,8 @@ define(
             syncProducts: function(event) {
                 event.preventDefault();
                 var button =  $(this.element);
-
-                button.text("Sync in progress...");
+                button.text('Sync in progress...');
+                button.addClass("syncing");
                 button.attr("disabled", true);
 
                 synMsg.hide();

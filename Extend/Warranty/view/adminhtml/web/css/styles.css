@@ -60,27 +60,38 @@ img#extend-mobile{
     margin: 0;
 }
 
-.action.action-extend-external {
+.action.action-extend-external,
+.action.action-extend-refund {
     border: 1px solid #007dbd;
     border-radius: 0;
     display: inline-block;
     font-weight: 600;
     line-height: 1.36;
-    padding: 1rem 2rem;
     text-align: center;
     vertical-align: baseline;
-    font-size: 1.6rem;
     letter-spacing: .025em;
     background-color: #007dbd;
     color: #fff;
     text-shadow: 1px 1px 0 rgba(0,0,0,0.25);
     white-space: nowrap;
+}
+
+.action.action-extend-external {
+    font-size: 1.6rem;
+    padding: 1rem 2rem;
     margin-right: 20px;
+}
+
+.action.action-extend-refund {
+
 }
 
 .action.action-extend-external:hover,
 .action.action-extend-external:active,
-.action.action-extend-external:focus {
+.action.action-extend-external:focus,
+.action.action-extend-refund:hover,
+.action.action-extend-refund:active,
+.action.action-extend-refund:focus {
     background-color: #0073ae;
     border-color: #007dbd;
     box-shadow: 0 0 0 1px #007bdb;
@@ -101,6 +112,10 @@ img#extend-mobile{
     margin-left: 8px;
 }
 
+#eSync {
+    vertical-align: middle !important;
+}
+
 .accordion .config .note {
     margin: 0;
 }
@@ -118,10 +133,85 @@ tr#row_warranty_account_help p.note {
 tr#row_warranty_account_help p.note a {
     font-size: 14px;
 }
-#syncBtn {
-    padding: 2% 15%;
+
+div.extend-sync-button-container {
+    align-items: center;
+    display: flex;
 }
 
-#eSync {
-    vertical-align: middle !important;
+div.extend-sync-button-container #syncBtn{
+    border: 0;
+    font-weight: bold;
+    padding: .6rem 4.5rem;
+}
+
+div.extend-sync-button-container #syncBtn.syncing {
+    padding-left: 2rem;
+    position: relative;
+}
+
+div.extend-sync-button-container #syncBtn.syncing::after {
+    -webkit-font-smoothing: antialiased;
+    content: '\e603';
+    display: inline-block;
+    font-family: "icons-blank-theme";
+    font-size: 5rem;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    speak: none;
+    position: absolute;
+    top: -10px;
+    right: 0;
+
+    -webkit-animation-name: spin;
+    -webkit-animation-duration: 4000ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: spin;
+    -moz-animation-duration: 4000ms;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -ms-animation-name: spin;
+    -ms-animation-duration: 4000ms;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-timing-function: linear;
+
+    animation-name: spin;
+    animation-duration: 4000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+
+
+}
+
+div.extend-sync-button-container .sync-info {
+    margin-left: 30px;
+}
+
+div.extend-sync-button-container .sync-info p{
+    margin: 0;
+}
+
+div.extend-sync-button-container .sync-info #cancel_sync {
+    color: red;
+    display: none;
+    font-weight: bold;
+}
+
+@-ms-keyframes spin {
+    from { -ms-transform: rotate(0deg); }
+    to { -ms-transform: rotate(360deg); }
+}
+@-moz-keyframes spin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    from { transform:rotate(0deg); }
+    to { transform:rotate(360deg); }
 }
