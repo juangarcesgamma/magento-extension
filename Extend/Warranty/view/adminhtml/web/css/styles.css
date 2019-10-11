@@ -199,6 +199,19 @@ div.extend-sync-button-container .sync-info #cancel_sync {
     font-weight: bold;
 }
 
+.modal-popup .modal-inner-wrap {
+    width: 20%;
+    padding: 24px;
+}
+
+.modal-popup .modal-content {
+    padding: 0;
+}
+
+.modal-popup .modal-footer {
+    padding: 0;
+}
+
 @-ms-keyframes spin {
     from { -ms-transform: rotate(0deg); }
     to { -ms-transform: rotate(360deg); }

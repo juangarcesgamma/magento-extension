@@ -61,25 +61,17 @@ define(
                 const itemId = this.options.itemId;
 
                 var modalOptions = {
-                    type: 'popup',
-                    responsive: true,
-                    innerScroll: true,
                     buttons: [{
                         text: 'Ok',
-                        class: '',
+                        modalClass: 'extend-confirm',
                         click: function() {
                             refund(url, contractId, itemId);
+                            this.closeModal();
                         }
                     }]
                 };
                 var confirmModal = modal(modalOptions, $('#popup-modal'));
                 $('#popup-modal').modal("openModal");
-
-
-                // if (confirm("Are you sure?")) {
-                //     refund(url, contractId, itemId);
-                // }
-
             }
         });
 
