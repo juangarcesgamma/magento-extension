@@ -2,6 +2,7 @@ define(
     [
         'jquery',
         'Magento_Ui/js/modal/alert',
+        'Magento_Ui/js/modal/modal',
         'mage/translate'
     ],
     function ($, alert, $t) {
@@ -59,10 +60,25 @@ define(
                 const contractId = this.options.contractId;
                 const itemId = this.options.itemId;
 
+                var modalOptions = {
+                    type: 'popup',
+                    responsive: true,
+                    innerScroll: true,
+                    buttons: [{
+                        text: 'Ok',
+                        class: '',
+                        click: function() {
+                            refund(url, contractId, itemId);
+                        }
+                    }]
+                };
+                var confirmModal = modal(modalOptions, $('#popup-modal'));
+                $('#popup-modal').modal("openModal");
 
-                if (confirm("Are you sure?")) {
-                    refund(url, contractId, itemId);
-                }
+
+                // if (confirm("Are you sure?")) {
+                //     refund(url, contractId, itemId);
+                // }
 
             }
         });

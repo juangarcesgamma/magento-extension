@@ -24,5 +24,6 @@
                 </arguments>
             </block>
         </referenceContainer>
+        <block name="extend-modal-cont" template="Extend_Warranty::confirm-modal.phtml" />
     </body>
 </page>
