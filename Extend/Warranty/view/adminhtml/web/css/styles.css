@@ -62,7 +62,8 @@ img#extend-mobile{
 
 .action.action-extend-external,
 .action.action-extend-refund,
-.extend-confirm {
+.extend-confirm,
+.modal-popup.extend-refund-success .modal-footer .action-primary {
     border: 1px solid #007dbd;
     border-radius: 0;
     display: inline-block;
@@ -83,10 +84,6 @@ img#extend-mobile{
     margin-right: 20px;
 }
 
-.action.action-extend-refund {
-
-}
-
 .action.action-extend-external:hover,
 .action.action-extend-external:active,
 .action.action-extend-external:focus,
@@ -95,7 +92,10 @@ img#extend-mobile{
 .action.action-extend-refund:focus,
 .extend-confirm:hover,
 .extend-confirm:active,
-.extend-confirm:focus{
+.extend-confirm:focus,
+.modal-popup.extend-refund-success .modal-footer .action-primary:hover,
+.modal-popup.extend-refund-success .modal-footer .action-primary:active,
+.modal-popup.extend-refund-success .modal-footer .action-primary:focus {
     background-color: #0073ae;
     border-color: #007dbd;
     box-shadow: 0 0 0 1px #007bdb;
@@ -185,8 +185,6 @@ div.extend-sync-button-container #syncBtn.syncing::after {
     animation-duration: 4000ms;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
-
-
 }
 
 div.extend-sync-button-container .sync-info {

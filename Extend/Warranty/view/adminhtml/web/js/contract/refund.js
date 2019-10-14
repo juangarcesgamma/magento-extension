@@ -26,7 +26,8 @@ define(
                             always: function(){
                                 location.reload();
                             }
-                        }
+                        },
+                        modalClass: 'extend-refund-success'
                     });
                 })
                 .fail(function (jqXHR, textStatus, errorThrown) {
