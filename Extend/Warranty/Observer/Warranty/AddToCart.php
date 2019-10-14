@@ -1,24 +1,18 @@
 <?php
 
-namespace Extend\Warranty\Plugin\Controller\Cart;
+namespace Extend\Warranty\Observer\Warranty;
 
-use Magento\Checkout\Controller\Cart\Add as SuperAdd;
-use \Magento\Framework\App\Request\Http;
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Extend\Warranty\Model\Product\Type as WarrantyType;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Checkout\Helper\Cart;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Message\ManagerInterface;
 
-class Add
+class AddToCart implements ObserverInterface
 {
-    /**
-     * @var Http
-     */
-    protected $request;
-
     /**
      * @var Cart
      */
@@ -41,35 +35,29 @@ class Add
 
     public function __construct
     (
-        Http $request,
         Cart $cart,
         ProductRepositoryInterface $productRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         ManagerInterface $messageManager
     )
     {
-        $this->request = $request;
         $this->cart = $cart;
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->messageManager = $messageManager;
     }
 
-    public function beforeExecute(SuperAdd $subject)
+    /**
+     * @param Observer $observer
+     * @return void
+     */
+    public function execute(Observer $observer)
     {
-        $productId = $this->request->getPost('product');
+        $request = $observer->getEvent()->getRequest();
 
-        try {
-            $product = $this->productRepository->getById($productId);
-        } catch (NoSuchEntityException $e) {
-            return null;
-        }
+        $warrantyData = $request->getPost('warranty');
 
-        $warrantyData = $this->request->getPost('warranty');
-
-        if ($warrantyData) {
-
-            $warrantyData['product'] = $product->getSku();
+        if (!empty($warrantyData)) {
 
             $this->searchCriteriaBuilder
                 ->setPageSize(1)->addFilter('type_id', WarrantyType::TYPE_CODE);
@@ -85,11 +73,12 @@ class Add
 
             try {
                 $cart->addProduct($warranty->getId(), $warrantyData);
+                $cart->getQuote()->setTotalsCollectedFlag(false)->collectTotals();
+                $cart->save();
             } catch (LocalizedException $e) {
                 $this->messageManager->addErrorMessage('Error while adding warranty product');
             }
 
         }
-        return null;
     }
 }

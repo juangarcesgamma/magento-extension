@@ -61,15 +61,15 @@ class ContractBuilder
 
         /** @var \Magento\Sales\Model\Order\Item $warranty */
         foreach ($warranties as $key => $warranty) {
-            $productId = $warranty->getProductOptionByCode(Type::ASSOCIATED_PRODUCT);
+            $productSku = $warranty->getProductOptionByCode(Type::ASSOCIATED_PRODUCT);
             $warrantyId = $warranty->getProductOptionByCode(Type::WARRANTY_ID);
 
-            if (empty($productId) || empty($warrantyId)) {
+            if (empty($productSku) || empty($warrantyId)) {
                 continue;
             }
 
             try {
-                $product = $this->productRepository->getById($productId);
+                $product = $this->productRepository->get($productSku);
             } catch (NoSuchEntityException $exception) {
                 continue;
             }
@@ -113,7 +113,7 @@ class ContractBuilder
                 'currency' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
                 'transactionDate' => strtotime($order->getCreatedAt()),
                 'plan' => [
-                    'purchasePrice' => $this->helper->formatPrice($warranty->getCustomPrice()),
+                    'purchasePrice' => $this->helper->formatPrice($warranty->getPrice()),
                     'planId' => $warrantyId
                 ]
             ];
