@@ -68,8 +68,8 @@ class InstallData implements InstallDataInterface
 
     public function addImageToPubMedia()
     {
-        $imagePath = $this->reader->getModuleDir(\Magento\Framework\Module\Dir::MODULE_SETUP_DIR, 'Extend_Warranty');
-        $imagePath .= '/Resource/Extend_icon.png';
+        $imagePath = $this->reader->getModuleDir(\Magento\Framework\Module\Dir::MODULE_VIEW_DIR, 'Extend_Warranty');
+        $imagePath .= '/../Setup/Resource/Extend_icon.png';
 
         $media = $this->directoryList->getPath('media');
         $media .= '/Extend_icon.png';
