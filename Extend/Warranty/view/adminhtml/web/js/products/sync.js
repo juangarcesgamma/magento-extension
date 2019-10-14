@@ -15,6 +15,7 @@ define(
 
         function restore(button) {
             button.text('Sync Products');
+            button.removeClass("syncing");
             button.attr("disabled", false);
             synMsg.show();
             cancelSync.hide();
@@ -37,6 +38,9 @@ define(
                 });
                 currentBatchesProcessed = data.currentBatchesProcessed;
                 totalBatches = data.totalBatches;
+                if(currentBatchesProcessed === totalBatches){
+                    $("#sync-time").text(data.msg);
+                }
             } while (currentBatchesProcessed <= totalBatches);
             restore(button);
         }
@@ -90,8 +94,8 @@ define(
             syncProducts: function(event) {
                 event.preventDefault();
                 var button =  $(this.element);
-
                 button.text('Sync in progress...');
+                button.addClass("syncing");
                 button.attr("disabled", true);
 
                 synMsg.hide();

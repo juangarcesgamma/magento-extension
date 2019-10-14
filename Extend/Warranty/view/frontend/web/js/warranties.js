@@ -60,7 +60,8 @@ define([
             const plan = component.getPlanSelection();
 
             if (plan) {
-                addWarranty(plan);
+                let sku = params.productSku !== '' ? params.productSku : selectedProduct();
+                addWarranty(plan, sku);
             }else{
                 $("input[name^='warranty']").remove();
             }
@@ -68,7 +69,7 @@ define([
 
         });
 
-        function addWarranty(plan){
+        function addWarranty(plan, sku){
 
             $.each(plan, (attribute, value) => {
                 $('<input />').attr('type', 'hidden')
@@ -76,6 +77,11 @@ define([
                     .attr('value', value)
                     .appendTo('#product_addtocart_form');
             });
+
+            $('<input />').attr('type', 'hidden')
+                .attr('name', 'warranty[product]')
+                .attr('value', sku)
+                .appendTo('#product_addtocart_form');
         }
 
     };
