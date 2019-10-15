@@ -59,13 +59,23 @@ define([
             /** get the users plan selection */
             const plan = component.getPlanSelection();
 
+            let sku = params.productSku !== '' ? params.productSku : selectedProduct();
+
             if (plan) {
-                let sku = params.productSku !== '' ? params.productSku : selectedProduct();
                 addWarranty(plan, sku);
-            }else{
-                $("input[name^='warranty']").remove();
+            } else {
+                Extend.modal.open({
+                    referenceId: sku,
+                    onClose: function (plan) {
+                        if (plan) {
+                            addWarranty(plan,sku)
+                        } else {
+                            $("input[name^='warranty']").remove();
+                        }
+                        $('#product_addtocart_form').submit();
+                    }
+                });
             }
-            $('#product_addtocart_form').submit();
 
         });
 
