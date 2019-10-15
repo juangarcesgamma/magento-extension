@@ -64,20 +64,20 @@ class ProductsRequest
             $data[] = $this->productDataBuilder->build($product);
         }
 
-        $response  = $this->connector->call(
-            self::ENDPOINT_URI . '?batch=1',
+        $response = $this->connector->call(
+            self::ENDPOINT_URI . '?batch=1&upsert=1',
             \Zend_Http_Client::POST,
             $data
         );
 
-        if ($response->isError()) {
-            $res = $this->jsonSerializer->unserialize($response->getBody());
-            $this->logger->error($res['message']);
-            throw new \Exception($res['message']);
-
-        } elseif ($response->getStatus() === 201) {
+        if ($response->getStatus() === 201) {
             $this->logger->info('Create product request successful');
+            return;
         }
+
+        $res = $this->jsonSerializer->unserialize($response->getBody());
+        $this->logger->error($res['message']);
+        throw new \Exception($res['message']);
     }
 
 
@@ -89,7 +89,7 @@ class ProductsRequest
     {
         foreach ($products as $product) {
             $data = $this->productDataBuilder->build($product);
-            $response  = $this->connector->call(
+            $response = $this->connector->call(
                 self::ENDPOINT_URI . "/{$product->getSku()}",
                 \Zend_Http_Client::PUT,
                 $data

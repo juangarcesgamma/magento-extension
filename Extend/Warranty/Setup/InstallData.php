@@ -52,8 +52,8 @@ class InstallData implements InstallDataInterface
         //ADD WARRANTY PRODUCT TO THE DB
         $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_ADMINHTML);
 
-        $this->addImageToPubMedia();
-        $this->createWarrantyProduct();
+        //$this->addImageToPubMedia();
+        //$this->createWarrantyProduct();
 
         $setup->startSetup();
 
@@ -110,16 +110,16 @@ class InstallData implements InstallDataInterface
         //ADD SYNCED DATE ATTRIBUTE FOR PRODUCTS
         $eavSetup->addAttribute(
             Product::ENTITY,
-            'product_synced_date',
+            'extend_sync',
             [
-                'type' => 'datetime',
-                'label' => 'Is Product Synced',
-                'input' => 'date',
+                'type' => 'int',
+                'label' => 'Synced with Extend',
+                'input' => 'boolean',
                 'required' => false,
                 'is_used_in_grid' => false,
                 'is_visible_in_grid' => false,
                 'is_filterable_in_grid' => false,
-                'visible' => true,
+                'visible' => false,
                 'apply_to' => 'simple,virtual,configurable,downloadable,bundle'
             ]
         );
