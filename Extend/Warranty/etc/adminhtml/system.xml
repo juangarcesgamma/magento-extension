@@ -31,7 +31,7 @@
                 <field id="help" translate="label" type="label" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
                     <comment>
                         <![CDATA[
-                            For more information or help, contact <a href="mailto:support@helloextend.com">support@helloextend.com</a>.
+                            For more information or help, contact <a href="mailto:support@extend.com">support@extend.com</a>.
                         ]]>
                     </comment>
                 </field>
