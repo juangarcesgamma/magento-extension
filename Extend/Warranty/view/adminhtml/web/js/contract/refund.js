@@ -2,9 +2,10 @@ define(
     [
         'jquery',
         'Magento_Ui/js/modal/alert',
+        'Magento_Ui/js/modal/modal',
         'mage/translate'
     ],
-    function ($, alert, $t) {
+    function ($, alert, modal, $t) {
         'use strict';
 
         function refund(url, contractId, itemId) {
@@ -25,7 +26,8 @@ define(
                             always: function(){
                                 location.reload();
                             }
-                        }
+                        },
+                        modalClass: 'extend-refund-success'
                     });
                 })
                 .fail(function (jqXHR, textStatus, errorThrown) {
@@ -59,11 +61,19 @@ define(
                 const contractId = this.options.contractId;
                 const itemId = this.options.itemId;
 
-
-                if (confirm("Are you sure?")) {
-                    refund(url, contractId, itemId);
-                }
-
+                var modalOptions = {
+                    modalClass: 'extend-confirm-modal',
+                    buttons: [{
+                        text: 'Ok',
+                        class: 'extend-confirm',
+                        click: function() {
+                            refund(url, contractId, itemId);
+                            this.closeModal();
+                        }
+                    }]
+                };
+                var confirmModal = modal(modalOptions, $('#popup-modal'));
+                $('#popup-modal').modal("openModal");
             }
         });
 

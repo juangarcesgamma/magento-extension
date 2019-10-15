@@ -1,7 +1,13 @@
 <?xml version="1.0"?>
 
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Extend_Warranty::css/styles.css"/>
+    </head>
     <body>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template" name="extend-modal-cont" template="Extend_Warranty::confirm-modal.phtml" after="-"/>
+        </referenceContainer>
         <referenceContainer name="order_items">
             <block class="Extend\Warranty\Block\Adminhtml\Order\View\Items\Renderer\WarrantyRenderer" as="warranty" name="warranty_order_items_renderer" template="Magento_Sales::order/view/items/renderer/default.phtml">
                 <arguments>
