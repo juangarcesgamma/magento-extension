@@ -6,6 +6,7 @@ namespace Extend\Warranty\Model;
 use Extend\Warranty\Model\Api\Sync\Product\ProductsRequest;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Extend\Warranty\Api\TimeUpdaterInterface;
+use Magento\Catalog\Model\Product;
 
 class SyncProcess
 {
@@ -32,41 +33,52 @@ class SyncProcess
     {
         $productsToSync = $this->processProducts($storeProducts);
 
-        if(!empty($productsToSync['productsToCreate'])){
-            $this->productsRequest->create($productsToSync['productsToCreate']);
-        }
-
-        if(!empty($productsToSync['productsToUpdate'])){
-            $this->productsRequest->update($productsToSync['productsToUpdate']);
+        try {
+            $this->productsRequest->create($productsToSync);
+            $this->setSyncedFlag($productsToSync);
+        } catch (\Exception $e) {
+            //Fail Request
         }
     }
 
     private function processProducts(array $storeProducts): array
     {
-        $productsOutdated = [];
+        $lastGlobalSyncDate = $this->scopeConfig->getValue(TimeUpdaterInterface::LAST_SYNC_PATH);
 
-        //Logic for remove products already in the api
+        if (empty($lastGlobalSyncDate)) {
+            return $storeProducts;
+        }
+
         foreach ($storeProducts as $key => $product) {
             $lastModifiedDate = $product->getUpdatedAt();
-            $lastGlobalSyncDate = $this->scopeConfig->getValue(TimeUpdaterInterface::LAST_SYNC_PATH);
-            $productIsSynced = (bool) $product->getCustomAttribute('is_product_synced');
+
+            $productIsSynced = (bool)$product->getCustomAttribute('extendSync');
 
             //If product has a sync flag
             if (!is_null($productIsSynced)) {
                 //If product is already synced and it is up to date then no sync
-                if ($productIsSynced && (!is_null($lastModifiedDate) && $lastModifiedDate < $lastGlobalSyncDate)) {
-                    unset($storeProducts[$key]);
-                    //If product is already synced but it is outdated then update and not create
-                } else if ($productIsSynced && (!is_null($lastModifiedDate) && $lastModifiedDate >= $lastGlobalSyncDate)) {
-                    $productsOutdated[] = $product;
+                if ($productIsSynced && $lastModifiedDate <= $lastGlobalSyncDate) {
                     unset($storeProducts[$key]);
                 }
             }
         }
 
-        return [
-            'productsToCreate' => $storeProducts,
-            'productsToUpdate' => $productsOutdated
-        ];
+        return $storeProducts;
+    }
+
+    /**
+     * @param Product[] $storeProducts
+     */
+    private function setSyncedFlag(array $storeProducts): void
+    {
+        foreach ($storeProducts as $key => $product) {
+            try {
+                $product->setCustomAttrubute('extendSync', true);
+                $product->save();
+            } catch (\Exception $e) {
+                continue;
+            }
+
+        }
     }
 }
