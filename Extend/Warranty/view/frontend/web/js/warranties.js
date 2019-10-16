@@ -63,6 +63,7 @@ define([
 
             if (plan) {
                 addWarranty(plan, sku);
+                $('#product_addtocart_form').submit();
             } else {
                 Extend.modal.open({
                     referenceId: sku,
