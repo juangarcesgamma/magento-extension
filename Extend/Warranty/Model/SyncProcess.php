@@ -52,7 +52,7 @@ class SyncProcess
         foreach ($storeProducts as $key => $product) {
             $lastModifiedDate = $product->getUpdatedAt();
 
-            $productIsSynced = (bool)$product->getCustomAttribute('extendSync');
+            $productIsSynced = (bool)$product->getCustomAttribute('extend_sync');
 
             //If product has a sync flag
             if (!is_null($productIsSynced)) {
@@ -73,7 +73,7 @@ class SyncProcess
     {
         foreach ($storeProducts as $key => $product) {
             try {
-                $product->setCustomAttrubute('extendSync', true);
+                $product->setCustomAttrubute('extend_sync', true);
                 $product->save();
             } catch (\Exception $e) {
                 continue;
