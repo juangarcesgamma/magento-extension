@@ -125,17 +125,18 @@ class Type extends AbstractType
                 if (!$data) {
                     continue;
                 }
+
+                if($property == self::TERM){
+                    $data = ((int)$data)/12;
+
+                    $data .= $data > 1 ? ' years' : ' year';
+                }
                 $options[] = [
                     'label' => $label,
                     'value' => $data
                 ];
             }
         }
-
-        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/test.log');
-        $logger = new \Zend\Log\Logger();
-        $logger->addWriter($writer);
-        $logger->info($options);
 
         return $options;
     }

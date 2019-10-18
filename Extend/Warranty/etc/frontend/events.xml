@@ -3,4 +3,7 @@
     <event name="checkout_cart_add_product_complete">
         <observer name="add_warranty_to_cart" instance="Extend\Warranty\Observer\Warranty\AddToCart"/>
     </event>
+    <event name="sales_quote_remove_item">
+        <observer name="remove_hasWarranty_option" instance="Extend\Warranty\Observer\Warranty\RemoveWarrantyFlag"/>
+    </event>
 </config>

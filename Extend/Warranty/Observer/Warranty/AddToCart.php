@@ -54,7 +54,9 @@ class AddToCart implements ObserverInterface
     public function execute(Observer $observer)
     {
         $request = $observer->getEvent()->getRequest();
-
+        $product = $observer->getEvent()->getProduct();
+        $cart = $this->cart->getCart();
+        $product = $cart->getQuote()->getItemByProduct($product);
         $warrantyData = $request->getPost('warranty');
 
         if (!empty($warrantyData)) {
@@ -69,12 +71,18 @@ class AddToCart implements ObserverInterface
             $results = $searchResults->getItems();
             $warranty = reset($results);
 
-            $cart = $this->cart->getCart();
-
             try {
                 $cart->addProduct($warranty->getId(), $warrantyData);
                 $cart->getQuote()->setTotalsCollectedFlag(false)->collectTotals();
                 $cart->save();
+                if($product){
+                    $product->addOption([
+                        'product' => $product->getProduct(),
+                        'code'  => 'hasWarranty',
+                        'value' => serialize(true)
+                    ]);
+                    $product->saveItemOptions();
+                }
             } catch (LocalizedException $e) {
                 $this->messageManager->addErrorMessage('Error while adding warranty product');
             }
