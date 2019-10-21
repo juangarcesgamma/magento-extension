@@ -51,6 +51,7 @@ class RemoveWarrantyFlag implements ObserverInterface
 
             try {
                 $product = $this->productRepository->get($productAssociated);
+                $product->addCustomOption('hasWarranty', true);
                 $quote = $this->cart->getQuote();
                 $itemAssociated = $quote->getItemByProduct($product);
                 if ($itemAssociated) {

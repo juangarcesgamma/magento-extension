@@ -20,6 +20,8 @@ define(['jquery'],
                 const plan = component.getPlanSelection();
 
                 if (plan) {
+                    $('#add-warranty').text('Adding...');
+                    $('#add-warranty').attr("disabled", true);
                     plan.product = param.productSku;
                     $.post(param.url, {
                         warranty: plan

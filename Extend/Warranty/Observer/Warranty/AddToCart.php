@@ -79,7 +79,7 @@ class AddToCart implements ObserverInterface
                     $product->addOption([
                         'product' => $product->getProduct(),
                         'code'  => 'hasWarranty',
-                        'value' => serialize(true)
+                        'value' => true
                     ]);
                     $product->saveItemOptions();
                 }
