@@ -32,6 +32,10 @@
         <plugin name="addSkuToJsonConfig" type="Extend\Warranty\Plugin\Block\Product\View\Type\Configurable"/>
     </type>
 
+    <type name="Magento\Catalog\Helper\Product\Configuration">
+        <plugin name="warranty_product" type="Extend\Warranty\Plugin\Helper\Product\Configuration"/>
+    </type>
+
     <virtualType
             name="Extend\Warranty\Model\ResourceModel\Indexer\Price"
             type="Magento\Catalog\Model\ResourceModel\Product\Indexer\Price\SimpleProductPrice"/>
