@@ -49,11 +49,12 @@ class InstallData implements InstallDataInterface
 
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
-        //ADD WARRANTY PRODUCT TO THE DB
+
         $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_ADMINHTML);
 
-        //$this->addImageToPubMedia();
-        //$this->createWarrantyProduct();
+        //ADD WARRANTY PRODUCT TO THE DB
+        $this->addImageToPubMedia();
+        $this->createWarrantyProduct();
 
         $setup->startSetup();
 
