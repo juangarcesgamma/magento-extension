@@ -7,7 +7,6 @@ use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterf
 use Magento\Checkout\Controller\Cart;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Checkout\Model\Cart as CustomerCart;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
 
@@ -32,8 +31,7 @@ class Add extends Cart implements HttpPostActionInterface
         CustomerCart $cart,
         ProductRepositoryInterface $productRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder
-    )
-    {
+    ) {
         parent::__construct(
             $context,
             $scopeConfig,
@@ -103,8 +101,7 @@ class Add extends Cart implements HttpPostActionInterface
             );
             $this->messageManager->addSuccessMessage($message);
             return $this->goBack(null, $warranty);
-
-        } catch (LocalizedException | \Exception $e) {
+        } catch (\Exception $e) {
             $this->messageManager->addExceptionMessage(
                 $e,
                 __('We can\'t add this product protection to your shopping cart right now.')
