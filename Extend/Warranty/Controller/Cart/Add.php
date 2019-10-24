@@ -64,7 +64,7 @@ class Add extends Cart
             try {
                 $product = $this->productRepository->get($info['product']);
                 $option = $this->getRequest()->getPost('option');
-                if(!empty($option)){
+                if (!empty($option)) {
                     $product->addCustomOption('parent_product_id', $option);
                 }
                 return $product;

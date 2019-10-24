@@ -7,7 +7,6 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Extend\Warranty\Model\Product\Type as WarrantyType;
 use Magento\Checkout\Helper\Cart;
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 class RemoveWarrantyFlag implements ObserverInterface
@@ -17,19 +16,12 @@ class RemoveWarrantyFlag implements ObserverInterface
      */
     protected $cart;
 
-    /**
-     * @var ProductRepositoryInterface
-     */
-    protected $productRepository;
-
     public function __construct
     (
-        Cart $cart,
-        ProductRepositoryInterface $productRepository
+        Cart $cart
     )
     {
         $this->cart = $cart;
-        $this->productRepository = $productRepository;
     }
 
     /**
@@ -50,11 +42,16 @@ class RemoveWarrantyFlag implements ObserverInterface
             }
 
             try {
-                $product = $this->productRepository->get($productAssociated);
-                $product->addCustomOption('hasWarranty', true);
                 $quote = $this->cart->getQuote();
-                $itemAssociated = $quote->getItemByProduct($product);
+                $items = $quote->getAllItems();
+                $itemAssociated = null;
+                foreach ($items as $item) {
+                    if ($item->getSku() == $productAssociated) {
+                        $itemAssociated = $item;
+                    }
+                }
                 if ($itemAssociated) {
+                    $itemAssociated = $itemAssociated->getParentItem() ?? $itemAssociated;
                     $itemAssociated->removeOption('hasWarranty');
                     $itemAssociated->saveItemOptions();
                 }

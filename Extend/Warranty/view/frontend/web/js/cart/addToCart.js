@@ -12,16 +12,16 @@ define(['jquery'],
                 }
             });
 
-            $('#add-warranty').click(() => {
+            $('#add-warranty-' + param.itemId).click(() => {
                 event.preventDefault();
 
                 const component = Extend.buttons.instance('#extend-offer-' + param.itemId);
-                
+
                 const plan = component.getPlanSelection();
 
                 if (plan) {
-                    $('#add-warranty').text('Adding...');
-                    $('#add-warranty').attr("disabled", true);
+                    $('#add-warranty-' + param.itemId).text('Adding...');
+                    $('#add-warranty-' + param.itemId).attr("disabled", true);
                     plan.product = param.productSku;
                     $.post(param.url, {
                         warranty: plan,

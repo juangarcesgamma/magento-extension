@@ -150,19 +150,20 @@ $canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinima
 <?php if ($product->getTypeId() !== 'warranty'): ?>
     <?php if (empty($_item->getOptionByCode('hasWarranty'))): ?>
         <tbody id="warranty-<?= $_item->getId() ?>" class="cart item" hidden>
-            <tr>
-                <td>
-                    <div id="extend-offer-<?= $_item->getId() ?>"></div>
-                </td>
-                <td colspan=4 class="product-item">
-                    <p>&nbsp;</p>
-                    <button class="action tocart primary"
-                            type="button" style="float: right;"
-                            id="add-warranty">
-                        <span><?= /* @escapeNotVerified */ __('Add to Cart') ?></span>
-                    </button>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                <div id="extend-offer-<?= $_item->getId() ?>"></div>
+            </td>
+            <td colspan=4 class="product-item">
+                <p>&nbsp;</p>
+                <button class="action tocart primary"
+                        type="button" style="float: right;"
+                        id="add-warranty-<?= $_item->getId() ?>">
+                    <span><?= /* @escapeNotVerified */
+                        __('Add to Cart') ?></span>
+                </button>
+            </td>
+        </tr>
         </tbody>
         <script type="text/x-magento-init">
                 {
@@ -171,7 +172,7 @@ $canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinima
                             "productSku": "<?= $product->getSku() ?>",
                             "url" : "<?= $block->getUrl('warranty/cart/add') ?>",
                             "itemId" : "<?= $_item->getId() ?>",
-                            "parentId" : "<?= $_item->getOptionByCode('simple_product') ? $_item->getProductId() : ''?>"
+                            "parentId" : "<?= $_item->getOptionByCode('simple_product') ? $_item->getProductId() : '' ?>"
                         }
                     }
                 }
