@@ -3,7 +3,6 @@
 namespace Extend\Warranty\Controller\Cart;
 
 use Extend\Warranty\Model\Product\Type as WarrantyType;
-use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
 use Magento\Checkout\Controller\Cart;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Checkout\Model\Cart as CustomerCart;
@@ -11,7 +10,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
 
-class Add extends Cart implements HttpPostActionInterface
+class Add extends Cart
 {
     /**
      * @var ProductRepositoryInterface
@@ -63,7 +62,12 @@ class Add extends Cart implements HttpPostActionInterface
     {
         if (isset($info['product'])) {
             try {
-                return $this->productRepository->get($info['product']);
+                $product = $this->productRepository->get($info['product']);
+                $option = $this->getRequest()->getPost('option');
+                if(!empty($option)){
+                    $product->addCustomOption('parent_product_id', $option);
+                }
+                return $product;
             } catch (NoSuchEntityException $e) {
                 return false;
             }
@@ -86,9 +90,11 @@ class Add extends Cart implements HttpPostActionInterface
             $this->cart->addProduct($warranty, $warrantyData);
 
             $product = $this->cart->getQuote()->getItemByProduct($product);
+
             if ($product) {
+                $product = $product->getParentItem() ?? $product;
                 $product->addOption([
-                    'product' => $product->getProduct(),
+                    'product_id' => $product->getProductId(),
                     'code' => 'hasWarranty',
                     'value' => serialize(true)
                 ]);

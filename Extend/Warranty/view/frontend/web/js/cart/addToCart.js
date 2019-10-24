@@ -16,7 +16,7 @@ define(['jquery'],
                 event.preventDefault();
 
                 const component = Extend.buttons.instance('#extend-offer-' + param.itemId);
-
+                
                 const plan = component.getPlanSelection();
 
                 if (plan) {
@@ -24,7 +24,8 @@ define(['jquery'],
                     $('#add-warranty').attr("disabled", true);
                     plan.product = param.productSku;
                     $.post(param.url, {
-                        warranty: plan
+                        warranty: plan,
+                        option: param.parentId
                     })
                         .done(function (data) {
                             location.reload(false);

@@ -170,7 +170,8 @@ $canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinima
                         "cartAddWarranty":{
                             "productSku": "<?= $product->getSku() ?>",
                             "url" : "<?= $block->getUrl('warranty/cart/add') ?>",
-                            "itemId" : "<?= $_item->getId() ?>"
+                            "itemId" : "<?= $_item->getId() ?>",
+                            "parentId" : "<?= $_item->getOptionByCode('simple_product') ? $_item->getProductId() : ''?>"
                         }
                     }
                 }
