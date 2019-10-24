@@ -75,10 +75,10 @@ class AddToCart implements ObserverInterface
                 $cart->addProduct($warranty->getId(), $warrantyData);
                 $cart->getQuote()->setTotalsCollectedFlag(false)->collectTotals();
                 $cart->save();
-                if($product){
+                if ($product) {
                     $product->addOption([
-                        'product' => $product->getProduct(),
-                        'code'  => 'hasWarranty',
+                        'product_id' => $product->getProductId(),
+                        'code' => 'hasWarranty',
                         'value' => true
                     ]);
                     $product->saveItemOptions();
