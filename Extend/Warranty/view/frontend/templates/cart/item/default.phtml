@@ -14,6 +14,7 @@ $isVisibleProduct = $product->isVisibleInSiteVisibility();
 /** @var \Magento\Msrp\Helper\Data $helper */
 $helper = $this->helper('Magento\Msrp\Helper\Data');
 $canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinimalPriceLessMsrp($product);
+$attributes = $product->getTypeId() === 'warranty' ? ['width'=>'50%'] : [];
 ?>
     <tbody class="cart item">
     <tr class="item-info">
@@ -27,7 +28,7 @@ $canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinima
                 <?php else: ?>
                 <span class="product-item-photo">
             <?php endif; ?>
-            <?= $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail')->toHtml() ?>
+            <?= $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail', $attributes)->toHtml() ?>
             <?php if ($block->hasProductUrl()): ?>
             </a>
         <?php else: ?>
