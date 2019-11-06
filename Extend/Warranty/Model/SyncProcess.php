@@ -6,7 +6,6 @@ namespace Extend\Warranty\Model;
 use Extend\Warranty\Model\Api\Sync\Product\ProductsRequest;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Extend\Warranty\Api\TimeUpdaterInterface;
-use Magento\Catalog\Model\Product;
 
 class SyncProcess
 {
@@ -34,7 +33,9 @@ class SyncProcess
         $productsToSync = $this->processProducts($storeProducts);
 
         try {
-            $this->productsRequest->create($productsToSync);
+            if (!empty($productsToSync)) {
+                $this->productsRequest->create($productsToSync);
+            }
         } catch (\Exception $e) {
             //Fail Request
         }
