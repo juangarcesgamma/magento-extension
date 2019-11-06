@@ -35,7 +35,6 @@ class SyncProcess
 
         try {
             $this->productsRequest->create($productsToSync);
-            $this->setSyncedFlag($productsToSync);
         } catch (\Exception $e) {
             //Fail Request
         }
@@ -52,33 +51,12 @@ class SyncProcess
         foreach ($storeProducts as $key => $product) {
             $lastModifiedDate = $product->getUpdatedAt();
 
-            $productIsSynced = (bool)$product->getCustomAttribute('extend_sync');
-
-            //If product has a sync flag
-            if (!is_null($productIsSynced)) {
-                //If product is already synced and it is up to date then no sync
-                if ($productIsSynced && $lastModifiedDate <= $lastGlobalSyncDate) {
-                    unset($storeProducts[$key]);
-                }
+            //If product has not been updated
+            if ($lastModifiedDate <= $lastGlobalSyncDate) {
+                unset($storeProducts[$key]);
             }
         }
 
         return $storeProducts;
-    }
-
-    /**
-     * @param Product[] $storeProducts
-     */
-    private function setSyncedFlag(array $storeProducts): void
-    {
-        foreach ($storeProducts as $key => $product) {
-            try {
-                $product->setCustomAttrubute('extend_sync', true);
-                $product->save();
-            } catch (\Exception $e) {
-                continue;
-            }
-
-        }
     }
 }

@@ -4,7 +4,7 @@ namespace Extend\Warranty\Api;
 
 interface SyncInterface
 {
-    const MAX_PRODUCTS_BATCH = 250;
+    const MAX_PRODUCTS_BATCH = 200;
 
     public function getProducts(int $batchNumber): array;
 
