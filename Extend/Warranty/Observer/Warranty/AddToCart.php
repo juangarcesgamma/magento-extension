@@ -73,8 +73,6 @@ class AddToCart implements ObserverInterface
 
             try {
                 $cart->addProduct($warranty->getId(), $warrantyData);
-                $cart->getQuote()->setTotalsCollectedFlag(false)->collectTotals();
-                $cart->save();
                 if ($product) {
                     $product->addOption([
                         'product_id' => $product->getProductId(),
@@ -83,6 +81,10 @@ class AddToCart implements ObserverInterface
                     ]);
                     $product->saveItemOptions();
                 }
+                $cart->getQuote()->removeAllAddresses();
+                $cart->getQuote()->setTotalsCollectedFlag(false);
+                $cart->save();
+
             } catch (LocalizedException $e) {
                 $this->messageManager->addErrorMessage('Error while adding warranty product');
             }
