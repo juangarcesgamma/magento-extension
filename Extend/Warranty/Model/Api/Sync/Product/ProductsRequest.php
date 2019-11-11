@@ -4,7 +4,6 @@
 namespace Extend\Warranty\Model\Api\Sync\Product;
 
 use Extend\Warranty\Model\Api\Request\ProductDataBuilder;
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Psr\Log\LoggerInterface;
 
@@ -29,8 +28,6 @@ class ProductsRequest
      */
     protected $jsonSerializer;
 
-    protected $productRepository;
-
     /**
      * @var LoggerInterface
      */
@@ -41,22 +38,20 @@ class ProductsRequest
         ConnectorInterface $connector,
         ProductDataBuilder $productDataBuilder,
         Json $jsonSerializer,
-        ProductRepositoryInterface $productRepository,
-        LoggerInterface $logger
+        LoggerInterface $syncLogger
     )
     {
         $this->connector = $connector;
         $this->productDataBuilder = $productDataBuilder;
         $this->jsonSerializer = $jsonSerializer;
-        $this->productRepository = $productRepository;
-        $this->logger = $logger;
+        $this->logger = $syncLogger;
     }
 
     /**
      * @param $products
      * @throws \Exception
      */
-    public function create($products): void
+    public function create($products, $batch): void
     {
         $data = [];
 
@@ -70,12 +65,17 @@ class ProductsRequest
             $data
         );
 
+        $res = $this->jsonSerializer->unserialize($response->getBody());
+
         if ($response->getStatus() === 201) {
-            $this->logger->info('Create product request successful');
+            $this->logger->info('Synced ' . count($data) . ' products in batch ' . $batch);
+            foreach ($res as $name => $section) {
+                $info = array_column($section, 'referenceId');
+                $this->logger->info($name, $info);
+            }
             return;
         }
 
-        $res = $this->jsonSerializer->unserialize($response->getBody());
         $this->logger->error($res['message']);
         throw new \Exception($res['message']);
     }
