@@ -70,10 +70,7 @@ class ProductsRequest
         if ($response->getStatus() === 201) {
             $this->logger->info('Synced ' . count($data) . ' products in batch ' . $batch);
             foreach ($res as $name => $section) {
-                $info = [];
-                foreach ($section as $product) {
-                    $info[] = $product['referenceId'];
-                }
+                $info = array_column($section, 'referenceId');
                 $this->logger->info($name, $info);
             }
             return;
