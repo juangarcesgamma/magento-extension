@@ -34,12 +34,12 @@ class Sync extends Action
     protected $sync;
 
     /**
-     * @var
+     * @var int
      */
     protected $totalBatches;
 
     /**
-     * @var
+     * @var bool
      */
     protected $resetTotal;
 
