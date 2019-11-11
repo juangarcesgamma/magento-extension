@@ -44,4 +44,24 @@
             name="Extend\Warranty\Model\ResourceModel\Indexer\Price"
             type="Magento\Catalog\Model\ResourceModel\Product\Indexer\Price\SimpleProductPrice"/>
 
+    <virtualType name="ProductSyncLogHandler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/extend/product-sync.log</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="ProductSyncVirtualInfoLogger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="info" xsi:type="object">ProductSyncLogHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Extend\Warranty\Model\Api\Sync\Product\ProductsRequest">
+        <arguments>
+            <argument name="syncLogger" xsi:type="object">ProductSyncVirtualInfoLogger</argument>
+        </arguments>
+    </type>
+
 </config>

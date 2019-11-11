@@ -28,13 +28,13 @@ class SyncProcess
         $this->scopeConfig = $scopeConfig;
     }
 
-    public function sync(array $storeProducts): void
+    public function sync(array $storeProducts, $batch): void
     {
         $productsToSync = $this->processProducts($storeProducts);
 
         try {
             if (!empty($productsToSync)) {
-                $this->productsRequest->create($productsToSync);
+                $this->productsRequest->create($productsToSync, $batch);
             }
         } catch (\Exception $e) {
             //Fail Request

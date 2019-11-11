@@ -5,6 +5,7 @@ namespace Extend\Warranty\Model\Product;
 use Extend\Warranty\Api\SyncInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Extend\Warranty\Model\Product\Type as WarrantyType;
 
 class Sync implements SyncInterface
 {
@@ -40,7 +41,8 @@ class Sync implements SyncInterface
         //Get batches of products
         $this->searchCriteriaBuilder
             ->setPageSize($this->batchSize)
-            ->setCurrentPage($batchNumber);
+            ->setCurrentPage($batchNumber)
+            ->addFilter('type_id', WarrantyType::TYPE_CODE, 'neq');
 
         $searchCriteria = $this->searchCriteriaBuilder->create();
 
@@ -67,6 +69,6 @@ class Sync implements SyncInterface
 
     public function getBatchesToProcess(): int
     {
-        return (int) ceil($this->getTotalOfProducts() / $this->getBatchSize());
+        return (int)ceil($this->getTotalOfProducts() / $this->getBatchSize());
     }
 }
