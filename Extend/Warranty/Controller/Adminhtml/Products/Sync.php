@@ -39,6 +39,11 @@ class Sync extends Action
     protected $totalBatches;
 
     /**
+     * @var
+     */
+    protected $resetTotal;
+
+    /**
      * @var TimeUpdaterInterface
      */
     protected $timeUpdater;
@@ -65,24 +70,29 @@ class Sync extends Action
     {
         if ($this->totalBatches === null) {
             $this->totalBatches = $this->sync->getBatchesToProcess();
+            $this->resetTotal = false;
         }
 
-        $currentBatch = (int) $this->getRequest()->getParam('currentBatchesProcessed');
+        $currentBatch = (int)$this->getRequest()->getParam('currentBatchesProcessed');
 
         $productsBatch = $this->sync->getProducts($currentBatch);
 
         try {
-
-            $this->syncProcess->sync($productsBatch);
-            $currentBatch++;
-
-            $data = [
-                'totalBatches' => (int) $this->totalBatches,
-                'currentBatchesProcessed' => (int) $currentBatch,
-            ];
+            $this->syncProcess->sync($productsBatch, $currentBatch);
 
             if ($currentBatch == $this->totalBatches) {
                 $data['msg'] = $this->timeUpdater->updateLastSync();
+                $this->resetTotal = true;
+            }
+
+            $currentBatch++;
+
+            $data = [
+                'totalBatches' => (int)$this->totalBatches,
+                'currentBatchesProcessed' => (int)$currentBatch,
+            ];
+
+            if ($this->resetTotal) {
                 unset($this->totalBatches);
             }
 

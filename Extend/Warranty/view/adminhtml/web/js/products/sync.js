@@ -4,10 +4,10 @@ define(
         'Magento_Ui/js/modal/alert',
         'mage/translate'
     ],
-    function($, alert, $t) {
+    function ($, alert, $t) {
         'use strict';
 
-        var currentBatchesProcessed = 0;
+        var currentBatchesProcessed = 1;
         var totalBatches = 0;
         var shouldAbort = false;
         var synMsg = $("#sync-msg");
@@ -19,17 +19,17 @@ define(
             button.attr("disabled", false);
             synMsg.show();
             cancelSync.hide();
-            currentBatchesProcessed = 0;
+            currentBatchesProcessed = 1;
             totalBatches = 0;
             shouldAbort = false;
         }
 
-        async function syncAllProducts(url, button){
+        async function syncAllProducts(url, button) {
             do {
                 var data = await batchBeingProcessed(shouldAbort, url).then(data => {
-                    return data;
+                    return data;            //success
                 }, data => {
-                    return {
+                    return {                //fail
                         'totalBatches': 0,
                         'currentBatchesProcessed': 1
                     };
@@ -38,27 +38,27 @@ define(
                 });
                 currentBatchesProcessed = data.currentBatchesProcessed;
                 totalBatches = data.totalBatches;
-                if(currentBatchesProcessed === totalBatches){
+                if (currentBatchesProcessed === totalBatches) {
                     $("#sync-time").text(data.msg);
                 }
             } while (currentBatchesProcessed <= totalBatches);
             restore(button);
         }
 
-        function batchBeingProcessed(shouldAbort, url){
+        function batchBeingProcessed(shouldAbort, url) {
             if (!shouldAbort) {
                 return new Promise((resolve, reject) => {
                     $.get({
-                        url : url,
+                        url: url,
                         dataType: 'json',
                         async: true,
                         data: {
                             currentBatchesProcessed: currentBatchesProcessed
                         },
-                        success:function(data){
+                        success: function (data) {
                             resolve(data)
                         },
-                        error:function(data){
+                        error: function (data) {
                             reject(data);
                         }
                     })
@@ -78,22 +78,22 @@ define(
                 url: ''
             },
 
-            _create: function() {
+            _create: function () {
                 this._super();
                 this._bind();
             },
 
-            _bind: function() {
+            _bind: function () {
                 $(this.element).click(this.syncProducts.bind(this));
                 var cancelSync = $("#cancel_sync");
-                $(cancelSync).bind( "click", function() {
+                $(cancelSync).bind("click", function () {
                     shouldAbort = true
                 });
 
             },
-            syncProducts: function(event) {
+            syncProducts: function (event) {
                 event.preventDefault();
-                var button =  $(this.element);
+                var button = $(this.element);
                 button.text('Sync in progress...');
                 button.addClass("syncing");
                 button.attr("disabled", true);
