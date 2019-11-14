@@ -37,16 +37,20 @@ class ValidateCredentialPlugin
 
     public function afterSave(\Magento\Config\Model\Config $subject, $result)
     {
-        if ($this->helper->isExtendEnabled()) {
-            if ($this->connection->testConnection()) {
-                $this->messageManager->addSuccessMessage(
-                    __("Connection to Extend Api successful.")
-                );
-            } else {
-                $this->messageManager->addNoticeMessage(
-                    __("Unable to connect to Extend Api with the credentials provided.")
-                );
-            }
+        if (!$this->helper->isExtendEnabled()) {
+            return $result;
         }
+
+        if (!$this->connection->testConnection()) {
+            $this->messageManager->addNoticeMessage(
+                __("Unable to connect to Extend Api with the credentials provided.")
+            );
+            return $result;
+        }
+
+        $this->messageManager->addSuccessMessage(
+            __("Connection to Extend Api successful.")
+        );
+        return $result;
     }
 }
