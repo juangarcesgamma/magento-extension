@@ -32,12 +32,8 @@ class SyncProcess
     {
         $productsToSync = $this->processProducts($storeProducts);
 
-        try {
-            if (!empty($productsToSync)) {
-                $this->productsRequest->create($productsToSync, $batch);
-            }
-        } catch (\Exception $e) {
-            //Fail Request
+        if (!empty($productsToSync)) {
+            $this->productsRequest->create($productsToSync, $batch);
         }
     }
 

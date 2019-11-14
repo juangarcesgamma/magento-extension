@@ -80,6 +80,8 @@ class Sync extends Action
         try {
             $this->syncProcess->sync($productsBatch, $currentBatch);
 
+            $data = [];
+
             if ($currentBatch == $this->totalBatches) {
                 $data['msg'] = $this->timeUpdater->updateLastSync();
                 $this->resetTotal = true;
@@ -87,10 +89,8 @@ class Sync extends Action
 
             $currentBatch++;
 
-            $data = [
-                'totalBatches' => (int)$this->totalBatches,
-                'currentBatchesProcessed' => (int)$currentBatch,
-            ];
+            $data['totalBatches'] = (int)$this->totalBatches;
+            $data['currentBatchesProcessed'] = (int)$currentBatch;
 
             if ($this->resetTotal) {
                 unset($this->totalBatches);
@@ -103,7 +103,7 @@ class Sync extends Action
         } catch (\Exception $e) {
             $data = ['msg' => $e->getMessage()];
 
-            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            $this->logger->info('Error found in products batch ' . $currentBatch, ['Exception' => $e->getMessage()]);
 
             return $this->resultFactory
                 ->create(ResultFactory::TYPE_JSON)
