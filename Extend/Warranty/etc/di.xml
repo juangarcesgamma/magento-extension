@@ -46,7 +46,7 @@
 
     <virtualType name="ProductSyncLogHandler" type="Magento\Framework\Logger\Handler\Base">
         <arguments>
-            <argument name="fileName" xsi:type="string">/var/log/extend/product-sync.log</argument>
+            <argument name="fileName" xsi:type="string">/var/log/extend/sync.log</argument>
         </arguments>
     </virtualType>
 
@@ -61,6 +61,12 @@
     <type name="Extend\Warranty\Model\Api\Sync\Product\ProductsRequest">
         <arguments>
             <argument name="syncLogger" xsi:type="object">ProductSyncVirtualInfoLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Extend\Warranty\Controller\Adminhtml\Products\Sync">
+        <arguments>
+            <argument name="logger" xsi:type="object">ProductSyncVirtualInfoLogger</argument>
         </arguments>
     </type>
 
