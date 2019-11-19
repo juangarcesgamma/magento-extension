@@ -45,8 +45,10 @@ class SyncProcess
             return $storeProducts;
         }
 
+        $lastGlobalSyncDate = new \DateTime($lastGlobalSyncDate);
+
         foreach ($storeProducts as $key => $product) {
-            $lastModifiedDate = $product->getUpdatedAt();
+            $lastModifiedDate = new \DateTime($product->getUpdatedAt());
 
             //If product has not been updated
             if ($lastModifiedDate <= $lastGlobalSyncDate) {
