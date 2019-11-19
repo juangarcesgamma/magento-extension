@@ -40,10 +40,10 @@ class TimeUpdater implements TimeUpdaterInterface
 
     public function updateLastSync(): string
     {
-        $date = $this->timezone->formatDate(null, 1, true);
+        $date = $this->timezone->date()->format('Y-m-d H:i:s');
         $this->configWriter->save(self::LAST_SYNC_PATH, $date);
         $this->cacheManager->clean($this->cacheManager->getAvailableTypes());
 
-        return $date;
+        return $this->timezone->formatDate($date, 1, true);
     }
 }

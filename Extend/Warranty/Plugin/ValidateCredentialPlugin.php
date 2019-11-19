@@ -37,7 +37,14 @@ class ValidateCredentialPlugin
 
     public function afterSave(\Magento\Config\Model\Config $subject, $result)
     {
+        if(!$subject->getSection() === 'warranty'){
+            return $result;
+        }
+
         if (!$this->helper->isExtendEnabled()) {
+            $this->messageManager->addSuccessMessage(
+                __("Extend is now disabled in your store. Your customers will be unable to see or buy Extend protection plans in your store until you re-enable the extension.")
+            );
             return $result;
         }
 
@@ -47,6 +54,9 @@ class ValidateCredentialPlugin
             );
             return $result;
         }
+        $this->messageManager->addSuccessMessage(
+            __("Extend is now enabled in your store.")
+        );
 
         $this->messageManager->addSuccessMessage(
             __("Connection to Extend Api successful.")
