@@ -78,7 +78,7 @@ class Type extends AbstractType
 
         $buyRequest->setData('custom_price', $price);
 
-        $product->addCustomOption(self::WARRANTY_ID, $buyRequest->getData('planId'));
+        $product->addCustomOption(self::WARRANTY_ID, $buyRequest->selectData('planId'));
         $product->addCustomOption(self::ASSOCIATED_PRODUCT, $buyRequest->getProduct());
         $product->addCustomOption(self::TERM, $buyRequest->getTerm());
 

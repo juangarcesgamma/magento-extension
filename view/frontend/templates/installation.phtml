@@ -1,7 +1,7 @@
 <?php
 /** @var $viewModel Extend\Warranty\ViewModel\Installation
  */
-$viewModel = $block->getData('viewModel');
+$viewModel = $block->selectData('viewModel');
 if ($viewModel) {
     $viewModel->prepareBlockData();
 }
