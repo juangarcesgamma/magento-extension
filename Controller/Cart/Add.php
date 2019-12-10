@@ -8,6 +8,7 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Checkout\Model\Cart as CustomerCart;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Serialize\SerializerInterface;
 
 class Add extends Cart
 {
@@ -21,6 +22,11 @@ class Add extends Cart
      */
     protected $searchCriteriaBuilder;
 
+    /**
+     * @var SerializerInterface
+     */
+    protected $serializer;
+
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -29,7 +35,8 @@ class Add extends Cart
         \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator,
         CustomerCart $cart,
         ProductRepositoryInterface $productRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        SerializerInterface $serializer
     ) {
         parent::__construct(
             $context,
@@ -41,6 +48,7 @@ class Add extends Cart
         );
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->serializer = $serializer;
     }
 
     protected function initWarranty()
@@ -94,7 +102,7 @@ class Add extends Cart
                 $product->addOption([
                     'product_id' => $product->getProductId(),
                     'code' => 'hasWarranty',
-                    'value' => serialize(true)
+                    'value' => $this->serializer->serialize(true)
                 ]);
                 $product->saveItemOptions();
             }
