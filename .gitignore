@@ -1,7 +1,0 @@
-.idea
-nbproject
-*.yml
-Dockerfile
-*.conf
-auth.json
-html
