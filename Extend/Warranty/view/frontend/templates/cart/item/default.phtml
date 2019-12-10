@@ -148,6 +148,7 @@ $attributes = $product->getTypeId() === 'warranty' ? ['width'=>'50%'] : [];
     </tr>
     </tbody>
 
+<!-- SDK CALL REMOVED FUTURE IMPLEMENTATION MAY USE THIS CODE
 <?php if ($product->getTypeId() !== 'warranty'): ?>
     <?php if (empty($_item->getOptionByCode('hasWarranty'))): ?>
         <tbody id="warranty-<?= $_item->getId() ?>" class="cart item" hidden>
@@ -180,3 +181,4 @@ $attributes = $product->getTypeId() === 'warranty' ? ['width'=>'50%'] : [];
         </script>
     <?php endif; ?>
 <?php endif; ?>
+-->
