@@ -54,7 +54,7 @@ class Normalizer
 
     private function updateMin($warranties, $qty, Cart $cart)
     {
-        while ($qty > 0){
+        while ($qty > 0) {
             $min = null;
             $pos = null;
             foreach ($warranties as $index => $item) {
@@ -66,13 +66,13 @@ class Normalizer
 
             $tempQty = $min->getQty() - $qty;
 
-            if($tempQty > 0){
+            if ($tempQty > 0) {
                 $min->setQty($tempQty);
                 $qty = 0;
-            }else if((int)$tempQty === 0){
+            } else if ((int)$tempQty === 0) {
                 $cart->removeItem($min->getItemId());
                 $qty = 0;
-            }else{
+            } else {
                 $cart->removeItem($min->getItemId());
                 unset($warranties[$pos]);
                 $qty = abs($tempQty);

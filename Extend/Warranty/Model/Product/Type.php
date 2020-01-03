@@ -109,7 +109,7 @@ class Type extends AbstractType
     }
 
     /**
-     * @param  \Magento\Catalog\Model\Product $product
+     * @param \Magento\Catalog\Model\Product $product
      * @return array
      */
     public function getWarrantyInfo($product)
@@ -129,8 +129,8 @@ class Type extends AbstractType
                     continue;
                 }
 
-                if($property == self::TERM){
-                    $data = ((int)$data)/12;
+                if ($property == self::TERM) {
+                    $data = ((int)$data) / 12;
 
                     $data .= $data > 1 ? ' years' : ' year';
                 }
