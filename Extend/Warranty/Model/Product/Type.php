@@ -82,7 +82,10 @@ class Type extends AbstractType
         $product->addCustomOption(self::ASSOCIATED_PRODUCT, $buyRequest->getProduct());
         $product->addCustomOption(self::TERM, $buyRequest->getTerm());
 
-        $product->setQty(1);
+        if ($this->_isStrictProcessMode($processMode)) {
+            $product->setCartQty($buyRequest->getQty());
+        }
+        $product->setQty($buyRequest->getQty());
 
         return $product;
     }
