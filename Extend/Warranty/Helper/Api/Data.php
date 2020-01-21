@@ -10,7 +10,7 @@ class Data extends AbstractHelper
 {
     CONST BASEPATH = 'warranty/authentication/';
 
-    CONST ENABLE_PATH = 'warranty/enableExtend/enable';
+    CONST ENABLE_PATH = 'warranty/enableExtend/';
 
     protected $scopeConfig;
 
@@ -32,12 +32,19 @@ class Data extends AbstractHelper
 
     public function isExtendEnabled()
     {
-        return $this->scopeConfig->isSetFlag($this::ENABLE_PATH);
+        $path = self::ENABLE_PATH . 'enable';
+        return $this->scopeConfig->isSetFlag($path);
     }
 
     public function isExtendLive()
     {
         $path = self::BASEPATH . 'auth_mode';
+        return $this->scopeConfig->isSetFlag($path);
+    }
+
+    public function isBalancedCart()
+    {
+        $path = self::ENABLE_PATH . 'enableBalance';
         return $this->scopeConfig->isSetFlag($path);
     }
 }

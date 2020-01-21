@@ -54,9 +54,8 @@ class AddToCart implements ObserverInterface
     public function execute(Observer $observer)
     {
         $request = $observer->getEvent()->getRequest();
-        $product = $observer->getEvent()->getProduct();
         $cart = $this->cart->getCart();
-        $product = $cart->getQuote()->getItemByProduct($product);
+        $qty = $request->getPost('qty');
         $warrantyData = $request->getPost('warranty');
 
         if (!empty($warrantyData)) {
@@ -71,16 +70,11 @@ class AddToCart implements ObserverInterface
             $results = $searchResults->getItems();
             $warranty = reset($results);
 
+            $warrantyData['qty'] = $qty;
+
             try {
                 $cart->addProduct($warranty->getId(), $warrantyData);
-                if ($product) {
-                    $product->addOption([
-                        'product_id' => $product->getProductId(),
-                        'code' => 'hasWarranty',
-                        'value' => true
-                    ]);
-                    $product->saveItemOptions();
-                }
+
                 $cart->getQuote()->removeAllAddresses();
                 $cart->getQuote()->setTotalsCollectedFlag(false);
                 $cart->save();

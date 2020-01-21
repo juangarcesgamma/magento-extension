@@ -82,7 +82,10 @@ class Type extends AbstractType
         $product->addCustomOption(self::ASSOCIATED_PRODUCT, $buyRequest->getProduct());
         $product->addCustomOption(self::TERM, $buyRequest->getTerm());
 
-        $product->setQty(1);
+        if ($this->_isStrictProcessMode($processMode)) {
+            $product->setCartQty($buyRequest->getQty());
+        }
+        $product->setQty($buyRequest->getQty());
 
         return $product;
     }
@@ -106,7 +109,7 @@ class Type extends AbstractType
     }
 
     /**
-     * @param  \Magento\Catalog\Model\Product $product
+     * @param \Magento\Catalog\Model\Product $product
      * @return array
      */
     public function getWarrantyInfo($product)
@@ -126,8 +129,8 @@ class Type extends AbstractType
                     continue;
                 }
 
-                if($property == self::TERM){
-                    $data = ((int)$data)/12;
+                if ($property == self::TERM) {
+                    $data = ((int)$data) / 12;
 
                     $data .= $data > 1 ? ' years' : ' year';
                 }
