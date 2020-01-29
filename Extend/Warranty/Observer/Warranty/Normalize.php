@@ -37,8 +37,7 @@ class Normalize implements ObserverInterface
         }
 
         $cart = $observer->getEvent()->getCart();
-        $info = $observer->getEvent()->getInfo();
 
-        $this->normalizer->normalize($cart, $info);
+        $this->normalizer->normalize($cart);
     }
 }

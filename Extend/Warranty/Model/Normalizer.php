@@ -7,13 +7,11 @@ use Magento\Checkout\Model\Cart;
 
 class Normalizer
 {
-    public function normalize(Cart $cart, $data)
+    public function normalize(Cart $cart)
     {
         $warranties = [];
         $products = [];
-        foreach ($data->getData() as $itemId => $itemInfo) {
-            $item = $cart->getQuote()->getItemById($itemId);
-
+        foreach ($cart->getItems() as $item) {
             if ($item->getProductType() === 'warranty') {
                 $prod = $item->getOptionByCode('associated_product')->getValue();
                 $warranties[$prod][] = $item;
