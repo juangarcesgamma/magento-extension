@@ -64,28 +64,9 @@ class Add extends Cart
         return reset($results);
     }
 
-    protected function initProduct($info)
-    {
-        if (isset($info['product'])) {
-            try {
-                $product = $this->productRepository->get($info['product']);
-                $option = $this->getRequest()->getPost('option');
-                if (!empty($option)) {
-                    $product->addCustomOption('parent_product_id', $option);
-                }
-                return $product;
-            } catch (NoSuchEntityException $e) {
-                return false;
-            }
-        }
-        return false;
-    }
-
     public function execute()
     {
         $warrantyData = $this->getRequest()->getPost('warranty');
-
-        $product = $this->initProduct($warrantyData);
 
         try {
             $warranty = $this->initWarranty();
@@ -94,18 +75,6 @@ class Add extends Cart
             }
 
             $this->cart->addProduct($warranty, $warrantyData);
-
-            $product = $this->cart->getQuote()->getItemByProduct($product);
-
-            if ($product) {
-                $product = $product->getParentItem() ?? $product;
-                $product->addOption([
-                    'product_id' => $product->getProductId(),
-                    'code' => 'hasWarranty',
-                    'value' => $this->serializer->serialize(true)
-                ]);
-                $product->saveItemOptions();
-            }
 
             $this->cart->save();
 
