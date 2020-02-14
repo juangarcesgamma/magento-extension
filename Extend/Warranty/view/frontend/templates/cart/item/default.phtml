@@ -153,15 +153,16 @@ $inCartViewModel = $block->getData('viewModel');
 </tbody>
 
 <?php if ($product->getTypeId() !== 'warranty'): ?>
-    <?php if (!$inCartViewModel->hasWarranty($product->getSku())): ?>
-        <tbody id="warranty-<?= $_item->getId() ?>">
-        <tr>
-            <td>
-                <div id="extend-offer-<?= $_item->getId() ?>"></div>
-            </td>
-        </tr>
-        </tbody>
-        <script type="text/x-magento-init">
+    <?php if ($inCartViewModel->isDisplayOffersEnabled()): ?>
+        <?php if (!$inCartViewModel->hasWarranty($product->getSku())): ?>
+            <tbody id="warranty-<?= $_item->getId() ?>">
+            <tr>
+                <td>
+                    <div id="extend-offer-<?= $_item->getId() ?>"></div>
+                </td>
+            </tr>
+            </tbody>
+            <script type="text/x-magento-init">
                 {
                     "#warranty-<?= $_item->getId() ?>": {
                         "cartAddWarranty":{
@@ -173,7 +174,9 @@ $inCartViewModel = $block->getData('viewModel');
                     }
                 }
 
-        </script>
+
+            </script>
+        <?php endif; ?>
     <?php endif; ?>
 <?php endif; ?>
 
