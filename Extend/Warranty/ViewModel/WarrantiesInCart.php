@@ -5,23 +5,23 @@ namespace Extend\Warranty\ViewModel;
 
 
 use Magento\Framework\View\Element\Block\ArgumentInterface;
-use Magento\Checkout\Model\Cart;
+use Magento\Checkout\Model\Session;
 
 class WarrantiesInCart implements ArgumentInterface
 {
-    protected $cart;
+    protected $checkoutSession;
 
     public function __construct
     (
-        Cart $cart
+        Session $checkoutSession
     )
     {
-        $this->cart = $cart;
+        $this->checkoutSession = $checkoutSession;
     }
 
     public function hasWarranty($sku)
     {
-        foreach ($this->cart->getItems() as $item) {
+        foreach ($this->checkoutSession->getQuote()->getAllVisibleItems() as $item) {
             if ($item->getProductType() === 'warranty') {
                 if ($item->getOptionByCode('associated_product')->getValue() === $sku) {
                     return true;
