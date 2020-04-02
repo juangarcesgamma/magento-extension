@@ -77,38 +77,33 @@ class Sync extends Action
 
         $productsBatch = $this->sync->getProducts($currentBatch);
 
+        $data = [];
+
         try {
             $this->syncProcess->sync($productsBatch, $currentBatch);
-
-            $data = [];
-
-            if ($currentBatch == $this->totalBatches) {
-                $data['msg'] = $this->timeUpdater->updateLastSync();
-                $this->resetTotal = true;
-            }
-
-            $currentBatch++;
-
-            $data['totalBatches'] = (int)$this->totalBatches;
-            $data['currentBatchesProcessed'] = (int)$currentBatch;
-
-            if ($this->resetTotal) {
-                unset($this->totalBatches);
-            }
-
-            return $this->resultFactory
-                ->create(ResultFactory::TYPE_JSON)
-                ->setHttpResponseCode(200)
-                ->setData($data);
+            $data['status'] = 'SUCCESS';
         } catch (\Exception $e) {
-            $data = ['msg' => $e->getMessage()];
-
             $this->logger->info('Error found in products batch ' . $currentBatch, ['Exception' => $e->getMessage()]);
-
-            return $this->resultFactory
-                ->create(ResultFactory::TYPE_JSON)
-                ->setHttpResponseCode(500)
-                ->setData($data);
+            $data['status'] = 'FAIL';
         }
+
+        if ($currentBatch == $this->totalBatches) {
+            $data['msg'] = $this->timeUpdater->updateLastSync();
+            $this->resetTotal = true;
+        }
+
+        $currentBatch++;
+
+        $data['totalBatches'] = (int)$this->totalBatches;
+        $data['currentBatchesProcessed'] = (int)$currentBatch;
+
+        if ($this->resetTotal) {
+            unset($this->totalBatches);
+        }
+
+        return $this->resultFactory
+            ->create(ResultFactory::TYPE_JSON)
+            ->setHttpResponseCode(200)
+            ->setData($data);
     }
 }
