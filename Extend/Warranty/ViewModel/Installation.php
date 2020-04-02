@@ -13,6 +13,10 @@ use Magento\Framework\Serialize\Serializer\Json;
 
 class Installation implements ArgumentInterface
 {
+    const DEMO = 'demo';
+
+    const LIVE = 'live';
+
     /**
      * @var StoreManagerInterface
      */
@@ -77,16 +81,15 @@ class Installation implements ArgumentInterface
 
     public function getJsMode()
     {
-        return $this->getExtendLive() ?
-            "https://sdk.helloextend.com/extend-sdk-client/v1/extend-sdk-client.min.js" :
-            "https://sdk.helloextend.com/extend-sdk-client/v1/demo/extend-sdk-client.min.js";
+        return "https://sdk.helloextend.com/extend-sdk-client/v1/extend-sdk-client.min.js";
     }
 
     public function getJsonConfig()
     {
 
         $data = [
-            'storeId' => (string)$this->getExtendStoreId()
+            'storeId' => (string)$this->getExtendStoreId(),
+            'environment' => (string)$this->getExtendLive()? self::LIVE : self::DEMO,
         ];
 
         return $this->jsonSerializer->serialize($data);
