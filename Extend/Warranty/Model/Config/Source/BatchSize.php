@@ -17,8 +17,7 @@ class BatchSize implements ArrayInterface
         return [
             ['value' => 25, 'label' => __('25')],
             ['value' => 50, 'label' => __('50')],
-            ['value' => 100, 'label' => __('100')],
-            ['value' => 200, 'label' => __('200')]
+            ['value' => 100, 'label' => __('100')]
         ];
     }
 }
