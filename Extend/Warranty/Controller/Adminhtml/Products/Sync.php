@@ -8,10 +8,12 @@ use Extend\Warranty\Model\SyncProcess;
 use Psr\Log\LoggerInterface;
 use Extend\Warranty\Api\SyncInterface;
 use Extend\Warranty\Api\TimeUpdaterInterface;
+use \Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Sync extends Action
 {
     const ADMIN_RESOURCE = 'Extend_Warranty::product_manual_sync';
+    const BATCH_SIZE_PATH = 'warranty/products/batch_size';
 
     /**
      * @var ResultFactory
@@ -39,6 +41,11 @@ class Sync extends Action
     protected $totalBatches;
 
     /**
+     * @var int
+     */
+    protected $batchSize;
+
+    /**
      * @var bool
      */
     protected $resetTotal;
@@ -48,32 +55,47 @@ class Sync extends Action
      */
     protected $timeUpdater;
 
+    /**
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
     public function __construct(
         Action\Context $context,
         ResultFactory $resultFactory,
         LoggerInterface $logger,
         SyncProcess $syncProcess,
         SyncInterface $sync,
-        TimeUpdaterInterface $timeUpdater
+        TimeUpdaterInterface $timeUpdater,
+        ScopeConfigInterface $scopeConfig
     )
     {
+        parent::__construct($context);
         $this->sync = $sync;
         $this->resultFactory = $resultFactory;
         $this->logger = $logger;
         $this->syncProcess = $syncProcess;
         $this->timeUpdater = $timeUpdater;
-
-        parent::__construct($context);
+        $this->scopeConfig = $scopeConfig;
     }
 
     public function execute()
     {
+        $currentBatch = (int)$this->getRequest()->getParam('currentBatchesProcessed');
+
+        if ($this->batchSize === null) {
+            $batchSize = $this->scopeConfig->getValue(self::BATCH_SIZE_PATH);
+
+            if ($batchSize) {
+                $this->batchSize = $batchSize;
+                $this->sync->setBatchSize((int)$batchSize);
+            }
+        }
+
         if ($this->totalBatches === null) {
             $this->totalBatches = $this->sync->getBatchesToProcess();
             $this->resetTotal = false;
         }
-
-        $currentBatch = (int)$this->getRequest()->getParam('currentBatchesProcessed');
 
         $productsBatch = $this->sync->getProducts($currentBatch);
 
