@@ -100,6 +100,13 @@
                     catalog to the Extend platform in batches. If you have a small number of SKUs this will take just
                     seconds, but if your catalog is very large it could take few minutes.
                 </comment>
+                <field id="batch_size" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Batch Size</label>
+                    <source_model>Extend\Warranty\Model\Config\Source\BatchSize</source_model>
+                    <comment>
+                        Save the configuration and flush the cache before running the sync process.
+                    </comment>
+                </field>
                 <field id="syncbutton" translate="label" type="button" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
                     <frontend_model>Extend\Warranty\Block\System\Config\Products\Button</frontend_model>
                 </field>

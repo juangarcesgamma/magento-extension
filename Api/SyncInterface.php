@@ -13,4 +13,6 @@ interface SyncInterface
     public function getBatchSize(): int;
 
     public function getBatchesToProcess(): int;
+
+    public function setBatchSize(int $batchSize): void;
 }
