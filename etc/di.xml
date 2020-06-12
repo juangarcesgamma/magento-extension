@@ -70,4 +70,24 @@
         </arguments>
     </type>
 
+    <type name="Extend\Warranty\Model\SyncProcess">
+        <arguments>
+            <argument name="logger" xsi:type="object">ProductSyncVirtualInfoLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Extend\Warranty\Console\Command\SyncProducts">
+        <arguments>
+            <argument name="logger" xsi:type="object">ProductSyncVirtualInfoLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="extend_sync_products" xsi:type="object">Extend\Warranty\Console\Command\SyncProducts</item>
+            </argument>
+        </arguments>
+    </type>
+
 </config>
