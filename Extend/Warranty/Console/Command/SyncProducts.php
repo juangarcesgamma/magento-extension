@@ -9,8 +9,9 @@ use Extend\Warranty\Api\SyncInterface as ProductBatch;
 use Magento\Framework\App\State;
 use Extend\Warranty\Model\SyncProcess;
 use Psr\Log\LoggerInterface;
-use \Extend\Warranty\Api\TimeUpdaterInterface;
+use Extend\Warranty\Api\TimeUpdaterInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 class SyncProducts extends Command
 {
@@ -93,8 +94,11 @@ class SyncProducts extends Command
         }
 
         $totalBatches = $this->productBatch->getBatchesToProcess();
+        $progressBar = new ProgressBar($output, $totalBatches);
+        $progressBar->setFormat('verbose');
         $noError = true;
 
+        $progressBar->start();
         for ($i = 1; $i <= $totalBatches; $i++) {
             try {
                 $productsBatch = $this->productBatch->getProducts($i);
@@ -106,10 +110,15 @@ class SyncProducts extends Command
 
                 $this->logger->error('Error found in products batch ' . $i, ['Exception' => $e->getMessage()]);
             }
+            $progressBar->advance();
         }
+
+        $progressBar->finish();
+        $output->writeln('');
 
         if ($noError) {
             $this->timeUpdater->updateLastSync();
+            $output->writeln('<info>Synchronization completed.</info>');
         } else {
             $output->writeln('<error>Some batches have not sync correctly, unable to save last time sync time.</error>');
         }
