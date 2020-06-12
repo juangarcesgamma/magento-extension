@@ -6,6 +6,7 @@ namespace Extend\Warranty\Model;
 use Extend\Warranty\Model\Api\Sync\Product\ProductsRequest;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Extend\Warranty\Api\TimeUpdaterInterface;
+use Psr\Log\LoggerInterface;
 
 class SyncProcess
 {
@@ -19,13 +20,20 @@ class SyncProcess
      */
     protected $scopeConfig;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct(
         ProductsRequest $productsRequest,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        LoggerInterface $logger
     )
     {
         $this->productsRequest = $productsRequest;
         $this->scopeConfig = $scopeConfig;
+        $this->logger = $logger;
     }
 
     public function sync(array $storeProducts, $batch): void
@@ -34,6 +42,8 @@ class SyncProcess
 
         if (!empty($productsToSync)) {
             $this->productsRequest->create($productsToSync, $batch);
+        } else {
+            $this->logger->info('Nothing to sync in batch ' . $batch);
         }
     }
 
