@@ -59,7 +59,7 @@ class Refund extends Action
                 [
                     'error' => 'Extend module or refunds are not enabled'
                 ]);
-            $response->setHttpResponseCode(500);
+            $response->setHttpResponseCode(403); //Forbidden error
             return $response;
         }
 
