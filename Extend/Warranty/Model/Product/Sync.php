@@ -57,7 +57,7 @@ class Sync implements SyncInterface
         $this->batchSize = $batchSize;
     }
 
-    public function getProducts(int $batchNumber): array
+    public function getProducts(int $batchNumber = 1): array
     {
         //Get batches of products
         $this->searchCriteriaBuilder
