@@ -6,6 +6,8 @@ use Extend\Warranty\Api\SyncInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Extend\Warranty\Model\Product\Type as WarrantyType;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Catalog\Api\ProductRepositoryInterfaceFactory;
 
 class Sync implements SyncInterface
 {
@@ -24,16 +26,30 @@ class Sync implements SyncInterface
      */
     protected $batchSize;
 
+    /**
+     * @var ResourceConnection
+     */
+    protected $connection;
+
+    /**
+     * @var ProductRepositoryInterfaceFactory
+     */
+    protected $productRepositoryInterfaceFactory;
+
     public function __construct
     (
         ProductRepositoryInterface $productRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
+        ResourceConnection $connection,
+        ProductRepositoryInterfaceFactory $productRepositoryInterfaceFactory,
         $batchSize = self::MAX_PRODUCTS_BATCH
     )
     {
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->batchSize = $batchSize;
+        $this->connection = $connection;
+        $this->productRepositoryInterfaceFactory = $productRepositoryInterfaceFactory;
     }
 
     public function setBatchSize(int $batchSize): void
@@ -41,7 +57,7 @@ class Sync implements SyncInterface
         $this->batchSize = $batchSize;
     }
 
-    public function getProducts(int $batchNumber): array
+    public function getProducts(int $batchNumber = 1): array
     {
         //Get batches of products
         $this->searchCriteriaBuilder
@@ -51,6 +67,7 @@ class Sync implements SyncInterface
 
         $searchCriteria = $this->searchCriteriaBuilder->create();
 
+        $this->productRepository = $this->productRepositoryInterfaceFactory->create();
         $searchResults = $this->productRepository->getList($searchCriteria);
 
         return $searchResults->getTotalCount() ?
@@ -60,11 +77,13 @@ class Sync implements SyncInterface
 
     public function getTotalOfProducts(): int
     {
-        $searchCriteria = $this->searchCriteriaBuilder->create();
+        $connection = $this->connection->getConnection();
+        $select = $connection->select();
+        $tableName = $this->connection->getTableName('catalog_product_entity');
 
-        $searchResults = $this->productRepository->getList($searchCriteria);
+        $select->from($tableName, 'COUNT(*)');
 
-        return $searchResults->getTotalCount();
+        return (int)$connection->fetchOne($select);
     }
 
     public function getBatchSize(): int
