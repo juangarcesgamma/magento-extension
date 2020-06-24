@@ -9,6 +9,7 @@ use Magento\Catalog\Model\Product;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Catalog\Model\Product\Media\ConfigInterface;
 
 class ProductDataBuilder
 {
@@ -34,28 +35,23 @@ class ProductDataBuilder
     protected $helper;
 
     /**
-     * @var StoreManagerInterface
+     * @var ConfigInterface
      */
-    protected $storeManager;
-
-    /**
-     * @var string
-     */
-    private $baseUrl;
+    protected $configMedia;
 
     public function __construct
     (
         Configurable $configurableType,
         CategoryRepositoryInterface $categoryRepository,
         ProductRepositoryInterface $productRepository,
-        StoreManagerInterface $storeManager,
+        ConfigInterface $configMedia,
         Data $helper
     )
     {
         $this->productRepository = $productRepository;
         $this->configurableType = $configurableType;
         $this->categoryRepository = $categoryRepository;
-        $this->storeManager = $storeManager;
+        $this->configMedia = $configMedia;
         $this->helper = $helper;
     }
 
@@ -68,7 +64,7 @@ class ProductDataBuilder
     public function build($productSubject): array
     {
         $description = !empty($productSubject->getShortDescription()) ? (string)$productSubject->getShortDescription() : 'No description';
-        $imgUrl = $productSubject->getImage();
+        $imgUrl = $this->getMainImage($productSubject);
 
         $data = [
             'title' => (string)$productSubject->getName(),
@@ -83,7 +79,7 @@ class ProductDataBuilder
         ];
 
         if (!empty($imgUrl)) {
-            $data['imageUrl'] = $this->getBaseUrl() . self::PRODUCT_MEDIA_PATH . ltrim($imgUrl, '/');
+            $data['imageUrl'] = $imgUrl;
         }
 
         $parentId = $this->configurableType->getParentIdsByChild($productSubject->getEntityId());
@@ -153,13 +149,19 @@ class ProductDataBuilder
     }
 
     /**
+     * @param $product
      * @return string
      */
-    public function getBaseUrl(): string
+    private function getMainImage($product) : string
     {
-        if (!$this->baseUrl) {
-            $this->baseUrl = $this->storeManager->getStore()->getBaseUrl();
+        $imgPath = $product->getImage();
+
+        if (empty($imgPath)) {
+            return '';
         }
-        return $this->baseUrl;
+
+        $base = $this->configMedia->getBaseMediaUrl();
+
+        return $base . $imgPath;
     }
 }
