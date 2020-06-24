@@ -8,12 +8,10 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Catalog\Model\Product\Media\ConfigInterface;
 
 class ProductDataBuilder
 {
-    const PRODUCT_MEDIA_PATH = 'pub/media/catalog/product/';
     /**
      * @var CategoryRepositoryInterface
      */
