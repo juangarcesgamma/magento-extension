@@ -2,6 +2,7 @@
 
 namespace Extend\Warranty\Controller\Adminhtml\Contract;
 
+use Extend\Warranty\Helper\Api\Data as ExtendData;
 use Magento\Backend\App\Action;
 use Magento\Framework\Controller\ResultFactory;
 use Extend\Warranty\Model\Api\Sync\Contract\ContractsRequest;
@@ -26,11 +27,17 @@ class Refund extends Action
      */
     protected $orderItemRepository;
 
+    /**
+     * @var ExtendData
+     */
+    protected $extendHelper;
+
     public function __construct(
         Action\Context $context,
         ResultFactory $resultFactory,
         ContractsRequest $contractsRequest,
-        OrderItemRepositoryInterface $orderItemRepository
+        OrderItemRepositoryInterface $orderItemRepository,
+        ExtendData $extendHelper
     )
     {
         parent::__construct($context);
@@ -38,18 +45,28 @@ class Refund extends Action
         $this->resultFactory = $resultFactory;
         $this->contractsRequest = $contractsRequest;
         $this->orderItemRepository = $orderItemRepository;
+        $this->extendHelper = $extendHelper;
     }
 
 
     public function execute()
     {
+        $response = $this->resultFactory
+            ->create(ResultFactory::TYPE_JSON);
+
+        if (!$this->extendHelper->isExtendEnabled() || !$this->extendHelper->isRefundEnabled()) {
+            $response->setData(
+                [
+                    'error' => 'Extend module or refunds are not enabled'
+                ]);
+            $response->setHttpResponseCode(403); //Forbidden error
+            return $response;
+        }
+
         $contractId = (string)$this->getRequest()->getPost('contractId');
         $itemId = (string)$this->getRequest()->getPost('itemId');
 
         $res = $this->contractsRequest->refund($contractId);
-
-        $response = $this->resultFactory
-            ->create(ResultFactory::TYPE_JSON);
 
         if ($res) {
             $item = $this->orderItemRepository->get($itemId);
