@@ -8,6 +8,7 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\Catalog\Model\Product\Media\ConfigInterface;
 
 class ProductDataBuilder
 {
@@ -26,19 +27,29 @@ class ProductDataBuilder
      */
     protected $productRepository;
 
+    /**
+     * @var Data
+     */
     protected $helper;
+
+    /**
+     * @var ConfigInterface
+     */
+    protected $configMedia;
 
     public function __construct
     (
         Configurable $configurableType,
         CategoryRepositoryInterface $categoryRepository,
         ProductRepositoryInterface $productRepository,
+        ConfigInterface $configMedia,
         Data $helper
     )
     {
         $this->productRepository = $productRepository;
         $this->configurableType = $configurableType;
         $this->categoryRepository = $categoryRepository;
+        $this->configMedia = $configMedia;
         $this->helper = $helper;
     }
 
@@ -50,21 +61,24 @@ class ProductDataBuilder
 
     public function build($productSubject): array
     {
-        $description = !empty($productSubject->getShortDescription())? (string)$productSubject->getShortDescription() : 'No description';
-        $imgUrl = !empty($productSubject->getImage())? (string)$productSubject->getImage() : 'No image url';
+        $description = !empty($productSubject->getShortDescription()) ? (string)$productSubject->getShortDescription() : 'No description';
+        $imgUrl = $this->getMainImage($productSubject);
 
         $data = [
             'title' => (string)$productSubject->getName(),
             'description' => $description,
             'price' => $this->helper->formatPrice($productSubject->getFinalPrice()),
             'referenceId' => (string)$productSubject->getSku(),
-            'imageUrl' => $imgUrl,
             'category' => $this->getCategories($productSubject),
             'identifiers' => [
                 'sku' => (string)$productSubject->getSku(),
                 'type' => (string)$productSubject->getTypeId()
             ]
         ];
+
+        if (!empty($imgUrl)) {
+            $data['imageUrl'] = $imgUrl;
+        }
 
         $parentId = $this->configurableType->getParentIdsByChild($productSubject->getEntityId());
         $parentId = reset($parentId);
@@ -130,5 +144,22 @@ class ProductDataBuilder
             }
         }
         return !empty($names) ? implode(",", $names) : null;
+    }
+
+    /**
+     * @param $product
+     * @return string
+     */
+    private function getMainImage($product) : string
+    {
+        $imgPath = $product->getImage();
+
+        if (empty($imgPath)) {
+            return '';
+        }
+
+        $base = $this->configMedia->getBaseMediaUrl();
+
+        return $base . $imgPath;
     }
 }
