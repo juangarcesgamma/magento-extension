@@ -17,7 +17,7 @@ class WarrantyRenderer extends DefaultRenderer
     /**
      * @var ExtendData
      */
-    protected $enable;
+    protected $extendHelper;
 
     public function __construct
     (
@@ -42,12 +42,12 @@ class WarrantyRenderer extends DefaultRenderer
             $data
         );
 
-        $this->enable = $extendHelper->isExtendEnabled();
+        $this->extendHelper = $extendHelper;
     }
 
     public function getColumnHtml(\Magento\Framework\DataObject $item, $column, $field = null)
     {
-        if (!$this->enable) {
+        if (!$this->extendHelper->isExtendEnabled() || !$this->extendHelper->isRefundEnabled()) {
             return parent::getColumnHtml($item, $column, $field);
         }
         $html = '';
