@@ -48,6 +48,11 @@ class Data extends AbstractHelper
         return $this->scopeConfig->isSetFlag($path);
     }
 
+    public function isDisplayOffersEnabled() {
+        $path = self::ENABLE_PATH. 'enableCartOffers';
+        return $this->scopeConfig->isSetFlag($path);
+    }
+
     public function isRefundEnabled() {
         $path = self::ENABLE_PATH. 'enableRefunds';
         return $this->scopeConfig->isSetFlag($path);

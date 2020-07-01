@@ -9,6 +9,7 @@ use Magento\Checkout\Model\Cart as CustomerCart;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\SerializerInterface;
+use Psr\Log\LoggerInterface;
 
 class Add extends Cart
 {
@@ -27,6 +28,11 @@ class Add extends Cart
      */
     protected $serializer;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $addWarrantyLogger;
+
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -36,7 +42,8 @@ class Add extends Cart
         CustomerCart $cart,
         ProductRepositoryInterface $productRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        LoggerInterface $addWarrantyLogger
     ) {
         parent::__construct(
             $context,
@@ -49,6 +56,7 @@ class Add extends Cart
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->serializer = $serializer;
+        $this->addWarrantyLogger = $addWarrantyLogger;
     }
 
     protected function initWarranty()
@@ -71,6 +79,9 @@ class Add extends Cart
         try {
             $warranty = $this->initWarranty();
             if (!$warranty) {
+                $this->messageManager->addErrorMessage('We can\'t add this product protection to your shopping cart right now.');
+                $this->addWarrantyLogger->error('Error finding warranty product, please ensure warranty product is in your catalog and is enabled.');
+
                 return $this->goBack();
             }
 
