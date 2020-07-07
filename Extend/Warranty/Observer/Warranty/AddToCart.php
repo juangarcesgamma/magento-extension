@@ -10,6 +10,7 @@ use Magento\Checkout\Helper\Cart;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Message\ManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class AddToCart implements ObserverInterface
 {
@@ -33,18 +34,25 @@ class AddToCart implements ObserverInterface
      */
     protected $messageManager;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $addWarrantyLogger;
+
     public function __construct
     (
         Cart $cart,
         ProductRepositoryInterface $productRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        ManagerInterface $messageManager
+        ManagerInterface $messageManager,
+        LoggerInterface $addWarrantyLogger
     )
     {
         $this->cart = $cart;
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->messageManager = $messageManager;
+        $this->addWarrantyLogger = $addWarrantyLogger;
     }
 
     /**
@@ -69,6 +77,12 @@ class AddToCart implements ObserverInterface
 
             $results = $searchResults->getItems();
             $warranty = reset($results);
+
+            if (!$warranty) {
+                $this->messageManager->addErrorMessage('Error while adding warranty product');
+                $this->addWarrantyLogger->error('Error finding warranty product, please ensure warranty product is in your catalog and is enabled.');
+                return;
+            }
 
             $warrantyData['qty'] = $qty;
 
