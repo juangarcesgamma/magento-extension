@@ -15,17 +15,52 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\Filesystem\Io\File;
 use Magento\Framework\Module\Dir\Reader;
 use Magento\Framework\App\Filesystem\DirectoryList;
-
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
+use Magento\Catalog\Model\Product\Visibility;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\App\Area;
 
 class InstallData implements InstallDataInterface
 {
+    /**
+     * @var ProductFactory
+     */
     protected $productFactory;
+
+    /**
+     * @var EavSetupFactory
+     */
     protected $eavSetupFactory;
+
+    /**
+     * @var State
+     */
     protected $state;
+
+    /**
+     * @var StoreManagerInterface
+     */
     protected $storeManager;
+
+    /**
+     * @var File
+     */
     protected $file;
+
+    /**
+     * @var Reader
+     */
     protected $reader;
+
+    /**
+     * @var DirectoryList
+     */
     protected $directoryList;
+
+    /**
+     * @var ProductRepositoryInterface
+     */
+    protected $productRepository;
 
     public function __construct
     (
@@ -35,7 +70,8 @@ class InstallData implements InstallDataInterface
         StoreManagerInterface $storeManager,
         File $file,
         Reader $reader,
-        DirectoryList $directoryList
+        DirectoryList $directoryList,
+        ProductRepositoryInterface $productRepository
     )
     {
         $this->productFactory = $productFactory;
@@ -45,22 +81,22 @@ class InstallData implements InstallDataInterface
         $this->file = $file;
         $this->reader = $reader;
         $this->directoryList = $directoryList;
+        $this->productRepository = $productRepository;
     }
 
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
+        $this->state->setAreaCode(Area::AREA_ADMINHTML);
 
-        $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_ADMINHTML);
+        $setup->startSetup();
+        $eavSetup = $this->eavSetupFactory->create();
 
         //ADD WARRANTY PRODUCT TO THE DB
         $this->addImageToPubMedia();
         $this->createWarrantyProduct();
 
-        $setup->startSetup();
-
-        $eavSetup = $this->eavSetupFactory->create();
-
-        $this->addSyncAttribute($eavSetup);
+        /** Attribute not being used **/
+        // $this->addSyncAttribute($eavSetup);
 
         $this->enablePriceForWarrantyProducts($eavSetup);
 
@@ -78,21 +114,33 @@ class InstallData implements InstallDataInterface
         $this->file->cp($imagePath, $media);
     }
 
+    public function getWarrantyAttributeSet($warranty)
+    {
+        /** @var Product $warranty */
+        $default = $warranty->getDefaultAttributeSetId();
+
+        if (!$default) {
+            throw new \Exception('Unable to find default attribute set');
+        }
+
+        return $default;
+    }
+
     public function createWarrantyProduct()
     {
         $warranty = $this->productFactory->create();
-
+        $attributeSetId = $this->getWarrantyAttributeSet($warranty);
         $websites = $this->storeManager->getWebsites();
 
         $warranty->setSku('WARRANTY-1')
             ->setName('Extend Protection Plan')
             ->setWebsiteIds(array_keys($websites))
-            ->setAttributeSetId(4) //Default
-            ->setStatus(1) //Enable
-            ->setVisibility(1) //Not visible individually
-            ->setTaxClassId(0) //None
+            ->setAttributeSetId($attributeSetId)
+            ->setStatus(Status::STATUS_ENABLED)
+            ->setVisibility(Visibility::VISIBILITY_NOT_VISIBLE)
             ->setTypeId(Type::TYPE_CODE)
-            ->setPrice(0)
+            ->setPrice(0.0)
+            ->setTaxClassId(0) //None
             ->setStockData([
                 'use_config_manage_stock' => 0,
                 'is_in_stock' => 1,
@@ -103,7 +151,8 @@ class InstallData implements InstallDataInterface
 
         $imagePath = 'Extend_icon.png';
         $warranty->addImageToMediaGallery($imagePath, array('image', 'small_image', 'thumbnail'), false, false);
-        $warranty->save();
+
+        $this->productRepository->save($warranty);
     }
 
     public function addSyncAttribute($eavSetup)
@@ -129,19 +178,27 @@ class InstallData implements InstallDataInterface
     public function enablePriceForWarrantyProducts($eavSetup)
     {
         //MAKE PRICE ATTRIBUTE AVAILABLE FOR WARRANTY PRODUCT TYPE
-        $field = 'price';
-        $applyTo = explode(
-            ',',
-            $eavSetup->getAttribute(\Magento\Catalog\Model\Product::ENTITY, $field, 'apply_to')
-        );
-        if (!in_array(\Extend\Warranty\Model\Product\Type::TYPE_CODE, $applyTo)) {
-            $applyTo[] = \Extend\Warranty\Model\Product\Type::TYPE_CODE;
-            $eavSetup->updateAttribute(
-                \Magento\Catalog\Model\Product::ENTITY,
-                $field,
-                'apply_to',
-                implode(',', $applyTo)
+        $fieldList = [
+            'price',
+            'special_price',
+            'tier_price',
+            'minimal_price'
+        ];
+
+        foreach ($fieldList as $field) {
+            $applyTo = explode(
+                ',',
+                $eavSetup->getAttribute(Product::ENTITY, $field, 'apply_to')
             );
+            if (!in_array(Type::TYPE_CODE, $applyTo)) {
+                $applyTo[] = Type::TYPE_CODE;
+                $eavSetup->updateAttribute(
+                    Product::ENTITY,
+                    $field,
+                    'apply_to',
+                    implode(',', $applyTo)
+                );
+            }
         }
     }
 }
