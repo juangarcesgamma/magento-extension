@@ -8,6 +8,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Extend\Warranty\Model\Product\Type as WarrantyType;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Catalog\Api\ProductRepositoryInterfaceFactory;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 
 class Sync implements SyncInterface
 {
@@ -63,7 +64,8 @@ class Sync implements SyncInterface
         $this->searchCriteriaBuilder
             ->setPageSize($this->batchSize)
             ->setCurrentPage($batchNumber)
-            ->addFilter('type_id', WarrantyType::TYPE_CODE, 'neq');
+            ->addFilter('type_id', WarrantyType::TYPE_CODE, 'neq')
+            ->addFilter('status', Status::STATUS_ENABLED, 'eq');
 
         $searchCriteria = $this->searchCriteriaBuilder->create();
 
@@ -80,8 +82,22 @@ class Sync implements SyncInterface
         $connection = $this->connection->getConnection();
         $select = $connection->select();
         $tableName = $this->connection->getTableName('catalog_product_entity');
+        $statusTable = $this->connection->getTableName('catalog_product_entity_int');
 
-        $select->from($tableName, 'COUNT(*)');
+        $eavTable = $this->connection->getTableName('eav_attribute');
+
+        $select->from($eavTable, 'attribute_id')
+            ->where('attribute_code = ?', 'status')
+            ->where('entity_type_id = ?', 4); //Default product entity id
+
+        $statusId = $connection->fetchOne($select);
+
+        $select = $connection->select();
+
+        $select->from(['main' => $tableName], 'COUNT(*)')
+            ->join(['status' => $statusTable], $connection->quoteInto('main.entity_id = status.entity_id AND attribute_id = ?', $statusId))
+            ->where('status.value = ?', Status::STATUS_ENABLED)
+            ->where('type_id <> ?', WarrantyType::TYPE_CODE);
 
         return (int)$connection->fetchOne($select);
     }
