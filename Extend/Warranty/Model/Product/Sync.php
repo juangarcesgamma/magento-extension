@@ -9,6 +9,7 @@ use Extend\Warranty\Model\Product\Type as WarrantyType;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Catalog\Api\ProductRepositoryInterfaceFactory;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Sync implements SyncInterface
 {
@@ -37,12 +38,18 @@ class Sync implements SyncInterface
      */
     protected $productRepositoryInterfaceFactory;
 
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
     public function __construct
     (
         ProductRepositoryInterface $productRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         ResourceConnection $connection,
         ProductRepositoryInterfaceFactory $productRepositoryInterfaceFactory,
+        StoreManagerInterface $storeManager,
         $batchSize = self::MAX_PRODUCTS_BATCH
     )
     {
@@ -51,6 +58,7 @@ class Sync implements SyncInterface
         $this->batchSize = $batchSize;
         $this->connection = $connection;
         $this->productRepositoryInterfaceFactory = $productRepositoryInterfaceFactory;
+        $this->storeManager = $storeManager;
     }
 
     public function setBatchSize(int $batchSize): void
@@ -83,6 +91,7 @@ class Sync implements SyncInterface
         $select = $connection->select();
         $tableName = $this->connection->getTableName('catalog_product_entity');
         $statusTable = $this->connection->getTableName('catalog_product_entity_int');
+        $defaultStore = $this->storeManager->getDefaultStoreView()->getId();
 
         $eavTable = $this->connection->getTableName('eav_attribute');
 
@@ -95,9 +104,14 @@ class Sync implements SyncInterface
         $select = $connection->select();
 
         $select->from(['main' => $tableName], 'COUNT(*)')
-            ->join(['status' => $statusTable], $connection->quoteInto('main.entity_id = status.entity_id AND attribute_id = ?', $statusId))
+            ->join(['status' => $statusTable],
+                $connection->quoteInto('main.entity_id = status.entity_id AND status.attribute_id = ? AND status.store_id = 0', $statusId), '')
+            ->joinLeft(['status_store' => $statusTable],
+                $connection->quoteInto('main.entity_id = status_store.entity_id AND status_store.attribute_id = ?', $statusId) . ' ' .
+                $connection->quoteInto(' AND status_store.store_id = ?', $defaultStore), '')
             ->where('status.value = ?', Status::STATUS_ENABLED)
-            ->where('type_id <> ?', WarrantyType::TYPE_CODE);
+            ->where('type_id <> ?', WarrantyType::TYPE_CODE)
+            ->where('IF(status_store.value_id > 0, status_store.value, status.value) = ?', Status::STATUS_ENABLED);
 
         return (int)$connection->fetchOne($select);
     }
