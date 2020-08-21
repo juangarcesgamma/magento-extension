@@ -149,6 +149,19 @@ class InstallData implements InstallDataInterface
                 'use_config_notify_stock_qty' => 0
             ]);
 
+        /* ShipExpress Module */
+        /*
+            shipsin_enable
+            shipsin_express_display
+            shipsin
+        */
+
+        $warranty->setCustomAttribute('shipsin_enable', 0)
+            ->setCustomAttribute('shipsin_express_display', 0)
+            ->setCustomAttribute('shipsin', '');
+
+        /* End Ship Express */
+
         $imagePath = 'Extend_icon.png';
         $warranty->addImageToMediaGallery($imagePath, array('image', 'small_image', 'thumbnail'), false, false);
 
