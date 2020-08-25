@@ -158,7 +158,7 @@ class InstallData implements InstallDataInterface
 
         $warranty->setCustomAttribute('shipsin_enable', 0)
             ->setCustomAttribute('shipsin_express_display', 0)
-            ->setCustomAttribute('shipsin', '');
+            ->setCustomAttribute('shipsin', 'default');
 
         /* End Ship Express */
 
