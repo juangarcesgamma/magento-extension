@@ -119,7 +119,7 @@ class ProductDataBuilder
             }
         }
 
-        return implode(",", $names);
+        return !empty($names) ? implode(",", $names) : "";
     }
 
     /**
@@ -128,7 +128,7 @@ class ProductDataBuilder
      * @param array $ids
      * @return string|null
      */
-    private function checkChildren(CategoryInterface $category, string $catName, array &$ids): ?string
+    private function checkChildren(CategoryInterface $category, string $catName, array &$ids): string
     {
         $names = [];
         $children = $category->getChildrenCategories();
@@ -143,14 +143,14 @@ class ProductDataBuilder
                 }
             }
         }
-        return !empty($names) ? implode(",", $names) : null;
+        return !empty($names) ? implode(",", $names) : "";
     }
 
     /**
      * @param $product
      * @return string
      */
-    private function getMainImage($product) : string
+    private function getMainImage($product): string
     {
         $imgPath = $product->getImage();
 
@@ -160,6 +160,6 @@ class ProductDataBuilder
 
         $base = $this->configMedia->getBaseMediaUrl();
 
-        return $base . $imgPath;
+        return !empty($base . $imgPath) ? $base . $imgPath : "";
     }
 }

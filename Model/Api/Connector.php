@@ -81,7 +81,7 @@ class Connector implements ConnectorInterface
 
     }
 
-    public function initClient(): void
+    public function initClient()
     {
         $accessKeys = $this->keys->getKeys();
 
