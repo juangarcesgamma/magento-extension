@@ -5,7 +5,7 @@ use Zend_Http_Response;
 
 interface ConnectorInterface
 {
-    public function initClient(): void;
+    public function initClient();
 
     public function call(
         string $endpoint,

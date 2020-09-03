@@ -36,7 +36,7 @@ class SyncProcess
         $this->logger = $logger;
     }
 
-    public function sync(array $storeProducts, $batch): void
+    public function sync(array $storeProducts, $batch)
     {
         $productsToSync = $this->processProducts($storeProducts);
 

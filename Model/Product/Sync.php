@@ -52,7 +52,7 @@ class Sync implements SyncInterface
         $this->productRepositoryInterfaceFactory = $productRepositoryInterfaceFactory;
     }
 
-    public function setBatchSize(int $batchSize): void
+    public function setBatchSize(int $batchSize)
     {
         $this->batchSize = $batchSize;
     }

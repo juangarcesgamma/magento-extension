@@ -51,7 +51,7 @@ class ProductsRequest
      * @param $products
      * @throws \Exception
      */
-    public function create($products, $batch): void
+    public function create($products, $batch)
     {
         $data = [];
 
@@ -85,7 +85,7 @@ class ProductsRequest
      * @param $products
      * @throws \Exception
      */
-    public function update($products): void
+    public function update($products)
     {
         foreach ($products as $product) {
             $data = $this->productDataBuilder->build($product);
