@@ -81,7 +81,7 @@
             <argument name="logger" xsi:type="object">ProductSyncVirtualInfoLogger</argument>
         </arguments>
     </type>
-
+<!--
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
@@ -89,7 +89,7 @@
             </argument>
         </arguments>
     </type>
-
+-->
     <virtualType name="WarrantyAddLogHandler" type="Magento\Framework\Logger\Handler\Base">
         <arguments>
             <argument name="fileName" xsi:type="string">/var/log/extend/addWarranty.log</argument>
