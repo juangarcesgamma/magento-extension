@@ -60,7 +60,9 @@ class WarrantyContract
 
                         $items[$key]->setProductOptions($options);
 
-                        $items[$key]->save();
+                        if ($order->getId()) {
+                            $items[$key]->save();
+                        }
                     }
                 }
             }
