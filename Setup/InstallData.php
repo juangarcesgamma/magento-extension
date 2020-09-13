@@ -152,7 +152,8 @@ class InstallData implements InstallDataInterface
         $imagePath = 'Extend_icon.png';
         $warranty->addImageToMediaGallery($imagePath, array('image', 'small_image', 'thumbnail'), false, false);
 
-        $this->productRepository->save($warranty);
+        $warranty->save();
+        //$this->productRepository->save($warranty);
     }
 
     public function addSyncAttribute($eavSetup)
