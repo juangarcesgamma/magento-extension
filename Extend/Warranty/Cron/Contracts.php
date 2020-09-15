@@ -46,24 +46,32 @@ class Contracts
 
     public function execute()
     {
-        $this->logger->info('Contracts Cron');
+        $this->logger->info('Starting Extend Contracts Cron...');
 
         $connection = $this->connection->getConnection();
-        $sql = "select order_id from sales_order_item where product_type = 'warranty' and contract_id is null;";
+        $table = $this->connection->getTableName('sales_order_item');
+
+        $select = $connection->select();
+        $select->from($table, 'order_id')
+            ->where('product_type = ?', WarrantyType::TYPE_CODE)
+            ->where('contract_id is null');
 
         try {
-            $orders = $connection->fetchAll($sql);
-
-            //Performance - Should we limit $orders size?
-            $ordersToSend = array_slice($orders, 0, 10);
+            $orders = $connection->fetchAll($select);
 
             if (!empty($orders)) {
-                foreach($orders as $_order) {
-
+                foreach ($orders as $_order) {
+                    /** @var \Magento\Sales\Model\Order */
                     $order = $this->orderRepository->get($_order["order_id"]);
 
+                    if (!$order || !$order->hasInvoices()) {
+                        continue;
+                    }
+
+                    $flag = false;
+                    $warranties = [];
+                    /** @var \Magento\Sales\Model\Order\Item $item */
                     foreach ($order->getAllItems() as $key => $item) {
-                        /** @var \Magento\Sales\Model\Order\Item $item */
                         if ($item->getProductType() == WarrantyType::TYPE_CODE) {
                             if (!$flag) {
                                 $flag = 1;
@@ -77,11 +85,10 @@ class Contracts
                     }
                 }
             }
-            
+
         } catch (\Exception $e) {
-            $this->logger->critical('Contracts cron sync error: ', $e->getMessage());
+            $this->logger->error('Contracts cron sync error: ' . $e->getMessage());
         }
+        $this->logger->info('Ending Extend Contracts Cron...');
     }
-
-
 }
