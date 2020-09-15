@@ -6,7 +6,7 @@
             <schedule>0 0 * * *</schedule>
         </job>
         <job name="sync_contracts" instance="Extend\Warranty\Cron\Contracts" method="execute">
-            <schedule>10 */1 * * *</schedule>
+            <schedule>0 0 * * *</schedule>
         </job>
     </group>
 </config>
