@@ -1,6 +1,6 @@
 <?php
 
-namespace Extend\Warranty\Plugin\api;
+namespace Extend\Warranty\Plugin\Api;
 
 use Magento\Sales\Api\OrderItemRepositoryInterface;
 use Magento\Sales\Api\Data\OrderItemExtensionFactory;
