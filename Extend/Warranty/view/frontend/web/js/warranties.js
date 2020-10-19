@@ -25,35 +25,29 @@ define([
 
         function selectedProduct() {
             let selected_options = {};
-			
-			//Added custom code to be able to select products on diferent Magento Versions (A. Figueroa 2020-10-16)
-			let option_parent = $('div.product-options-wrapper').parent();
-			console.log(document.getElementsByName("item"));
-			console.log(document.getElementsByName("item")[0].value);
-			if(document.getElementsByName("item").value !== ''){
-				const productConfig = $('[data-role=swatch-options]').data('mageSwatchRenderer').options.jsonConfig;
-				return productConfig.skus[document.getElementsByName('item')[0].value];
-			}else{
-				//Original code A. Figueroa 2020-10-16
-				let options = $('div.swatch-attribute');
-				options.each((index, value) => {
-					let attribute_id = $(value).attr('attribute-id');
-					let option_selected = $(value).attr('option-selected');
-					if (!attribute_id || !option_selected) {
-						return '';
-					}
-					selected_options[attribute_id] = option_selected;
-				});
+            let option_parent = $('div.product-options-wrapper').parent();
+            if(document.getElementsByName("selected_configurable_option").value !== '' && document.getElementsByName("selected_configurable_option").value !== undefined){
+                const productConfig = $('[data-role=swatch-options]').data('mageSwatchRenderer').options.jsonConfig;
+                return productConfig.skus[document.getElementsByName('selected_configurable_option')[0].value];
+            }else{
+                let options = $('div.swatch-attribute');
+                options.each((index, value) => {
+                    let attribute_id = $(value).attr('attribute-id');
+                    let option_selected = $(value).attr('option-selected');
+                    if (!attribute_id || !option_selected) {
+                        return '';
+                    }
+                    selected_options[attribute_id] = option_selected;
+                });
 
-				const productConfig = $('[data-role=swatch-options]').data('mageSwatchRenderer').options.jsonConfig;
+                const productConfig = $('[data-role=swatch-options]').data('mageSwatchRenderer').options.jsonConfig;
 
-				for (let [productId, attributes] of Object.entries(productConfig.index)) {
-					if (match(attributes, selected_options)) {
-						return productConfig.skus[productId];
-					}
-				}
-			}
-			//End of custom code
+                for (let [productId, attributes] of Object.entries(productConfig.index)) {
+                    if (match(attributes, selected_options)) {
+                        return productConfig.skus[productId];
+                    }
+                }
+            }
         }
 
         function renderWarranties(productSku){
