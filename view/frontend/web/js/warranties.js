@@ -10,7 +10,7 @@ define([
         });
 
         $(document).ready(function () {
-            $('div.product-options-wrapper').click(() => {
+            $('div.product-options-wrapper').on('change',() => {
                 let sku = selectedProduct();
 
                 if(sku !== ''){
@@ -24,12 +24,15 @@ define([
         }
 
         function selectedProduct() {
-            let selected_options = {};
-            let option_parent = $('div.product-options-wrapper').parent();
-            if(document.getElementsByName("selected_configurable_option").value !== '' && document.getElementsByName("selected_configurable_option").value !== undefined){
-                const productConfig = $('[data-role=swatch-options]').data('mageSwatchRenderer').options.jsonConfig;
-                return productConfig.skus[document.getElementsByName('selected_configurable_option')[0].value];
+
+            if ($('div.swatch-attribute').length === 0 ){
+                if ($('#product_addtocart_form [name=selected_configurable_option]')[0].value !== ''){
+                    let productId1 = $('#product_addtocart_form [name=selected_configurable_option]')[0].value;
+                    const productConfig1 = $('#product_addtocart_form').data('mageConfigurable').options.spConfig;
+                    return productConfig1.skus[productId1];
+                }
             }else{
+                let selected_options = {};
                 let options = $('div.swatch-attribute');
                 options.each((index, value) => {
                     let attribute_id = $(value).attr('attribute-id');
