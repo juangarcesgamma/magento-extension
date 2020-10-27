@@ -1,0 +1,22 @@
+<?php
+/** @var $viewModel Extend\Warranty\ViewModel\Installation
+ */
+$viewModel = $block->getData('viewModel');
+if ($viewModel) {
+    $viewModel->prepareBlockData();
+}
+?>
+<?php if (isset($viewModel) && $viewModel->getExtendEnable()) : ?>
+    <script src="<?= $viewModel->getJsMode() ?>"></script>
+    <script>
+        Extend.config(<?= $viewModel->getJsonConfig() ?>);
+    </script>
+<?php endif; ?>
+
+<script>
+    var BASE_URL = '<?= /* @noEscape */ $block->getUrl('*') ?>';
+    var FORM_KEY = '<?= /* @noEscape */ $block->getFormKey() ?>';
+    var require = {
+        "baseUrl": "<?= /* @noEscape */ $block->getViewFileUrl('/') ?>"
+    };
+</script>
