@@ -2,6 +2,7 @@
 
 namespace Extend\Warranty\Console\Command;
 
+use Magento\Framework\Exception\LocalizedException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -69,7 +70,7 @@ class SyncProducts extends Command
         ];
 
         $this->setName('extend:sync:products');
-        $this->setDescription('Sync products from Magneto 2 to Extend');
+        $this->setDescription('Sync products from Magento 2 to Extend');
         $this->setDefinition($options);
 
         parent::configure();
@@ -78,7 +79,12 @@ class SyncProducts extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln("Starting Sync Process... ");
-        $this->state->setAreaCode('adminhtml');
+
+        try {
+            $this->state->setAreaCode('adminhtml');
+        } catch (LocalizedException $e) {
+            $this->logger->error('Error setting the area code', ['Exception' => $e->getMessage()]);
+        }
 
         if ($size = $input->getOption(self::ARGUMENT_BATCH_SIZE)) {
             $batchSize = (int)$size;

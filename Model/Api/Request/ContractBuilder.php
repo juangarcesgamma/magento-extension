@@ -80,7 +80,7 @@ class ContractBuilder
 
 
             $contracts[$key] = [
-                'transactionId' => $order->getId(),
+                'transactionId' => $order->getIncrementId(),
                 'transactionTotal' => $this->helper->formatPrice($order->getGrandTotal()),
                 'customer' => [
                     'phone' => $billing->getTelephone(),
@@ -111,7 +111,7 @@ class ContractBuilder
                     'title' => $product->getName()
                 ],
                 'currency' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
-                'transactionDate' => strtotime($order->getCreatedAt()),
+                'transactionDate' => $order->getCreatedAt() ? strtotime($order->getCreatedAt()) : strtotime('now'),
                 'plan' => [
                     'purchasePrice' => $this->helper->formatPrice($warranty->getPrice()),
                     'planId' => $warrantyId
