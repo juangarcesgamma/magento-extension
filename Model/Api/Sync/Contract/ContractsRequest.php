@@ -126,7 +126,7 @@ class ContractsRequest
 
     private function processRefundResponse(\Zend_Http_Response $response): bool
     {
-        if ($response->getStatus() === 202) {
+        if ($response->getStatus() === 201 || $response->getStatus() === 202) {
             $this->logger->info('Refund Request Success');
             return true;
         }
