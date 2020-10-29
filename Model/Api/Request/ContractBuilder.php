@@ -108,7 +108,8 @@ class ContractBuilder
                 'product' => [
                     'referenceId' => $product->getSku(),
                     'purchasePrice' => $this->helper->formatPrice($product->getFinalPrice()),
-                    'title' => $product->getName()
+                    'title' => $product->getName(),
+                    'qty' => intval($warranty->getQtyOrdered())
                 ],
                 'currency' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
                 'transactionDate' => $order->getCreatedAt() ? strtotime($order->getCreatedAt()) : strtotime('now'),
