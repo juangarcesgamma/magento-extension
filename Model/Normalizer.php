@@ -21,13 +21,13 @@ class Normalizer
         //Loop products to see if their qty is different from the warranty qty and adjust both to max
         foreach ($products as $item) {
             $sku = $item->getSku();
-            foreach($warranties as $warrantyitem){
-                if($warrantyitem->getOptionByCode('associated_product')->getValue() == $sku && $item->getProductType() == 'configurable'){
-                    if($warrantyitem->getQty() <> $item->getQty()){
-                        if ($item->getQty()>0){
+            foreach ($warranties as $warrantyitem) {
+                if ($warrantyitem->getOptionByCode('associated_product')->getValue() == $sku && $item->getProductType() == 'configurable') {
+                    if ($warrantyitem->getQty() <> $item->getQty()) {
+                        if ($item->getQty() > 0) {
                             //Update Warranty QTY
                             $warrantyitem->setQty($item->getQty());
-                        }else{
+                        } else {
                             //Remove both product and warranty
                             $cart->removeItem($warrantyitem->getItemId());
                             $cart->removeItem($item->getItemId());
@@ -38,3 +38,4 @@ class Normalizer
         }
 
     }
+}
