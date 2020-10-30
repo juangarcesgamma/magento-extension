@@ -22,9 +22,10 @@ class Normalizer
         foreach ($products as $item) {
             $sku = $item->getSku();
             foreach ($warranties as $warrantyitem) {
-                if ($warrantyitem->getOptionByCode('associated_product')->getValue() == $sku && $item->getProductType() == 'configurable') {
+                if ($warrantyitem->getOptionByCode('associated_product')->getValue() == $sku &&
+                    ($item->getProductType() == 'configurable'  || is_null($item->getOptionByCode('parent_product_id')))) {
                     if ($warrantyitem->getQty() <> $item->getQty()) {
-                        if ($item->getQty() > 0) {
+                        if ($item->getQty()>0) {
                             //Update Warranty QTY
                             $warrantyitem->setQty($item->getQty());
                         } else {
@@ -36,6 +37,5 @@ class Normalizer
                 }
             }
         }
-
     }
 }
