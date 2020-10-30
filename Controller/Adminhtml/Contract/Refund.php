@@ -68,7 +68,7 @@ class Refund extends Action
         $noErrors = true;
 
         foreach ($contractId as $_contractId) {
-            $refundResponse = $this->contractsRequest->refund($contractId);
+            $refundResponse = $this->contractsRequest->refund($_contractId);
             // Responses log
             $response_log[] = [
                 "contract_id" => $_contractId,
