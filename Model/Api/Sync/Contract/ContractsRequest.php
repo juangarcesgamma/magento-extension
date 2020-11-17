@@ -131,6 +131,18 @@ class ContractsRequest
             return true;
         }
 
+        //Refund Already Accepted
+        try {
+            $body = json_decode($response->getBody(), true);
+            if ($body["message"] == "The contract has already been refunded") {
+                $this->logger->info('Refund Request already processed');
+                return true;
+            }
+        } catch(\Exception $e) {
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            return false;
+        }
+
         $res = $this->jsonSerializer->unserialize($response->getBody());
         $this->logger->error('Refund Request Fail', $res);
         return false;
