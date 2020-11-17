@@ -93,6 +93,12 @@ class Connector implements ConnectorInterface
                 'Content-Type' => ' application/json',
                 'X-Extend-Access-Token' => $accessKeys['api_key']
             ]);
+
+        $this->client->setConfig(
+            [
+                'timeout' => 20
+            ]
+        );
     }
 
     public function call(
