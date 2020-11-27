@@ -43,7 +43,9 @@ define(
             options: {
                 url: '',
                 contractId: '',
-                itemId: ''
+                itemId: '',
+                isPartial: '',
+                maxRefunds: ''
             },
 
             _create: function () {
@@ -61,21 +63,56 @@ define(
                 const contractId = this.options.contractId;
                 const itemId = this.options.itemId;
 
-                var modalOptions = {
-                    modalClass: 'extend-confirm-modal',
-                    buttons: [{
-                        text: 'Ok',
-                        class: 'extend-confirm',
-                        click: function() {
-                            refund(url, contractId, itemId);
-                            this.closeModal();
-                        }
-                    }]
-                };
-                var confirmModal = modal(modalOptions, $('#popup-modal'));
-                $('#popup-modal').modal("openModal");
+                const isPartial = String(this.options.isPartial);
+                const maxRefunds = this.options.maxRefunds;
+
+                if (isPartial) {
+                    $("#partial_max_span").text(maxRefunds);
+                    $("#partial_max_input").attr({
+                        "max" : maxRefunds,
+                    });
+
+                    var modalOptions = {
+                        modalClass: 'extend-confirm-partial-modal',
+                        buttons: [{
+                            text: 'Ok',
+                            class: 'extend-partial-confirm',
+                            click: function() {
+                                var selectedRefunds = $("#partial_max_input").val();
+
+                                if (selectedRefunds >= 1 && selectedRefunds <= maxRefunds) {
+                                    var reducedContractId = Object.fromEntries(
+                                        Object.entries(contractId).slice(0, selectedRefunds)
+                                    );
+                                    refund(url, reducedContractId, itemId);
+                                }
+                                this.closeModal();
+                                $("#partial_max_span").text('');
+                            }
+                        }]
+                    };
+                    var confirmModal = modal(modalOptions, $('#popup-modal-partial'));
+                    $('#popup-modal-partial').modal("openModal");
+                } else {
+                    var modalOptions = {
+                        modalClass: 'extend-confirm-modal',
+                        buttons: [{
+                            text: 'Ok',
+                            class: 'extend-confirm',
+                            click: function() {
+                                refund(url, contractId, itemId);
+                                this.closeModal();
+                            }
+                        }]
+                    };
+                    var confirmModal = modal(modalOptions, $('#popup-modal'));
+                    $('#popup-modal').modal("openModal");
+                }
+
             }
         });
+
+
 
         return $.extend.refundWarranty;
     });

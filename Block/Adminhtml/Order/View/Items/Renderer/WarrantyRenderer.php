@@ -74,6 +74,10 @@ class WarrantyRenderer extends DefaultRenderer
                     } else {
                         $html .= '&nbsp;';
                     }
+
+                    if($this->canShowPartial($item)) {
+                        $html .= '<div><button type="button" class="action action-extend-partial-refund"' . " data-mage-init='{$this->getDataInit($item, true)}' >Partial Refund</button></div>";
+                    }
                 } else {
                     $html .= '&nbsp;';
                 }
@@ -84,13 +88,21 @@ class WarrantyRenderer extends DefaultRenderer
         return $html;
     }
 
-    private function getDataInit($item)
+    private function getDataInit($item, $isPartial = false)
     {
         $contractID = json_decode($item->getContractId()) === NULL ? json_encode([$item->getContractId()]) : $item->getContractId();
+        $_elements = count(json_decode($contractID, true));
 
         return '{"refundWarranty": {"url": "' . $this->getUrl('extend/contract/refund') .
             '", "contractId": ' . $contractID .
+            ', "isPartial": "' . $isPartial . '"' .
+            ', "maxRefunds": "' . $_elements . '"' .
             ', "itemId": "' . $item->getId() . '" }}';
+    }
+
+    private function canShowPartial($item) {
+        $contractID = json_decode($item->getContractId()) === NULL ? json_encode([$item->getContractId()]) : $item->getContractId();
+        return (count(json_decode($contractID, true)) > 1);
     }
 
     public function getHtmlId()
