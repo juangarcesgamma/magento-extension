@@ -59,40 +59,57 @@ define(
 
             refundWarranty: function (event) {
 
-                const url = this.options.url;
+                const url        = this.options.url;
                 const contractId = this.options.contractId;
-                const itemId = this.options.itemId;
-
-                const isPartial = String(this.options.isPartial);
-                const maxRefunds = this.options.maxRefunds;
+                const itemId     = this.options.itemId;
+                const isPartial  = String(this.options.isPartial);
 
                 if (isPartial) {
-                    $("#partial_max_span").text(maxRefunds);
-                    $("#partial_max_input").attr({
-                        "max" : maxRefunds,
-                    });
+                    $("div#partial-contracts-list").html('');
 
-                    var modalOptions = {
+                    for (const property in contractId) {
+                        if (contractId[property]) {
+                            let contractItem = '<input type="checkbox" id="pl-contract' + property + '" name="pl-contract' + property + '" value="' + contractId[property] + '">' +
+                                '<label for="pl-contract' + property +'">' + contractId[property] + '</label><br>';
+                            $("div#partial-contracts-list").append(contractItem);
+                        }
+                    }
+
+                    let modalOptions = {
                         modalClass: 'extend-confirm-partial-modal',
                         buttons: [{
                             text: 'Ok',
                             class: 'extend-partial-confirm',
                             click: function() {
-                                var selectedRefunds = $("#partial_max_input").val();
+                                let selectedRefundsArr = [];
+                                $.each($("input[name^='pl-contract']:checked"), function(){
+                                    selectedRefundsArr.push($(this).val());
+                                });
 
-                                if (selectedRefunds >= 1 && selectedRefunds <= maxRefunds) {
-                                    var reducedContractId = Object.fromEntries(
-                                        Object.entries(contractId).slice(0, selectedRefunds)
-                                    );
-                                    refund(url, reducedContractId, itemId);
-                                }
+                                let selectedRefundsObj = Object.assign({}, selectedRefundsArr);
                                 this.closeModal();
-                                $("#partial_max_span").text('');
+
+                                if (selectedRefundsArr.length >= 1) {
+                                    let confirmationModalOptions = {
+                                        modalClass: 'extend-confirm-modal',
+                                        buttons: [{
+                                            text: 'Ok',
+                                            class: 'extend-confirm',
+                                            click: function() {
+                                                refund(url, selectedRefundsObj, itemId);
+                                                this.closeModal();
+                                            }
+                                        }]
+                                    };
+                                    let confirmModal = modal(confirmationModalOptions, $('#popup-modal'));
+                                    $('#popup-modal').modal("openModal");
+                                }
                             }
                         }]
                     };
-                    var confirmModal = modal(modalOptions, $('#popup-modal-partial'));
+                    let confirmModal = modal(modalOptions, $('#popup-modal-partial'));
                     $('#popup-modal-partial').modal("openModal");
+
                 } else {
                     var modalOptions = {
                         modalClass: 'extend-confirm-modal',
@@ -105,14 +122,12 @@ define(
                             }
                         }]
                     };
-                    var confirmModal = modal(modalOptions, $('#popup-modal'));
+                    let confirmModal = modal(modalOptions, $('#popup-modal'));
                     $('#popup-modal').modal("openModal");
                 }
 
             }
         });
-
-
 
         return $.extend.refundWarranty;
     });

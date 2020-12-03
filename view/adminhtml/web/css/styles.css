@@ -209,8 +209,14 @@ div.extend-sync-button-container .sync-info #cancel_sync {
 }
 
 .modal-popup.extend-confirm-partial-modal input {
-    margin: 10px auto;
-    display: block;
+    margin: 10px;
+    display: inline-block;
+}
+.modal-popup.extend-confirm-partial-modal span#partial-select-all {
+    margin: 10px 0 0 10px;
+    display: inline-block;
+    cursor: pointer;
+    color: #007dbd;
 }
 
 .modal-popup.extend-confirm-modal .modal-inner-wrap,
