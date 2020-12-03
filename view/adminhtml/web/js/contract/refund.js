@@ -43,7 +43,9 @@ define(
             options: {
                 url: '',
                 contractId: '',
-                itemId: ''
+                itemId: '',
+                isPartial: '',
+                maxRefunds: ''
             },
 
             _create: function () {
@@ -57,23 +59,73 @@ define(
 
             refundWarranty: function (event) {
 
-                const url = this.options.url;
+                const url        = this.options.url;
                 const contractId = this.options.contractId;
-                const itemId = this.options.itemId;
+                const itemId     = this.options.itemId;
+                const isPartial  = String(this.options.isPartial);
 
-                var modalOptions = {
-                    modalClass: 'extend-confirm-modal',
-                    buttons: [{
-                        text: 'Ok',
-                        class: 'extend-confirm',
-                        click: function() {
-                            refund(url, contractId, itemId);
-                            this.closeModal();
+                if (isPartial) {
+                    $("div#partial-contracts-list").html('');
+
+                    for (const property in contractId) {
+                        if (contractId[property]) {
+                            let contractItem = '<input type="checkbox" id="pl-contract' + property + '" name="pl-contract' + property + '" value="' + contractId[property] + '">' +
+                                '<label for="pl-contract' + property +'">' + contractId[property] + '</label><br>';
+                            $("div#partial-contracts-list").append(contractItem);
                         }
-                    }]
-                };
-                var confirmModal = modal(modalOptions, $('#popup-modal'));
-                $('#popup-modal').modal("openModal");
+                    }
+
+                    let modalOptions = {
+                        modalClass: 'extend-confirm-partial-modal',
+                        buttons: [{
+                            text: 'Ok',
+                            class: 'extend-partial-confirm',
+                            click: function() {
+                                let selectedRefundsArr = [];
+                                $.each($("input[name^='pl-contract']:checked"), function(){
+                                    selectedRefundsArr.push($(this).val());
+                                });
+
+                                let selectedRefundsObj = Object.assign({}, selectedRefundsArr);
+                                this.closeModal();
+
+                                if (selectedRefundsArr.length >= 1) {
+                                    let confirmationModalOptions = {
+                                        modalClass: 'extend-confirm-modal',
+                                        buttons: [{
+                                            text: 'Ok',
+                                            class: 'extend-confirm',
+                                            click: function() {
+                                                refund(url, selectedRefundsObj, itemId);
+                                                this.closeModal();
+                                            }
+                                        }]
+                                    };
+                                    let confirmModal = modal(confirmationModalOptions, $('#popup-modal'));
+                                    $('#popup-modal').modal("openModal");
+                                }
+                            }
+                        }]
+                    };
+                    let confirmModal = modal(modalOptions, $('#popup-modal-partial'));
+                    $('#popup-modal-partial').modal("openModal");
+
+                } else {
+                    var modalOptions = {
+                        modalClass: 'extend-confirm-modal',
+                        buttons: [{
+                            text: 'Ok',
+                            class: 'extend-confirm',
+                            click: function() {
+                                refund(url, contractId, itemId);
+                                this.closeModal();
+                            }
+                        }]
+                    };
+                    let confirmModal = modal(modalOptions, $('#popup-modal'));
+                    $('#popup-modal').modal("openModal");
+                }
+
             }
         });
 
