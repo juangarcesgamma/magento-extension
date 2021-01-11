@@ -92,7 +92,7 @@ class ContractBuilder
                     'billingAddress' => [
                         "postalCode" => $billing->getPostcode(),
                         "city" => $billing->getCity(),
-                        "country" => $this->countryInformationAcquirer
+                        "countryCode" => $this->countryInformationAcquirer
                             ->getCountryInfo(
                                 $billing->getCountryId()
                             )->getThreeLetterAbbreviation(),
@@ -101,7 +101,7 @@ class ContractBuilder
                     'shippingAddress' => [
                         "postalCode" => $shipping->getPostcode(),
                         "city" => $shipping->getCity(),
-                        "country" => $this->countryInformationAcquirer
+                        "countryCode" => $this->countryInformationAcquirer
                             ->getCountryInfo(
                                 $shipping->getCountryId()
                             )->getThreeLetterAbbreviation(),
@@ -110,7 +110,10 @@ class ContractBuilder
                 ],
                 'product' => [
                     'referenceId' => $product->getSku(),
-                    'purchasePrice' => $this->helper->formatPrice($product->getFinalPrice()),
+                    'purchasePrice' => [
+                        "currencyCode" => "USD",
+                        "amount" => $this->helper->formatPrice($product->getFinalPrice()),
+                    ],
                     'title' => $product->getName(),
                     'qty' => intval($warranty->getQtyOrdered())
                 ],
@@ -120,7 +123,10 @@ class ContractBuilder
                     "platform" => "magento"
                 ],
                 'plan' => [
-                    'purchasePrice' => $this->helper->formatPrice($warranty->getPrice()),
+                    'purchasePrice' => [
+                        "currencyCode" => "USD",
+                        "amount" => $this->helper->formatPrice($warranty->getPrice()),
+                    ],
                     'planId' => $warrantyId
                 ]
             ];
