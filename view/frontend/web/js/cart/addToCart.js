@@ -11,14 +11,14 @@ define(['jquery'],
                         const plan = opts.plan;
 
                         if (plan) {
-                            plan.product = param.productSku;
+                            plan.product = opts.product.id;
+
                             $.post(param.url, {
                                 warranty: plan,
                                 option: param.parentId
-                            })
-                                .done(function (data) {
-                                    location.reload(false);
-                                });
+                            }).done(function (data) {
+                                location.reload(false);
+                            });
                         }
                     }
                 }
