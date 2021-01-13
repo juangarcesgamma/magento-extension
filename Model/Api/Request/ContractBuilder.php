@@ -81,24 +81,27 @@ class ContractBuilder
 
             $contracts[$key] = [
                 'transactionId' => $order->getIncrementId(),
-                'transactionTotal' => $this->helper->formatPrice($order->getGrandTotal()),
+                'transactionTotal' => [
+                    "currencyCode" => "USD",
+                    "amount" => $this->helper->formatPrice($order->getGrandTotal())
+                ],
                 'customer' => [
                     'phone' => $billing->getTelephone(),
                     'email' => $order->getCustomerEmail(),
                     'name' => $order->getCustomerName(),
-                    'billing' => [
+                    'billingAddress' => [
                         "postalCode" => $billing->getPostcode(),
                         "city" => $billing->getCity(),
-                        "country" => $this->countryInformationAcquirer
+                        "countryCode" => $this->countryInformationAcquirer
                             ->getCountryInfo(
                                 $billing->getCountryId()
                             )->getThreeLetterAbbreviation(),
                         "region" => $billing->getRegion()
                     ],
-                    'shipping' => [
+                    'shippingAddress' => [
                         "postalCode" => $shipping->getPostcode(),
                         "city" => $shipping->getCity(),
-                        "country" => $this->countryInformationAcquirer
+                        "countryCode" => $this->countryInformationAcquirer
                             ->getCountryInfo(
                                 $shipping->getCountryId()
                             )->getThreeLetterAbbreviation(),
@@ -107,14 +110,23 @@ class ContractBuilder
                 ],
                 'product' => [
                     'referenceId' => $product->getSku(),
-                    'purchasePrice' => $this->helper->formatPrice($product->getFinalPrice()),
+                    'purchasePrice' => [
+                        "currencyCode" => "USD",
+                        "amount" => $this->helper->formatPrice($product->getFinalPrice()),
+                    ],
                     'title' => $product->getName(),
                     'qty' => intval($warranty->getQtyOrdered())
                 ],
                 'currency' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
                 'transactionDate' => $order->getCreatedAt() ? strtotime($order->getCreatedAt()) : strtotime('now'),
+                'source' => [
+                    "platform" => "magento"
+                ],
                 'plan' => [
-                    'purchasePrice' => $this->helper->formatPrice($warranty->getPrice()),
+                    'purchasePrice' => [
+                        "currencyCode" => "USD",
+                        "amount" => $this->helper->formatPrice($warranty->getPrice()),
+                    ],
                     'planId' => $warrantyId
                 ]
             ];
@@ -122,16 +134,16 @@ class ContractBuilder
             $billingStreet = $billing->getStreet();
             $billingFormat = $this->formatStreet($billingStreet);
 
-            $contracts[$key]['customer']['billing'] = array_merge(
-                $contracts[$key]['customer']['billing'],
+            $contracts[$key]['customer']['billingAddress'] = array_merge(
+                $contracts[$key]['customer']['billingAddress'],
                 $billingFormat
             );
 
             $shippingStreet = $shipping->getStreet();
             $shippingFormat = $this->formatStreet($shippingStreet);
 
-            $contracts[$key]['customer']['shipping'] = array_merge(
-                $contracts[$key]['customer']['shipping'],
+            $contracts[$key]['customer']['shippingAddress'] = array_merge(
+                $contracts[$key]['customer']['shippingAddress'],
                 $shippingFormat
             );
 
