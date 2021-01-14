@@ -13,7 +13,7 @@ define([
             $('div.product-options-wrapper').on('change',() => {
                 let sku = selectedProduct();
 
-                if(sku !== ''){
+                if(sku !== '' && sku != undefined){
                     renderWarranties(sku);
                 }
             });
