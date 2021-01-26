@@ -64,6 +64,24 @@ class Refund extends Action
 
         $contractId = $this->getRequest()->getPost('contractId');
 
+        $isValidationRequest = $this->getRequest()->getPost('validation');
+
+        /* Validation Request */
+        if (!empty($isValidationRequest) && $isValidationRequest) {
+            $amountValidated = 0;
+            foreach ($contractId as $_contractId) {
+                $_response = $this->contractsRequest->validateRefund($_contractId);
+                if (!empty($_response) && !empty($_response["refundAmount"])
+                    && !empty($_response["refundAmount"]["amount"])) {
+                    $amountValidated += $_response["refundAmount"]["amount"];
+                }
+            }
+
+            return $this->resultFactory->create(ResultFactory::TYPE_JSON)
+                ->setHttpResponseCode(200)
+                ->setData(["amountValidated" => $amountValidated]);
+        }
+
         $itemId  = (string)$this->getRequest()->getPost('itemId');
         $item    = $this->orderItemRepository->get($itemId);
         $options = $item->getProductOptions();
