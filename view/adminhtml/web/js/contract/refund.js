@@ -39,6 +39,53 @@ define(
                 });
         }
 
+        function validate(url, contractId, itemId) {
+            //Reset cache & loader
+            $('#refund-amount-validation-cache').val(0);
+            $('body').trigger('processStart');
+
+            $.post(url,{
+                contractId: contractId,
+                itemId: itemId,
+                validation: true
+            })
+                .done(function (data) {
+                    console.log("Validate Done >");
+
+                    if (data.amountValidated > 0) {
+                        $('#refund-amount-validation-cache').val(data.amountValidated);
+                    } else {
+                        $('#refund-amount-validation-cache').val(-1);
+                    }
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#refund-amount-validation-cache').val(-1);
+                });
+        }
+
+        function waitValidation () {
+            let validatedAmount = $('#refund-amount-validation-cache').val();
+
+            if (validatedAmount > 0) {
+
+                $('body').trigger('processStop');
+                $('#refund-amount-validation-text').html("$"+validatedAmount);
+                $('#popup-modal').modal("openModal");
+
+            } else if (validatedAmount < 0) {
+
+                $('body').trigger('processStop');
+                alert({
+                    title: $.mage.__("Refund failed"),
+                    content: $.mage.__("An unexpected error, please try again later."),
+                });
+
+            } else {
+                 //Waiting validation
+                 setTimeout(waitValidation, 500); // try again in 500 milliseconds
+            }
+        }
+
         $.widget('extend.refundWarranty', {
             options: {
                 url: '',
@@ -85,9 +132,10 @@ define(
                                 $.each($("input[name^='pl-contract']:checked"), function(){
                                     selectedRefundsArr.push($(this).val());
                                 });
-
                                 let selectedRefundsObj = Object.assign({}, selectedRefundsArr);
                                 this.closeModal();
+
+                                validate(url, selectedRefundsObj, itemId);
 
                                 if (selectedRefundsArr.length >= 1) {
                                     let confirmationModalOptions = {
@@ -102,7 +150,7 @@ define(
                                         }]
                                     };
                                     let confirmModal = modal(confirmationModalOptions, $('#popup-modal'));
-                                    $('#popup-modal').modal("openModal");
+                                    waitValidation();
                                 }
                             }
                         }]
@@ -111,6 +159,9 @@ define(
                     $('#popup-modal-partial').modal("openModal");
 
                 } else {
+
+                    validate(url, contractId, itemId);
+
                     var modalOptions = {
                         modalClass: 'extend-confirm-modal',
                         buttons: [{
@@ -123,9 +174,8 @@ define(
                         }]
                     };
                     let confirmModal = modal(modalOptions, $('#popup-modal'));
-                    $('#popup-modal').modal("openModal");
+                    waitValidation();
                 }
-
             }
         });
 
