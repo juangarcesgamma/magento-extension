@@ -77,6 +77,11 @@ class Refund extends Action
                 }
             }
 
+            //Cent to dollars
+            if ($amountValidated > 0) {
+                $amountValidated /= 100;
+            }
+
             return $this->resultFactory->create(ResultFactory::TYPE_JSON)
                 ->setHttpResponseCode(200)
                 ->setData(["amountValidated" => $amountValidated]);
