@@ -11,6 +11,8 @@ Extend provides an easy way for any merchant to offer extended protection plans,
 
 - Integration Questions: [integrations@extend.com](integrations@extend.com)
 
+- Create an Extend Account: [https://merchants.extend.com/onboarding/signup/platform](https://merchants.extend.com/onboarding/signup/platform)
+
 - Extend Merchant Portal:
 
     - Production: [https://merchants.extend.com](https://merchants.extend.com)

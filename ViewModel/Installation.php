@@ -81,7 +81,7 @@ class Installation implements ArgumentInterface
 
     public function getJsMode()
     {
-        return "https://sdk.helloextend.com/extend-sdk-client/v1/extend-sdk-client.min.js";
+        return "https://.helloextend.com/extend-sdk-client/v1/extend-sdk-client.min.js";
     }
 
     public function getJsonConfig()
