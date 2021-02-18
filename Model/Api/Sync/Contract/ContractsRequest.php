@@ -146,7 +146,36 @@ class ContractsRequest
         $res = $this->jsonSerializer->unserialize($response->getBody());
         $this->logger->error('Refund Request Fail', $res);
         return false;
+    }
 
+    private function validateRefundRequest($contractId)
+    {
+        try {
+            $endpoint = self::ENDPOINT_URI . "/{$contractId}/refund?commit=false";
+
+            $response = $this->connector
+                ->call(
+                    $endpoint,
+                    \Zend_Http_Client::POST
+                );
+
+            $body = json_decode($response->getBody(), true);
+            if (!empty($body)) {
+                return $body;
+            } else {
+                return false;
+            }
+
+
+        } catch (\Zend_Http_Client_Exception $e) {
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            return false;
+        }
+    }
+
+    public function validateRefund($contractId)
+    {
+        return $this->validateRefundRequest($contractId);
     }
 
 }

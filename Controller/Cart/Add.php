@@ -79,8 +79,8 @@ class Add extends Cart
         try {
             $warranty = $this->initWarranty();
             if (!$warranty) {
-                $this->messageManager->addErrorMessage('We can\'t add this product protection to your shopping cart right now.');
-                $this->addWarrantyLogger->error('Error finding warranty product, please ensure warranty product is in your catalog and is enabled.');
+                $this->messageManager->addErrorMessage('Sorry! We can\'t add this product protection to your shopping cart right now.');
+                $this->addWarrantyLogger->error('Oops! There was an error finding the protection plan product, please ensure the protection plan product is in your catalog and is enabled!');
 
                 return $this->goBack();
             }
@@ -98,7 +98,7 @@ class Add extends Cart
         } catch (\Exception $e) {
             $this->messageManager->addExceptionMessage(
                 $e,
-                __('We can\'t add this product protection to your shopping cart right now.')
+                __('Sorry! We can\'t add this product protection to your shopping cart right now.')
             );
             $this->_objectManager->get(\Psr\Log\LoggerInterface::class)->critical($e);
             return $this->goBack();

@@ -40,9 +40,9 @@
             <group id="authentication" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Authentication</label>
                 <comment>
-                    In order for the Extend Magento extension to communicate with the Extend platform on your stores's
-                    behalf (to sync products, create warranty SKUs, display optimized warranty offers in your store, and
-                    record extended warranty sales), we need you to store a couple of unique identifiers here in your
+                    In order for the Extend extension to communicate with the Extend platform on your stores's
+                    behalf (to sync products, create protection plan SKUs, display optimized plan offers in your store, and
+                    record extended service contract sales), we need you to store a couple of unique identifiers here in your
                     configuration settings.
                 </comment>
                 <attribute type="expanded">0</attribute>
@@ -50,8 +50,8 @@
                     <label>Mode</label>
                     <source_model>Extend\Warranty\Model\Config\Source\AuthMode</source_model>
                     <!--<comment>
-                        Warning! Please note that while you are in sandbox mode, any warranty purchases made in your store
-                        will be considered test transactions. Extend will not create real warranty contracts for sandbox transactions.
+                        Warning! Please note that while you are in sandbox mode, any protection plan purchases made in your store
+                        will be considered test transactions. Extend will not create real service contracts for sandbox transactions.
                     </comment> -->
                 </field>
                 <field id="store_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -96,7 +96,7 @@
                 <label>Sync Products</label>
                 <comment>
                     It's important to keep your product catalog synced with Extend, so we can serve accurate
-                    extended warranty offers in your store. Just click the "Sync Products" button and we'll send your
+                    extended protection plan offers in your store. Just click the "Sync Products" button and we'll send your
                     catalog to the Extend platform in batches. If you have a small number of SKUs this will take just
                     seconds, but if your catalog is very large it could take few minutes.
                 </comment>
@@ -120,7 +120,7 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>
                         <![CDATA[
-                                To enable or disable warranty sales on specific products,
+                                To enable or disable protection plan offers on specific products,
                                 please go to <a href="https://merchants.extend.com">your Extend merchant dashboard</a>.
                             ]]>
                     </comment>
@@ -144,7 +144,7 @@
                 <comment>
                     There are a number of other configurations you can control through your Extend merchant dashboard,
                     including: enabling / disabling Extend offers (for your whole store or for individual products),
-                    customizing your warranty offer branding, viewing the status of warranty contract matching for
+                    customizing your offer branding, viewing the status of protection plan matching for
                     your products, and more!
                 </comment>
                 <field id="portalbutton" translate="label" type="button" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">

@@ -1,6 +1,6 @@
 {
   "name": "extend/module-warranty",
-  "description": "Extend Warranty module for magento 2",
+  "description": "Extend Module for Magento 2",
   "require": {
     "magento/framework": ">=101.0",
     "magento/module-catalog": ">=102.0",

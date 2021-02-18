@@ -79,8 +79,8 @@ class AddToCart implements ObserverInterface
             $warranty = reset($results);
 
             if (!$warranty) {
-                $this->messageManager->addErrorMessage('Error while adding warranty product');
-                $this->addWarrantyLogger->error('Error finding warranty product, please ensure warranty product is in your catalog and is enabled.');
+                $this->messageManager->addErrorMessage('Oops! There was an error adding the protection plan product.');
+                $this->addWarrantyLogger->error('Oops! There was an error finding the protection pan product, please ensure the Extend protection plan product is in your catalog and is enabled!');
                 return;
             }
 
@@ -94,7 +94,7 @@ class AddToCart implements ObserverInterface
                 $cart->save();
 
             } catch (LocalizedException $e) {
-                $this->messageManager->addErrorMessage('Error while adding warranty product');
+                $this->messageManager->addErrorMessage('Oops! There was an error adding the protection plan product.');
             }
 
         }
