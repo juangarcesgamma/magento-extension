@@ -25,6 +25,7 @@ Extend provides an easy way for any merchant to offer extended protection plans,
 - The module is built for Magento 2 versions: 
     - Magento 2.2.x
     - Magento 2.3.x
+    - Magento 2.4.x
 
 ## Browser Support
 - Internet Explorer 11 or later, Microsoft Edge, latest–1
