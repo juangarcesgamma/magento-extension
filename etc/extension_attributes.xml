@@ -6,5 +6,6 @@
         <attribute code="associated_product" type="string" />
         <attribute code="term" type="string" />
         <attribute code="warranty_id" type="string" />
+        <attribute code="test" type="array" />
     </extension_attributes>
 </config>

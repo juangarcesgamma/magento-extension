@@ -82,11 +82,17 @@ class OrderRepository
             $extensionAttributes = $orderItem->getExtensionAttributes();
             $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->extensionFactory->create();
             $extensionAttributes->setContractId($contractId);
+            $test = [];
             if(array_key_exists("warranty_term", $productOptions) && array_key_exists("associated_product", $productOptions) && array_key_exists("warranty_id", $productOptions))
             {
                 $extensionAttributes->setTerm($productOptions["warranty_term"]);
                 $extensionAttributes->setAssociatedProduct($productOptions["associated_product"]);
                 $extensionAttributes->setWarrantyId($productOptions["warranty_id"]);
+                $test = array(
+                    "warranty_term" => $productOptions["warranty_term"],
+                    "associated_product" => $productOptions["associated_product"],
+                    "warranty_id" => $productOptions["warranty_id"]
+                );
             }
             $extensionAttributes->setProductOptions(json_encode($productOptions));
             $orderItem->setExtensionAttributes($extensionAttributes);
