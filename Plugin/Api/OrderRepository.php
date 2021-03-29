@@ -93,6 +93,7 @@ class OrderRepository
                     "associated_product" => $productOptions["associated_product"],
                     "warranty_id" => $productOptions["warranty_id"]
                 );
+                $extensionAttributes->setTest($test);
             }
             $extensionAttributes->setProductOptions(json_encode($productOptions));
             $orderItem->setExtensionAttributes($extensionAttributes);
