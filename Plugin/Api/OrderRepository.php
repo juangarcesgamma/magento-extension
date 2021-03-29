@@ -88,12 +88,6 @@ class OrderRepository
                 $extensionAttributes->setTerm($productOptions["warranty_term"]);
                 $extensionAttributes->setAssociatedProduct($productOptions["associated_product"]);
                 $extensionAttributes->setWarrantyId($productOptions["warranty_id"]);
-                $test = array(
-                    "warranty_term" => $productOptions["warranty_term"],
-                    "associated_product" => $productOptions["associated_product"],
-                    "warranty_id" => $productOptions["warranty_id"]
-                );
-                $extensionAttributes->setTest($test);
             }
             $extensionAttributes->setProductOptions(json_encode($productOptions));
             $orderItem->setExtensionAttributes($extensionAttributes);
