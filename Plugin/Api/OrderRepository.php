@@ -7,8 +7,6 @@ use Magento\Sales\Api\Data\OrderItemExtensionFactory;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
 use Magento\Sales\Api\Data\OrderItemSearchResultInterface;
-use Psr\Log\LoggerInterface;
-
 
 
 class OrderRepository
