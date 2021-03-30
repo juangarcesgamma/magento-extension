@@ -82,7 +82,6 @@ class OrderRepository
             $extensionAttributes = $orderItem->getExtensionAttributes();
             $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->extensionFactory->create();
             $extensionAttributes->setContractId($contractId);
-            $test = [];
             if(array_key_exists("warranty_term", $productOptions) && array_key_exists("associated_product", $productOptions) && array_key_exists("warranty_id", $productOptions))
             {
                 $extensionAttributes->setTerm($productOptions["warranty_term"]);
