@@ -8,6 +8,7 @@ use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
 use Magento\Sales\Api\Data\OrderItemSearchResultInterface;
 
+
 class OrderRepository
 {
 
@@ -20,13 +21,14 @@ class OrderRepository
      * @var OrderItemExtensionFactory
      */
     protected $extensionFactory;
-
     /**
      * OrderRepositoryPlugin constructor
      *
      * @param OrderExtensionFactory $extensionFactory
      */
-    public function __construct(OrderItemExtensionFactory $extensionFactory)
+    public function __construct(
+        OrderItemExtensionFactory $extensionFactory
+    )
     {
         $this->extensionFactory = $extensionFactory;
     }
@@ -44,9 +46,18 @@ class OrderRepository
         //contract_id
         $contractId = $orderItem->getData(self::CONTRACT_ID);
         //product_options
-        $productOptions = $orderItem->getProductOptions();
+        $productOptions = $orderItem->getProductOptions();      
         $extensionAttributes = $orderItem->getExtensionAttributes();
         $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->extensionFactory->create();
+
+//         $extensionAttributes->setContractId($contractId);
+//         if(array_key_exists("warranty_term", $productOptions) && array_key_exists("associated_product", $productOptions) && array_key_exists("warranty_id", $productOptions))
+//         {
+//             $extensionAttributes->setTerm($productOptions["warranty_term"]);
+//             $extensionAttributes->setAssociatedProduct($productOptions["associated_product"]);
+//             $extensionAttributes->setWarrantyId($productOptions["warranty_id"]);
+//         }
+
         $extensionAttributes->setProductOptions(json_encode($productOptions));
 
         if ($contractId) {
@@ -80,6 +91,15 @@ class OrderRepository
             $productOptions = $orderItem->getProductOptions();
             $extensionAttributes = $orderItem->getExtensionAttributes();
             $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->extensionFactory->create();
+
+//             $extensionAttributes->setContractId($contractId);
+//             if(array_key_exists("warranty_term", $productOptions) && array_key_exists("associated_product", $productOptions) && array_key_exists("warranty_id", $productOptions))
+//             {
+//                 $extensionAttributes->setTerm($productOptions["warranty_term"]);
+//                 $extensionAttributes->setAssociatedProduct($productOptions["associated_product"]);
+//                 $extensionAttributes->setWarrantyId($productOptions["warranty_id"]);
+//             }
+
             $extensionAttributes->setProductOptions(json_encode($productOptions));
 
             if ($contractId) {
