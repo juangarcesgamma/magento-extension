@@ -85,8 +85,16 @@ class Add extends Cart
                 return $this->goBack();
             }
 
-            $this->cart->addProduct($warranty, $warrantyData);
+            //Check Qty
+            $_relatedProduct = $warrantyData['product'];
+            $_qty = 1;
+            $_quote = $this->_checkoutSession->getQuote();
+            foreach($_quote->getAllVisibleItems() as $_item) {
+                if ($_item->getSku() == $_relatedProduct) $_qty = $_item->getQty();
+            }
+            $warrantyData['qty'] = $_qty;
 
+            $this->cart->addProduct($warranty, $warrantyData);
             $this->cart->save();
 
             $message = __(
