@@ -9,4 +9,7 @@
     <event name="checkout_cart_update_items_after">
         <observer name="cart_normalize" instance="Extend\Warranty\Observer\Warranty\Normalize"/>
     </event>
+    <event name="checkout_cart_update_item_complete">
+        <observer name="cart_normalize" instance="Extend\Warranty\Observer\Warranty\Normalize"/>
+    </event>
 </config>
